@@ -110,7 +110,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "fig, ax = plt.subplots(figsize=style.panel_size(width=0.6 * style.PANEL_WIDTH_IN, aspect=0.74))\n",
+    "fig, ax = plt.subplots(figsize=style.panel_size())\n",
     "for frame, label, color in (\n",
     "    (uncorrected, \"Bus voltage bases\", style.HIGHLIGHT),\n",
     "    (corrected, \"Nameplate ratio\", style.PRIMARY),\n",
@@ -120,7 +120,7 @@
     "style.reference_line(ax, 0.0)\n",
     "ax.set_xlabel(\"Bus, ordered by OpenDSS voltage\")\n",
     "ax.set_ylabel(\"pandapower - OpenDSS (pu)\")\n",
-    "ax.set_title(\"Converted model against the circuit it came from\")\n",
+    "ax.set_title(\"Conversion check\")\n",
     "style.format_axes(ax)\n",
     "style.legend_below(ax, ncol=2)\n",
     "style.show(fig)"
@@ -264,14 +264,14 @@
    "source": [
     "estimate = full[0]\n",
     "order = np.argsort(v_true)\n",
-    "fig, ax = plt.subplots(figsize=style.panel_size(width=0.6 * style.PANEL_WIDTH_IN, aspect=0.74))\n",
+    "fig, ax = plt.subplots(figsize=style.panel_size())\n",
     "ax.plot(np.arange(len(order)), v_true[order], color=style.PRIMARY, lw=style.LINE_WIDTH, label=\"True\")\n",
     "ax.plot(\n",
     "    np.arange(len(order)), estimate[order], \"o\", mec=style.HIGHLIGHT, mfc=\"white\", label=\"Estimated\", **style.MARKER\n",
     ")\n",
     "ax.set_xlabel(\"Bus, ordered by true voltage\")\n",
     "ax.set_ylabel(\"Voltage (pu)\")\n",
-    "ax.set_title(\"Every customer metered: estimate against truth\")\n",
+    "ax.set_title(\"Every customer metered\")\n",
     "style.format_axes(ax)\n",
     "style.legend_below(ax, ncol=2)\n",
     "style.show(fig)"

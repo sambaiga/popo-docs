@@ -534,51 +534,304 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="scenarios">
 <h1>Scenarios<a class="headerlink" href="#scenarios" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../api/index.html#module-popo.scenarios" title="popo.scenarios"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.scenarios</span></code></a> builds the counterfactual networks a study compares: customers given real demand
-profiles, and a share of them given rooftop solar, an EV charger or a battery.</p>
-<section id="profiles-and-penetration">
-<h2>Profiles and penetration<a class="headerlink" href="#profiles-and-penetration" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="../api/index.html#popo.scenarios.assign_household_profiles" title="popo.scenarios.assign_household_profiles"><code class="xref py py-func docutils literal notranslate"><span class="pre">assign_household_profiles()</span></code></a> gives each existing load its own demand shape, drawn
-from a pool of real household profiles.</p></li>
-<li><p><a class="reference internal" href="../api/index.html#popo.scenarios.attach_generation" title="popo.scenarios.attach_generation"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_generation()</span></code></a> fits rooftop arrays to a fraction of customers, sized by
-<a class="reference internal" href="../api/index.html#popo.scenarios.ArraySizing" title="popo.scenarios.ArraySizing"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArraySizing</span></code></a>.</p></li>
-<li><p><a class="reference internal" href="../api/index.html#popo.scenarios.attach_charging" title="popo.scenarios.attach_charging"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_charging()</span></code></a> gives a fraction of customers a charger, each driven by its own
-recorded session, so the diversified sum at the substation reflects real coincidence.</p></li>
-</ul>
-<p>Penetration is the fraction of customers holding the technology. Every installation connects on its
-customer’s own phase (<a class="reference internal" href="../api/index.html#popo.scenarios.service_connection" title="popo.scenarios.service_connection"><code class="xref py py-func docutils literal notranslate"><span class="pre">service_connection()</span></code></a>), unless a phase is forced with
-<code class="docutils literal notranslate"><span class="pre">connection=</span></code>.</p>
-</section>
-<section id="mitigation">
-<h2>Mitigation<a class="headerlink" href="#mitigation" title="Link to this heading">#</a></h2>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Lever</p></th>
-<th class="head"><p>How</p></th>
-<th class="head"><p>What it costs</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Volt-VAr</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">attach_generation(volt_var=VoltVarCurve(...))</span></code></p></td>
-<td><p>reactive power, adding to transformer loading</p></td>
-</tr>
-<tr class="row-odd"><td><p>Volt-Watt</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">attach_generation(volt_watt=VoltWattCurve.ieee_1547_default())</span></code></p></td>
-<td><p>curtailed generation</p></td>
-</tr>
-<tr class="row-even"><td><p>Storage</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">attach_storage(dss,</span> <span class="pre">customers,</span> <span class="pre">...,</span> <span class="pre">dispatch=StorageDispatch())</span></code></p></td>
-<td><p>a battery per customer</p></td>
-</tr>
-</tbody>
-</table>
+<p><a class="reference internal" href="../api/index.html#module-popo.scenarios" title="popo.scenarios"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.scenarios</span></code></a> changes a circuit to represent a future one: customers with real demand
+profiles, and a share of them with rooftop solar, an EV charger or a battery. It needs the <code class="docutils literal notranslate"><span class="pre">opendss</span></code>
+extra.</p>
+<section id="household-demand">
+<h2>Household demand<a class="headerlink" href="#household-demand" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../api/index.html#popo.scenarios.assign_household_profiles" title="popo.scenarios.assign_household_profiles"><code class="xref py py-func docutils literal notranslate"><span class="pre">assign_household_profiles()</span></code></a> gives each customer its own demand shape, drawn from
+a pool of recorded household profiles. It returns the number of customers it assigned.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.network</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circuit</span><span class="p">,</span> <span class="n">residential_loads</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.scenarios</span><span class="w"> </span><span class="kn">import</span> <span class="n">assign_household_profiles</span>
+
+<span class="n">FEEDER</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"tests/data/dss_uk_network_17_1_1149/master_network_17_1_1149.dss"</span><span class="p">)</span>
+<span class="n">household_pool</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s2">"tests/data/uk_household_pu_96.parquet"</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">pv_profile</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s2">"tests/data/uk_pv_unit_96.parquet"</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">ev_pool</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s2">"tests/data/uk_ev_kw_96.parquet"</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">FEEDER</span><span class="p">)</span>
+<span class="n">customers</span> <span class="o">=</span> <span class="n">residential_loads</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">dss</span><span class="p">)</span>
+<span class="n">assign_household_profiles</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">dss</span><span class="p">,</span> <span class="n">customers</span><span class="p">,</span> <span class="n">household_pool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
 </div>
-<p>OpenDSS gives each inverter one control, so Volt-VAr and Volt-Watt are installed one at a time.
-<a class="reference internal" href="../api/index.html#popo.scenarios.StorageDispatch" title="popo.scenarios.StorageDispatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">StorageDispatch</span></code></a> charges through the middle of the day and discharges in the
-evening so a battery starts the next day empty; a schedule shared by every battery concentrates their
-charging and discharging in time, which the second tutorial shows moving the over-voltage into the evening.</p>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>188
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each column of the pool is one household over 96 half-hours. The pool here has 400 households.</p>
+</section>
+<section id="rooftop-solar">
+<h2>Rooftop solar<a class="headerlink" href="#rooftop-solar" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../api/index.html#popo.scenarios.attach_generation" title="popo.scenarios.attach_generation"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_generation()</span></code></a> fits a rooftop array to a fraction of customers, the
+penetration. Array sizes are drawn from <a class="reference internal" href="../api/index.html#popo.scenarios.ArraySizing" title="popo.scenarios.ArraySizing"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArraySizing</span></code></a>, by default a mean of
+3.5 kWp clipped to between 2 and 12 kWp, and every array follows the same per-unit generation profile.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.scenarios</span><span class="w"> </span><span class="kn">import</span> <span class="n">attach_generation</span>
+
+<span class="n">attach_generation</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">dss</span><span class="p">,</span> <span class="n">customers</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">pv_profile</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">kv</span><span class="o">=</span><span class="mf">0.23</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">pvsystems</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>bus1</th>
+      <th>kva</th>
+      <th>pmpp</th>
+      <th>pf</th>
+      <th>phases</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>pv4</td>
+      <td>1_1149_171_217.1.0</td>
+      <td>2.799</td>
+      <td>2.545</td>
+      <td>1.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>pv165</td>
+      <td>1_1149_171_2633.3.0</td>
+      <td>4.240</td>
+      <td>3.854</td>
+      <td>1.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>pv97</td>
+      <td>1_1149_171_1530.1.0</td>
+      <td>2.200</td>
+      <td>2.000</td>
+      <td>1.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>pv23</td>
+      <td>1_1149_171_518.2.0</td>
+      <td>4.839</td>
+      <td>4.399</td>
+      <td>1.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>pv100</td>
+      <td>1_1149_171_1611.3.0</td>
+      <td>3.676</td>
+      <td>3.342</td>
+      <td>1.0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>At 60 % penetration, 113 of the 188 customers have an array. The random generator decides which
+customers are chosen; with the same seed, the customers chosen at 40 % are also chosen at 60 %, so
+results at different penetrations compare the same households.</p>
+<p>Each array is connected on its customer’s own phase. The bus suffix <code class="docutils literal notranslate"><span class="pre">.1.0</span></code> means phase 1 to neutral.
+<a class="reference internal" href="../api/index.html#popo.scenarios.service_connection" title="popo.scenarios.service_connection"><code class="xref py py-func docutils literal notranslate"><span class="pre">service_connection()</span></code></a> returns the suffix for any customer, and the <code class="docutils literal notranslate"><span class="pre">connection</span></code>
+argument of every scenario function overrides it.</p>
+</section>
+<section id="ev-charging-and-storage">
+<h2>EV charging and storage<a class="headerlink" href="#ev-charging-and-storage" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../api/index.html#popo.scenarios.attach_charging" title="popo.scenarios.attach_charging"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_charging()</span></code></a> gives a fraction of customers an EV charger. Each charger
+follows its own recorded session series, so the total at the substation reflects how often chargers
+actually coincide.</p>
+<p><a class="reference internal" href="../api/index.html#popo.scenarios.attach_storage" title="popo.scenarios.attach_storage"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_storage()</span></code></a> gives customers a battery that charges and discharges in fixed
+daily windows, set by <a class="reference internal" href="../api/index.html#popo.scenarios.StorageDispatch" title="popo.scenarios.StorageDispatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">StorageDispatch</span></code></a>. The default is a 3 kW, 10 kWh battery
+that charges from 10:00 to 17:00, while rooftop generation is high, and discharges from 18:00 to 22:00.</p>
+</section>
+<section id="comparing-scenarios">
+<h2>Comparing scenarios<a class="headerlink" href="#comparing-scenarios" title="Link to this heading">#</a></h2>
+<p>The function below rebuilds the feeder for each case with the same seeds, so every case has the same
+households and the same 113 arrays. It solves two days and counts how many customers exceed the EN 50160
+upper limit at least once.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.scenarios</span><span class="w"> </span><span class="kn">import</span> <span class="n">attach_charging</span><span class="p">,</span> <span class="n">attach_storage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.standards</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoltageLimits</span><span class="p">,</span> <span class="n">VoltVarCurve</span><span class="p">,</span> <span class="n">VoltWattCurve</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="n">case</span><span class="p">):</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">FEEDER</span><span class="p">)</span>
+    <span class="n">dss</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">dss</span>
+    <span class="n">customers</span> <span class="o">=</span> <span class="n">residential_loads</span><span class="p">(</span><span class="n">dss</span><span class="p">)</span>
+    <span class="n">assign_household_profiles</span><span class="p">(</span><span class="n">dss</span><span class="p">,</span> <span class="n">customers</span><span class="p">,</span> <span class="n">household_pool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">control</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"Volt-VAr"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"volt_var"</span><span class="p">:</span> <span class="n">VoltVarCurve</span><span class="o">.</span><span class="n">ieee_1547_default</span><span class="p">()},</span>
+        <span class="s2">"Volt-Watt"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"volt_watt"</span><span class="p">:</span> <span class="n">VoltWattCurve</span><span class="o">.</span><span class="n">ieee_1547_default</span><span class="p">()},</span>
+    <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">attach_generation</span><span class="p">(</span><span class="n">dss</span><span class="p">,</span> <span class="n">customers</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">pv_profile</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">kv</span><span class="o">=</span><span class="mf">0.23</span><span class="p">,</span> <span class="o">**</span><span class="n">control</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="s2">"Storage"</span><span class="p">:</span>
+        <span class="n">pv_buses</span> <span class="o">=</span> <span class="p">{</span><span class="n">pv</span><span class="o">.</span><span class="n">bus1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">pv</span> <span class="ow">in</span> <span class="n">circuit</span><span class="o">.</span><span class="n">pvsystems</span><span class="p">}</span>
+        <span class="n">with_pv</span> <span class="o">=</span> <span class="p">[(</span><span class="n">load</span><span class="p">,</span> <span class="n">bus</span><span class="p">)</span> <span class="k">for</span> <span class="n">load</span><span class="p">,</span> <span class="n">bus</span> <span class="ow">in</span> <span class="n">customers</span> <span class="k">if</span> <span class="n">bus</span> <span class="ow">in</span> <span class="n">pv_buses</span><span class="p">]</span>
+        <span class="n">attach_storage</span><span class="p">(</span><span class="n">dss</span><span class="p">,</span> <span class="n">with_pv</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">kv</span><span class="o">=</span><span class="mf">0.23</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="s2">"EV charging"</span><span class="p">:</span>
+        <span class="n">attach_charging</span><span class="p">(</span><span class="n">dss</span><span class="p">,</span> <span class="n">customers</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">ev_pool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">kv</span><span class="o">=</span><span class="mf">0.23</span><span class="p">)</span>
+
+    <span class="n">report</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">solve_time_series</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="n">buses</span><span class="o">=</span><span class="p">[</span><span class="n">bus</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">bus</span> <span class="ow">in</span> <span class="n">customers</span><span class="p">])</span>
+    <span class="n">traces</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">voltage_traces</span><span class="p">()</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">VoltageLimits</span><span class="o">.</span><span class="n">en_50160</span><span class="p">()</span><span class="o">.</span><span class="n">event_summary</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"case"</span><span class="p">:</span> <span class="n">case</span><span class="p">,</span>
+        <span class="s2">"max voltage (pu)"</span><span class="p">:</span> <span class="n">events</span><span class="p">[</span><span class="s2">"v_max_pu"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+        <span class="s2">"min voltage (pu)"</span><span class="p">:</span> <span class="n">events</span><span class="p">[</span><span class="s2">"v_min_pu"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+        <span class="s2">"customers over limit"</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">events</span><span class="p">[</span><span class="s2">"over_steps"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+        <span class="s2">"peak transformer load (kVA)"</span><span class="p">:</span> <span class="n">report</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="s2">"s_kva"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+        <span class="s2">"converged"</span><span class="p">:</span> <span class="n">report</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<span class="n">cases</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"No control"</span><span class="p">,</span> <span class="s2">"Volt-VAr"</span><span class="p">,</span> <span class="s2">"Volt-Watt"</span><span class="p">,</span> <span class="s2">"Storage"</span><span class="p">,</span> <span class="s2">"EV charging"</span><span class="p">]</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">simulate</span><span class="p">(</span><span class="n">case</span><span class="p">)</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"case"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>max voltage (pu)</th>
+      <th>min voltage (pu)</th>
+      <th>customers over limit</th>
+      <th>peak transformer load (kVA)</th>
+      <th>converged</th>
+    </tr>
+    <tr>
+      <th>case</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>No control</th>
+      <td>1.131</td>
+      <td>1.015</td>
+      <td>142</td>
+      <td>338.523</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>Volt-VAr</th>
+      <td>1.083</td>
+      <td>1.013</td>
+      <td>0</td>
+      <td>369.747</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>Volt-Watt</th>
+      <td>1.086</td>
+      <td>1.015</td>
+      <td>0</td>
+      <td>185.998</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>Storage</th>
+      <td>1.109</td>
+      <td>0.969</td>
+      <td>76</td>
+      <td>263.789</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>EV charging</th>
+      <td>1.129</td>
+      <td>0.993</td>
+      <td>132</td>
+      <td>332.196</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Without control, 142 customers exceed 1.10 pu. The cases differ in what they cost:</p>
+<ul class="simple">
+<li><p><strong>Volt-VAr</strong> absorbs reactive power as voltage rises. It keeps every customer within the limit but
+raises the transformer’s peak load, because the reactive power flows through it.</p></li>
+<li><p><strong>Volt-Watt</strong> curtails active power as voltage rises. It also keeps every customer within the limit,
+and halves the transformer’s peak load, at the cost of generation that is not exported.</p></li>
+<li><p><strong>Storage</strong> behind every array reduces the export but does not remove it. Charging at 3 kW, a
+10 kWh battery is full after about 3.3 hours, while the arrays are still generating. Discharging in
+the evening also lowers the minimum voltage, from 1.015 to 0.969 pu.</p></li>
+<li><p><strong>EV charging</strong> at 30 % penetration barely changes the midday peak, because most charging happens
+in the evening.</p></li>
+</ul>
+</section>
+<section id="inverter-control">
+<h2>Inverter control<a class="headerlink" href="#inverter-control" title="Link to this heading">#</a></h2>
+<p>Volt-VAr and Volt-Watt are installed through <code class="docutils literal notranslate"><span class="pre">attach_generation</span></code>, with the <code class="docutils literal notranslate"><span class="pre">volt_var</span></code> or <code class="docutils literal notranslate"><span class="pre">volt_watt</span></code>
+argument, or added afterwards to every inverter with <a class="reference internal" href="../api/index.html#popo.scenarios.install_volt_var" title="popo.scenarios.install_volt_var"><code class="xref py py-func docutils literal notranslate"><span class="pre">install_volt_var()</span></code></a> and
+<a class="reference internal" href="../api/index.html#popo.scenarios.install_volt_watt" title="popo.scenarios.install_volt_watt"><code class="xref py py-func docutils literal notranslate"><span class="pre">install_volt_watt()</span></code></a>. The curves themselves are standards, described in
+<a class="reference internal" href="standards.html"><span class="doc">Standards</span></a>.</p>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>OpenDSS allows one control per inverter, so a case uses Volt-VAr or Volt-Watt, not both.</p></li>
+<li><p>Every array follows the same generation profile. The same irradiance at every roof is reasonable on
+one feeder, but the profile carries no local cloud cover.</p></li>
+<li><p>Battery dispatch follows fixed windows and does not respond to voltage. All batteries charge and
+discharge at the same times, which can move a voltage problem into the evening.</p></li>
+<li><p>The penetration is a fraction of the customers passed in. Pass only eligible customers, for example
+houses with a suitable roof, if the study needs that distinction.</p></li>
+</ul>
 </section>
 </section>
 
@@ -629,8 +882,12 @@ charging and discharging in time, which the second tutorial shows moving the ove
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#profiles-and-penetration">Profiles and penetration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mitigation">Mitigation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#household-demand">Household demand</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rooftop-solar">Rooftop solar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ev-charging-and-storage">EV charging and storage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-scenarios">Comparing scenarios</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inverter-control">Inverter control</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
 </ul>
   </nav></div>
 

@@ -881,7 +881,10 @@ voltage status.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/47b7acbc532d2887f913fc67873ccdb0b314b8324aef52dc49568ce580aa5458.png" src="../_images/47b7acbc532d2887f913fc67873ccdb0b314b8324aef52dc49568ce580aa5458.png" />
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Failed to find font weight bold for cmr10, now using 400.
+</pre></div>
+</div>
+<img alt="../_images/8d2bee4fabcde00254267191eb5e370b665b3163cdedc115d24d6ded8c00d4c9.png" src="../_images/8d2bee4fabcde00254267191eb5e370b665b3163cdedc115d24d6ded8c00d4c9.png" />
 </div>
 </div>
 </section>
@@ -1051,17 +1054,18 @@ output exceeds the three houses’ demand, so the transformer’s active power t
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">line_style</span><span class="o">.</span><span class="n">new_panel</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">bus</span><span class="p">,</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">traces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">trace</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">bus</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"House </span><span class="si">{</span><span class="n">bus</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Hour"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">trace</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">bus</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="n">line_style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"House </span><span class="si">{</span><span class="n">bus</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">hour_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">set_y_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">traces</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Voltage (pu)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">24</span><span class="p">])</span>
 <span class="n">line_style</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-<span class="n">line_style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/21f0edaeccb744c129af3daf60e88564e157304959ef531359547aeb019281be.png" src="../_images/21f0edaeccb744c129af3daf60e88564e157304959ef531359547aeb019281be.png" />
+<img alt="../_images/5245f8f58cdd5c5e193ce55bbd03ba291444cd3b488758680dc3d20f2e9e6c56.png" src="../_images/5245f8f58cdd5c5e193ce55bbd03ba291444cd3b488758680dc3d20f2e9e6c56.png" />
 </div>
 </div>
 <p>While the PV system generates, the voltage at house <code class="docutils literal notranslate"><span class="pre">E</span></code> rises to about 1.02 pu. The unbalanced flow

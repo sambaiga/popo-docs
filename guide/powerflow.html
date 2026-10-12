@@ -534,11 +534,12 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="power-flow">
 <h1>Power flow<a class="headerlink" href="#power-flow" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../api/index.html#module-popo.powerflow" title="popo.powerflow"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.powerflow</span></code></a> solves a circuit over time and reads its results back as tables.</p>
-<section id="results-as-tables">
-<h2>Results as tables<a class="headerlink" href="#results-as-tables" title="Link to this heading">#</a></h2>
-<p>Each function takes the <code class="docutils literal notranslate"><span class="pre">opendssdirect</span></code> module with a solved circuit and returns a long frame, one row per
-element and phase.</p>
+<p><a class="reference internal" href="../api/index.html#module-popo.powerflow" title="popo.powerflow"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.powerflow</span></code></a> reads a solved circuit’s results as tables and steps a circuit through time.
+It needs the <code class="docutils literal notranslate"><span class="pre">opendss</span></code> extra.</p>
+<section id="results-of-a-solved-circuit">
+<h2>Results of a solved circuit<a class="headerlink" href="#results-of-a-solved-circuit" title="Link to this heading">#</a></h2>
+<p>Each results function takes the <code class="docutils literal notranslate"><span class="pre">opendssdirect</span></code> module holding a solved circuit and returns a long
+DataFrame. <code class="docutils literal notranslate"><span class="pre">Circuit</span></code> has the same functions as methods, for example <code class="docutils literal notranslate"><span class="pre">circuit.bus_voltages()</span></code>.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Function</p></th>
@@ -547,7 +548,7 @@ element and phase.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference internal" href="../api/index.html#popo.powerflow.bus_voltages" title="popo.powerflow.bus_voltages"><code class="xref py py-func docutils literal notranslate"><span class="pre">bus_voltages()</span></code></a></p></td>
-<td><p>bus and phase, labelled by the phase it is connected on</p></td>
+<td><p>bus and connected phase</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../api/index.html#popo.powerflow.line_currents" title="popo.powerflow.line_currents"><code class="xref py py-func docutils literal notranslate"><span class="pre">line_currents()</span></code></a></p></td>
 <td><p>line and phase</p></td>
@@ -556,34 +557,484 @@ element and phase.</p>
 <td><p>line</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../api/index.html#popo.powerflow.element_powers" title="popo.powerflow.element_powers"><code class="xref py py-func docutils literal notranslate"><span class="pre">element_powers()</span></code></a></p></td>
-<td><p>element and phase, for loads, lines, transformers, PV or storage</p></td>
+<td><p>element and phase, for one element type</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../api/index.html#popo.powerflow.circuit_summary" title="popo.powerflow.circuit_summary"><code class="xref py py-func docutils literal notranslate"><span class="pre">circuit_summary()</span></code></a></p></td>
-<td><p>circuit: convergence, counts and total losses</p></td>
+<td><p>circuit, as a dictionary</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">Circuit</span></code> has the same tables as methods: <code class="docutils literal notranslate"><span class="pre">circuit.bus_voltages()</span></code> and so on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.network</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circuit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.powerflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">bus_voltages</span><span class="p">,</span> <span class="n">element_powers</span><span class="p">,</span> <span class="n">line_currents</span><span class="p">,</span> <span class="n">line_losses</span>
+
+<span class="n">FEEDER</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"tests/data/dss_uk_network_17_1_1149/master_network_17_1_1149.dss"</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">FEEDER</span><span class="p">)</span>
+<span class="n">dss</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">dss</span>
+
+<span class="n">bus_voltages</span><span class="p">(</span><span class="n">dss</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bus</th>
+      <th>phase</th>
+      <th>vmag_pu</th>
+      <th>vangle_deg</th>
+      <th>kv_base</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>sourcebus</td>
+      <td>1</td>
+      <td>1.000</td>
+      <td>-7.429e-06</td>
+      <td>6.351</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>sourcebus</td>
+      <td>2</td>
+      <td>1.000</td>
+      <td>-1.200e+02</td>
+      <td>6.351</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>sourcebus</td>
+      <td>3</td>
+      <td>1.000</td>
+      <td>1.200e+02</td>
+      <td>6.351</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1149</td>
+      <td>1</td>
+      <td>0.998</td>
+      <td>-1.921e-01</td>
+      <td>6.351</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1149</td>
+      <td>2</td>
+      <td>0.998</td>
+      <td>-1.202e+02</td>
+      <td>6.351</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Every bus is reported on the phases it is actually connected to. A single-phase customer on phase 2
+has one row, labelled phase 2.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">line_currents</span><span class="p">(</span><span class="n">dss</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>line</th>
+      <th>bus1</th>
+      <th>bus2</th>
+      <th>phase</th>
+      <th>current_a</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>sourcez</td>
+      <td>sourcebus</td>
+      <td>1149</td>
+      <td>1</td>
+      <td>11.395</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>sourcez</td>
+      <td>sourcebus</td>
+      <td>1149</td>
+      <td>2</td>
+      <td>11.920</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>sourcez</td>
+      <td>sourcebus</td>
+      <td>1149</td>
+      <td>3</td>
+      <td>9.917</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">losses</span> <span class="o">=</span> <span class="n">line_losses</span><span class="p">(</span><span class="n">dss</span><span class="p">)</span>
+<span class="n">losses</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"p_loss_kw"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>line</th>
+      <th>bus1</th>
+      <th>bus2</th>
+      <th>p_loss_kw</th>
+      <th>q_loss_kvar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>253</th>
+      <td>line1_1149_171_cmpd_94</td>
+      <td>1_1149_171_53</td>
+      <td>1_1149_171_92</td>
+      <td>1.838</td>
+      <td>1.003</td>
+    </tr>
+    <tr>
+      <th>166</th>
+      <td>line1_1149_171_cmpd_7</td>
+      <td>1_1149_171_32</td>
+      <td>1_1149_171_53</td>
+      <td>1.218</td>
+      <td>0.662</td>
+    </tr>
+    <tr>
+      <th>240</th>
+      <td>line1_1149_171_cmpd_81</td>
+      <td>1_1149_171_1</td>
+      <td>1_1149_171_32</td>
+      <td>1.178</td>
+      <td>0.809</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">element_powers</span><span class="p">(</span><span class="n">dss</span><span class="p">,</span> <span class="s2">"transformers"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>phase</th>
+      <th>p_kw</th>
+      <th>q_kvar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>tr171_11491_1</td>
+      <td>1</td>
+      <td>70.093</td>
+      <td>17.515</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>tr171_11491_1</td>
+      <td>2</td>
+      <td>69.141</td>
+      <td>30.426</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>tr171_11491_1</td>
+      <td>3</td>
+      <td>58.433</td>
+      <td>23.229</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">element_powers</span></code> accepts <code class="docutils literal notranslate"><span class="pre">&quot;lines&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;loads&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pvsystems&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;storages&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;transformers&quot;</span></code>. At this
+defined loading the transformer carries about 198 kW, unevenly split across its three phases.</p>
 </section>
 <section id="time-series">
 <h2>Time series<a class="headerlink" href="#time-series" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.powerflow.solve_time_series" title="popo.powerflow.solve_time_series"><code class="xref py py-func docutils literal notranslate"><span class="pre">solve_time_series()</span></code></a> steps the circuit through its load shapes, recording power and
-voltage at each monitored transformer’s secondary and at the feeder head. Passing <code class="docutils literal notranslate"><span class="pre">buses=</span></code> also records a
-voltage trace at every customer, in the same run.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">report</span> <span class="o">=</span> <span class="n">solve_time_series</span><span class="p">(</span><span class="n">dss</span><span class="p">,</span> <span class="n">transformers</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="mi">96</span><span class="p">,</span> <span class="n">buses</span><span class="o">=</span><span class="n">customer_buses</span><span class="p">)</span>
-<span class="n">report</span><span class="o">.</span><span class="n">require_convergence</span><span class="p">()</span>              <span class="c1"># raise if any step diverged</span>
-<span class="n">traces</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">voltage_traces</span><span class="p">()</span>          <span class="c1"># bus -&gt; voltage per step</span>
+<p><a class="reference internal" href="../api/index.html#popo.powerflow.solve_time_series" title="popo.powerflow.solve_time_series"><code class="xref py py-func docutils literal notranslate"><span class="pre">solve_time_series()</span></code></a> steps the circuit through its load shapes, by default in
+30-minute steps. Here each customer is first given a household demand profile with
+<a class="reference internal" href="../api/index.html#popo.scenarios.assign_household_profiles" title="popo.scenarios.assign_household_profiles"><code class="xref py py-func docutils literal notranslate"><span class="pre">assign_household_profiles()</span></code></a> (see <a class="reference internal" href="scenarios.html"><span class="doc">Scenarios</span></a>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.network</span><span class="w"> </span><span class="kn">import</span> <span class="n">residential_loads</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.powerflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_time_series</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.scenarios</span><span class="w"> </span><span class="kn">import</span> <span class="n">assign_household_profiles</span>
+
+<span class="n">household_pool</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s2">"tests/data/uk_household_pu_96.parquet"</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">customers</span> <span class="o">=</span> <span class="n">residential_loads</span><span class="p">(</span><span class="n">dss</span><span class="p">)</span>
+<span class="n">assign_household_profiles</span><span class="p">(</span><span class="n">dss</span><span class="p">,</span> <span class="n">customers</span><span class="p">,</span> <span class="n">household_pool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">transformers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">transformers</span><span class="p">)</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">solve_time_series</span><span class="p">(</span><span class="n">dss</span><span class="p">,</span> <span class="n">transformers</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="mi">96</span><span class="p">,</span> <span class="n">buses</span><span class="o">=</span><span class="p">[</span><span class="n">bus</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">bus</span> <span class="ow">in</span> <span class="n">customers</span><span class="p">])</span>
+<span class="n">report</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The returned <a class="reference internal" href="../api/index.html#popo.powerflow.SolveReport" title="popo.powerflow.SolveReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">SolveReport</span></code></a> carries how many steps did not converge. A diverged
-step’s customer voltage is recorded as NaN, not as the solver’s last guess.</p>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>step</th>
+      <th>trafo</th>
+      <th>kva_rating</th>
+      <th>p_kw</th>
+      <th>q_kvar</th>
+      <th>s_kva</th>
+      <th>v_lv_pu</th>
+      <th>v_lv_min_pu</th>
+      <th>head_p_kw</th>
+      <th>head_q_kvar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>tr171_11491_1</td>
+      <td>500.0</td>
+      <td>34.210</td>
+      <td>11.301</td>
+      <td>36.028</td>
+      <td>1.042</td>
+      <td>1.042</td>
+      <td>34.242</td>
+      <td>11.301</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>tr171_11491_1</td>
+      <td>500.0</td>
+      <td>30.399</td>
+      <td>10.036</td>
+      <td>32.012</td>
+      <td>1.042</td>
+      <td>1.042</td>
+      <td>30.424</td>
+      <td>10.003</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>tr171_11491_1</td>
+      <td>500.0</td>
+      <td>28.253</td>
+      <td>9.326</td>
+      <td>29.753</td>
+      <td>1.042</td>
+      <td>1.042</td>
+      <td>28.275</td>
+      <td>9.277</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>tr171_11491_1</td>
+      <td>500.0</td>
+      <td>25.759</td>
+      <td>8.500</td>
+      <td>27.125</td>
+      <td>1.042</td>
+      <td>1.042</td>
+      <td>25.777</td>
+      <td>8.431</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>tr171_11491_1</td>
+      <td>500.0</td>
+      <td>24.188</td>
+      <td>7.980</td>
+      <td>25.470</td>
+      <td>1.043</td>
+      <td>1.043</td>
+      <td>24.204</td>
+      <td>7.901</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">report.records</span></code> has one row per step and monitored transformer: the active, reactive and apparent
+power at its secondary winding, the mean and minimum voltage on its secondary busbar, and the power at
+the head of the feeder. Passing <code class="docutils literal notranslate"><span class="pre">buses</span></code> also records the voltage at each of those buses, which
+<a class="reference internal" href="../api/index.html#popo.powerflow.SolveReport.voltage_traces" title="popo.powerflow.SolveReport.voltage_traces"><code class="xref py py-meth docutils literal notranslate"><span class="pre">voltage_traces()</span></code></a> returns as one array per bus.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">line_style</span><span class="p">,</span> <span class="n">tokens</span>
+
+<span class="n">line_style</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">latex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">traces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">voltage_traces</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+<span class="n">hours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">96</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+<span class="n">busbar</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="s2">"v_lv_pu"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">line_style</span><span class="o">.</span><span class="n">new_panel</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">traces</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">traces</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">line_style</span><span class="o">.</span><span class="n">BAND_COLOR</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">"Customers"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">busbar</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">tokens</span><span class="o">.</span><span class="n">TEXT_MUTED</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">line_style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Busbar"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">48</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">48</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Hour"</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">set_y_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">traces</span><span class="p">,</span> <span class="n">busbar</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Voltage (pu)"</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c7b754c23ac71345c879f7e248bed91e5292fe87f2e75523c1e3bc79c2f717f8.png" src="../_images/c7b754c23ac71345c879f7e248bed91e5292fe87f2e75523c1e3bc79c2f717f8.png" />
+</div>
+</div>
+<p>Over the two days, customer voltages range from 1.015 to 1.041 pu, all below the busbar, which is held
+near 1.04 pu by the transformer.</p>
 </section>
-<section id="sweeps">
-<h2>Sweeps<a class="headerlink" href="#sweeps" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.powerflow.run_uk_sweep" title="popo.powerflow.run_uk_sweep"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_uk_sweep()</span></code></a> and <a class="reference internal" href="../api/index.html#popo.powerflow.run_us_sweep" title="popo.powerflow.run_us_sweep"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_us_sweep()</span></code></a> sweep EV and PV
-penetration on a feeder, building a fresh circuit per scenario from the same seed, so the customers who hold
-PV at 40 % still hold it at 60 % and the sweep is a controlled comparison.</p>
+<section id="convergence">
+<h2>Convergence<a class="headerlink" href="#convergence" title="Link to this heading">#</a></h2>
+<p>A time-series solve can fail to converge at some steps, most often when many inverters run a Volt-VAr
+control loop. OpenDSS still reports a solution at those steps, so the report records how many steps
+diverged.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">report</span><span class="o">.</span><span class="n">converged</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">diverged_steps</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">total_steps</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(True, 0, 96)
+</pre></div>
+</div>
+</div>
+</div>
+<p>At a diverged step, each recorded customer voltage is NaN. To stop a study when any step diverges, call
+<a class="reference internal" href="../api/index.html#popo.powerflow.SolveReport.require_convergence" title="popo.powerflow.SolveReport.require_convergence"><code class="xref py py-meth docutils literal notranslate"><span class="pre">require_convergence()</span></code></a>, which raises
+<a class="reference internal" href="../api/index.html#popo.powerflow.ConvergenceError" title="popo.powerflow.ConvergenceError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConvergenceError</span></code></a>.</p>
+</section>
+<section id="penetration-sweeps">
+<h2>Penetration sweeps<a class="headerlink" href="#penetration-sweeps" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../api/index.html#popo.powerflow.run_uk_sweep" title="popo.powerflow.run_uk_sweep"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_uk_sweep()</span></code></a> and <a class="reference internal" href="../api/index.html#popo.powerflow.run_us_sweep" title="popo.powerflow.run_us_sweep"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_us_sweep()</span></code></a> run a grid of EV and
+PV penetration levels on one feeder. Each scenario builds a fresh circuit from the same seed, so the
+customers who have PV at 40 % penetration still have it at 60 %. A sweep on this feeder takes several
+minutes, so it is not run on this page; the
+<span class="xref myst">time series tutorial</span> runs one.</p>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The step length is fixed for a run, 30 minutes by default. Shorter events, such as a cloud passing,
+are averaged out.</p></li>
+<li><p>A bus’s recorded voltage is the mean across its connected phases. For a single-phase customer that is
+the voltage it sees; for a three-phase bus it hides any imbalance between phases.</p></li>
+<li><p>The solver iterates the inverter control loop up to 200 times per step by default. A step that needs
+more is reported as diverged; raise <code class="docutils literal notranslate"><span class="pre">max_control_iterations</span></code> only after checking why.</p></li>
+</ul>
 </section>
 </section>
 
@@ -634,9 +1085,11 @@ PV at 40 % still hold it at 60 % and the sweep is a controlled comparison.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results-as-tables">Results as tables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results-of-a-solved-circuit">Results of a solved circuit</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series">Time series</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sweeps">Sweeps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence">Convergence</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penetration-sweeps">Penetration sweeps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
 </ul>
   </nav></div>
 

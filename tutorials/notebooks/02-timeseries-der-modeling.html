@@ -702,9 +702,9 @@ ev_pool:        (96, 200) (half-hours, real charging sessions)
 <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">household_pool</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">:</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">half_hours</span><span class="p">,</span> <span class="n">household_pool</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Hour"</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">two_day_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Demand (per unit of own mean)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"60 of 400 real UK household demand profiles, two days"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Household demand, 60 of 400"</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">format_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
@@ -716,7 +716,7 @@ ev_pool:        (96, 200) (half-hours, real charging sessions)
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/bad7f1c6e22c1f08e659820eb3c68a71012f91dd9025c56545edf68f6aeee3d6.png" src="../../_images/bad7f1c6e22c1f08e659820eb3c68a71012f91dd9025c56545edf68f6aeee3d6.png" />
+<img alt="../../_images/3f66cd758c535046e54e3fb23722963f6fea132bd63535f474bc90c81a03cd6c.png" src="../../_images/3f66cd758c535046e54e3fb23722963f6fea132bd63535f474bc90c81a03cd6c.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Across all 400 households: min peak 0.51, max peak 16.35 (per unit of each household's own mean): no two households agree on when or how hard they peak.
 </pre></div>
 </div>
@@ -729,9 +729,9 @@ ev_pool:        (96, 200) (half-hours, real charging sessions)
 <span class="n">ev_sample</span> <span class="o">=</span> <span class="n">rng_ev</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">ev_pool</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ev_sample</span><span class="p">:</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">half_hours</span><span class="p">,</span> <span class="n">ev_pool</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Hour"</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">two_day_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Charging power (kW)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"40 of 200 real EV charging sessions, two days"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"EV charging, 40 of 200"</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">format_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
@@ -742,7 +742,7 @@ ev_pool:        (96, 200) (half-hours, real charging sessions)
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/fb869ed2a111d08620f62cc0811301bdabcadf5f40e74f673ac9d3e5e7405e7f.png" src="../../_images/fb869ed2a111d08620f62cc0811301bdabcadf5f40e74f673ac9d3e5e7405e7f.png" />
+<img alt="../../_images/29df72dab046d5d205a84677cb0ae9f9af6a3001892b133a4c192f0591a82f24.png" src="../../_images/29df72dab046d5d205a84677cb0ae9f9af6a3001892b133a4c192f0591a82f24.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>EV charging power: 7.40 kW peak (Level 2, single session), 78% of columns ever draw power in this window.
 </pre></div>
 </div>
@@ -913,12 +913,12 @@ Max gap between live-circuit power and loadshape x rated kW: 6.77e-06 kW (solver
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span> <span class="o">*</span> <span class="mf">0.9</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span> <span class="o">*</span> <span class="n">style</span><span class="o">.</span><span class="n">ASPECT</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">half_hours</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="s2">"head_p_kw"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"active (kW)"</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">half_hours</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="s2">"head_q_kvar"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">HIGHLIGHT</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"reactive (kvar)"</span>
 <span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Real two-day simulation: no DER attached"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"No DER attached"</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Feeder-head power"</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">format_axes</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -927,7 +927,7 @@ Max gap between live-circuit power and loadshape x rated kW: 6.77e-06 kW (solver
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">half_hours</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="s2">"v_lv_min_pu"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">TEXT_MUTED</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"min"</span>
 <span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Hour"</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">two_day_axis</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"LV busbar voltage (pu)"</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">format_axes</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -939,7 +939,7 @@ Max gap between live-circuit power and loadshape x rated kW: 6.77e-06 kW (solver
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/89b1c9579efa9f841aad5663fe6e7fffae8b8568d3726fcec9f88c09ca2ac3ed.png" src="../../_images/89b1c9579efa9f841aad5663fe6e7fffae8b8568d3726fcec9f88c09ca2ac3ed.png" />
+<img alt="../../_images/4e920ea1e8735c1d7271192187c03d6b7c9f20409968c443646b5c5df83db942.png" src="../../_images/4e920ea1e8735c1d7271192187c03d6b7c9f20409968c443646b5c5df83db942.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>EN 50160: compliant; 100.00 % within band, range 1.0391 to 1.0426 pu
 </pre></div>
 </div>
@@ -1005,9 +1005,9 @@ Steps with real irradiance present but zeroed out by the 20% default: 26.
     <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span>
     <span class="n">label</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">tex_safe</span><span class="p">(</span><span class="s2">"5% (popo's attach_generation)"</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Hour"</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">two_day_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"PV export (kW)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">tex_safe</span><span class="p">(</span><span class="s2">"A real PV profile through two </span><span class="si">%c</span><span class="s2">utin/</span><span class="si">%c</span><span class="s2">utout settings"</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"PV output, two cut-in settings"</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">format_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
@@ -1015,7 +1015,7 @@ Steps with real irradiance present but zeroed out by the 20% default: 26.
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/bdbfb8feddefacd7fc134aae6951407483ee2719f90381a6191fdb68d1793849.png" src="../../_images/bdbfb8feddefacd7fc134aae6951407483ee2719f90381a6191fdb68d1793849.png" />
+<img alt="../../_images/c5f34e1d8e4face88e6b8dfcaadeda2917ec088a06d2a207a9966b31e33edce2.png" src="../../_images/c5f34e1d8e4face88e6b8dfcaadeda2917ec088a06d2a207a9966b31e33edce2.png" />
 </div>
 </div>
 <blockquote>
@@ -1129,12 +1129,12 @@ PV penetration 100%: EN 50160: compliant; 100.00 % within band, range 1.0357 to 
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hc_plot</span> <span class="o">=</span> <span class="n">hc_summary</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="n">hc_plot</span><span class="p">[</span><span class="s2">"pv_pen_pct"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">hc_plot</span><span class="p">[</span><span class="s2">"pv_pen"</span><span class="p">]</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span> <span class="o">*</span> <span class="mf">0.55</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span> <span class="o">*</span> <span class="n">style</span><span class="o">.</span><span class="n">ASPECT</span><span class="p">))</span>
 <span class="n">style</span><span class="o">.</span><span class="n">plot_penetration_sweep</span><span class="p">(</span>
     <span class="n">hc_plot</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s2">"pv_pen_pct"</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="s2">"vmax_pu"</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Maximum LV busbar voltage vs. PV penetration"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Maximum busbar voltage"</span><span class="p">,</span>
     <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Voltage (pu)"</span><span class="p">,</span>
     <span class="n">hlines</span><span class="o">=</span><span class="p">{</span><span class="s2">"EN 50160 upper (1.10 pu)"</span><span class="p">:</span> <span class="n">limits</span><span class="o">.</span><span class="n">upper_pu</span><span class="p">},</span>
     <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -1143,7 +1143,7 @@ PV penetration 100%: EN 50160: compliant; 100.00 % within band, range 1.0357 to 
     <span class="n">hc_plot</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s2">"pv_pen_pct"</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="s2">"utilization_pct"</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Peak transformer utilization vs. PV penetration"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Peak transformer loading"</span><span class="p">,</span>
     <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Utilization (</span><span class="si">% o</span><span class="s2">f 500 kVA)"</span><span class="p">,</span>
     <span class="n">hlines</span><span class="o">=</span><span class="p">{</span><span class="s2">"100</span><span class="si">% r</span><span class="s2">ated"</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">},</span>
     <span class="n">from_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1154,7 +1154,7 @@ PV penetration 100%: EN 50160: compliant; 100.00 % within band, range 1.0357 to 
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/b76a946455dce52de9e688f628a1e512bd5b443333269838dc0acc6bcd9621d9.png" src="../../_images/b76a946455dce52de9e688f628a1e512bd5b443333269838dc0acc6bcd9621d9.png" />
+<img alt="../../_images/3efc8a09868cf96385495b11c9ff8cdad18b9b1f36b77df8897d3702cbeba8c7.png" src="../../_images/3efc8a09868cf96385495b11c9ff8cdad18b9b1f36b77df8897d3702cbeba8c7.png" />
 </div>
 </div>
 <p style="text-align: justify">At the substation, voltage is not the constraint: the LV busbar stays compliant with EN 50160 at every penetration, never above 1.048 pu. Transformer loading is: peak apparent power reaches 86% of the 500 kVA rating at 80% PV penetration and 117% at 100%, so the rating is crossed somewhere between the two.</p>
@@ -1225,67 +1225,67 @@ Volt-Watt (IEEE 1547): 0 of 96 steps diverged (0.00%)
 Storage (3 kW, 10 kWh): 0 of 96 steps diverged (0.00%)
 </pre></div>
 </div>
-<div class="output text_html"><div id="febiwihujc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
+<div class="output text_html"><div id="neafyanyli" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
 <style>
-#febiwihujc table {
+#neafyanyli table {
           font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#febiwihujc thead, tbody, tfoot, tr, td, th { border-style: none; }
+#neafyanyli thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#febiwihujc p { margin: 0; padding: 0; }
- #febiwihujc .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #febiwihujc .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #febiwihujc .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #febiwihujc .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #febiwihujc .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #febiwihujc .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #febiwihujc .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #febiwihujc .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #febiwihujc .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #febiwihujc .gt_column_spanner_outer:first-child { padding-left: 0; }
- #febiwihujc .gt_column_spanner_outer:last-child { padding-right: 0; }
- #febiwihujc .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
- #febiwihujc .gt_spanner_row { border-bottom-style: hidden; }
- #febiwihujc .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #febiwihujc .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #febiwihujc .gt_from_md> :first-child { margin-top: 0; }
- #febiwihujc .gt_from_md> :last-child { margin-bottom: 0; }
- #febiwihujc .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #febiwihujc .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #febiwihujc .gt_indent_1 { text-indent: 5px; }
- #febiwihujc .gt_indent_2 { text-indent: calc(5px * 2); }
- #febiwihujc .gt_indent_3 { text-indent: calc(5px * 3); }
- #febiwihujc .gt_indent_4 { text-indent: calc(5px * 4); }
- #febiwihujc .gt_indent_5 { text-indent: calc(5px * 5); }
- #febiwihujc .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #febiwihujc .gt_row_group_first td { border-top-width: 2px; }
- #febiwihujc .gt_row_group_first th { border-top-width: 2px; }
- #febiwihujc .gt_striped { color: #2d3748; background-color: #F4F4F4; }
- #febiwihujc .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
- #febiwihujc .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
- #febiwihujc .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
- #febiwihujc .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #febiwihujc .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
- #febiwihujc .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
- #febiwihujc .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
- #febiwihujc .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #febiwihujc .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #febiwihujc .gt_left { text-align: left; }
- #febiwihujc .gt_center { text-align: center; }
- #febiwihujc .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #febiwihujc .gt_font_normal { font-weight: normal; }
- #febiwihujc .gt_font_bold { font-weight: bold; }
- #febiwihujc .gt_font_italic { font-style: italic; }
- #febiwihujc .gt_super { font-size: 65%; }
- #febiwihujc .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #febiwihujc .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
- #febiwihujc .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #febiwihujc .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #febiwihujc .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #febiwihujc .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#neafyanyli p { margin: 0; padding: 0; }
+ #neafyanyli .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #neafyanyli .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #neafyanyli .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #neafyanyli .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #neafyanyli .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #neafyanyli .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #neafyanyli .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #neafyanyli .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #neafyanyli .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #neafyanyli .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #neafyanyli .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #neafyanyli .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #neafyanyli .gt_spanner_row { border-bottom-style: hidden; }
+ #neafyanyli .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #neafyanyli .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #neafyanyli .gt_from_md> :first-child { margin-top: 0; }
+ #neafyanyli .gt_from_md> :last-child { margin-bottom: 0; }
+ #neafyanyli .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #neafyanyli .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #neafyanyli .gt_indent_1 { text-indent: 5px; }
+ #neafyanyli .gt_indent_2 { text-indent: calc(5px * 2); }
+ #neafyanyli .gt_indent_3 { text-indent: calc(5px * 3); }
+ #neafyanyli .gt_indent_4 { text-indent: calc(5px * 4); }
+ #neafyanyli .gt_indent_5 { text-indent: calc(5px * 5); }
+ #neafyanyli .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #neafyanyli .gt_row_group_first td { border-top-width: 2px; }
+ #neafyanyli .gt_row_group_first th { border-top-width: 2px; }
+ #neafyanyli .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #neafyanyli .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #neafyanyli .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #neafyanyli .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #neafyanyli .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #neafyanyli .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #neafyanyli .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #neafyanyli .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #neafyanyli .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #neafyanyli .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #neafyanyli .gt_left { text-align: left; }
+ #neafyanyli .gt_center { text-align: center; }
+ #neafyanyli .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #neafyanyli .gt_font_normal { font-weight: normal; }
+ #neafyanyli .gt_font_bold { font-weight: bold; }
+ #neafyanyli .gt_font_italic { font-style: italic; }
+ #neafyanyli .gt_super { font-size: 65%; }
+ #neafyanyli .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #neafyanyli .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #neafyanyli .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #neafyanyli .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #neafyanyli .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #neafyanyli .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
@@ -1342,13 +1342,13 @@ Storage (3 kW, 10 kWh): 0 of 96 steps diverged (0.00%)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">panel_size</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">WIDE</span><span class="p">)</span>
 <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">style</span><span class="o">.</span><span class="n">TEXT_MUTED</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">HIGHLIGHT</span><span class="p">]</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="n">mitigation_df</span><span class="p">[</span><span class="s2">"scenario"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">" ("</span><span class="p">,</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">("</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">mitigation_df</span><span class="p">[</span><span class="s2">"utilization_pct"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">reference_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">tex_safe</span><span class="p">(</span><span class="s2">"100</span><span class="si">% r</span><span class="s2">ated"</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">tex_safe</span><span class="p">(</span><span class="s2">"Peak transformer utilization (%)"</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">tex_safe</span><span class="p">(</span><span class="s2">"Each lever's effect on thermal loading at 80% PV penetration"</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">tex_safe</span><span class="p">(</span><span class="s2">"Thermal loading at 80% PV"</span><span class="p">))</span>
 <span class="n">style</span><span class="o">.</span><span class="n">format_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
@@ -1356,7 +1356,7 @@ Storage (3 kW, 10 kWh): 0 of 96 steps diverged (0.00%)
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/e554b5cd989ae1e1da525dee178339b76f24100278f1b22c359088059b1eb6c2.png" src="../../_images/e554b5cd989ae1e1da525dee178339b76f24100278f1b22c359088059b1eb6c2.png" />
+<img alt="../../_images/aa199bd88c3b3dbaca59a79bbd2f04827825826e8ce34186277522a9fa141854.png" src="../../_images/aa199bd88c3b3dbaca59a79bbd2f04827825826e8ce34186277522a9fa141854.png" />
 </div>
 </div>
 <p style="text-align: justify">The three levers act on different things:</p>
@@ -1382,67 +1382,67 @@ Storage (3 kW, 10 kWh): 0 of 96 steps diverged (0.00%)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div id="gvwwanafxc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
+<div class="output text_html"><div id="drgebtjuvo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
 <style>
-#gvwwanafxc table {
+#drgebtjuvo table {
           font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#gvwwanafxc thead, tbody, tfoot, tr, td, th { border-style: none; }
+#drgebtjuvo thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#gvwwanafxc p { margin: 0; padding: 0; }
- #gvwwanafxc .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #gvwwanafxc .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #gvwwanafxc .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #gvwwanafxc .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #gvwwanafxc .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #gvwwanafxc .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #gvwwanafxc .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #gvwwanafxc .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #gvwwanafxc .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #gvwwanafxc .gt_column_spanner_outer:first-child { padding-left: 0; }
- #gvwwanafxc .gt_column_spanner_outer:last-child { padding-right: 0; }
- #gvwwanafxc .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
- #gvwwanafxc .gt_spanner_row { border-bottom-style: hidden; }
- #gvwwanafxc .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #gvwwanafxc .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #gvwwanafxc .gt_from_md> :first-child { margin-top: 0; }
- #gvwwanafxc .gt_from_md> :last-child { margin-bottom: 0; }
- #gvwwanafxc .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #gvwwanafxc .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #gvwwanafxc .gt_indent_1 { text-indent: 5px; }
- #gvwwanafxc .gt_indent_2 { text-indent: calc(5px * 2); }
- #gvwwanafxc .gt_indent_3 { text-indent: calc(5px * 3); }
- #gvwwanafxc .gt_indent_4 { text-indent: calc(5px * 4); }
- #gvwwanafxc .gt_indent_5 { text-indent: calc(5px * 5); }
- #gvwwanafxc .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #gvwwanafxc .gt_row_group_first td { border-top-width: 2px; }
- #gvwwanafxc .gt_row_group_first th { border-top-width: 2px; }
- #gvwwanafxc .gt_striped { color: #2d3748; background-color: #F4F4F4; }
- #gvwwanafxc .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
- #gvwwanafxc .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
- #gvwwanafxc .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
- #gvwwanafxc .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #gvwwanafxc .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
- #gvwwanafxc .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
- #gvwwanafxc .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
- #gvwwanafxc .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #gvwwanafxc .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #gvwwanafxc .gt_left { text-align: left; }
- #gvwwanafxc .gt_center { text-align: center; }
- #gvwwanafxc .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #gvwwanafxc .gt_font_normal { font-weight: normal; }
- #gvwwanafxc .gt_font_bold { font-weight: bold; }
- #gvwwanafxc .gt_font_italic { font-style: italic; }
- #gvwwanafxc .gt_super { font-size: 65%; }
- #gvwwanafxc .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #gvwwanafxc .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
- #gvwwanafxc .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #gvwwanafxc .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #gvwwanafxc .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #gvwwanafxc .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#drgebtjuvo p { margin: 0; padding: 0; }
+ #drgebtjuvo .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #drgebtjuvo .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #drgebtjuvo .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #drgebtjuvo .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #drgebtjuvo .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #drgebtjuvo .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #drgebtjuvo .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #drgebtjuvo .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #drgebtjuvo .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #drgebtjuvo .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #drgebtjuvo .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #drgebtjuvo .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #drgebtjuvo .gt_spanner_row { border-bottom-style: hidden; }
+ #drgebtjuvo .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #drgebtjuvo .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #drgebtjuvo .gt_from_md> :first-child { margin-top: 0; }
+ #drgebtjuvo .gt_from_md> :last-child { margin-bottom: 0; }
+ #drgebtjuvo .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #drgebtjuvo .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #drgebtjuvo .gt_indent_1 { text-indent: 5px; }
+ #drgebtjuvo .gt_indent_2 { text-indent: calc(5px * 2); }
+ #drgebtjuvo .gt_indent_3 { text-indent: calc(5px * 3); }
+ #drgebtjuvo .gt_indent_4 { text-indent: calc(5px * 4); }
+ #drgebtjuvo .gt_indent_5 { text-indent: calc(5px * 5); }
+ #drgebtjuvo .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #drgebtjuvo .gt_row_group_first td { border-top-width: 2px; }
+ #drgebtjuvo .gt_row_group_first th { border-top-width: 2px; }
+ #drgebtjuvo .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #drgebtjuvo .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #drgebtjuvo .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #drgebtjuvo .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #drgebtjuvo .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #drgebtjuvo .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #drgebtjuvo .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #drgebtjuvo .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #drgebtjuvo .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #drgebtjuvo .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #drgebtjuvo .gt_left { text-align: left; }
+ #drgebtjuvo .gt_center { text-align: center; }
+ #drgebtjuvo .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #drgebtjuvo .gt_font_normal { font-weight: normal; }
+ #drgebtjuvo .gt_font_bold { font-weight: bold; }
+ #drgebtjuvo .gt_font_italic { font-style: italic; }
+ #drgebtjuvo .gt_super { font-size: 65%; }
+ #drgebtjuvo .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #drgebtjuvo .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #drgebtjuvo .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #drgebtjuvo .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #drgebtjuvo .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #drgebtjuvo .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
@@ -1586,14 +1586,14 @@ Storage (3 kW, 10 kWh): 0 of 96 steps diverged (0.00%)
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">worst_bus</span> <span class="o">=</span> <span class="n">worst_customers</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">panel_size</span><span class="p">())</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">WIDE</span><span class="p">)</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">report</span><span class="p">),</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">reports</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">colors</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">half_hours</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">voltage_traces</span><span class="p">()[</span><span class="n">worst_bus</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">reference_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">limits</span><span class="o">.</span><span class="n">upper_pu</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"EN 50160 upper (</span><span class="si">{</span><span class="n">limits</span><span class="o">.</span><span class="n">upper_pu</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> pu)"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">volt_watt</span><span class="o">.</span><span class="n">start_pu</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">TEXT_MUTED</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Volt-Watt starts"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Hour"</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">two_day_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Voltage (pu)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">tex_safe</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Voltage at the highest-voltage customer, bus </span><span class="si">{</span><span class="n">worst_bus</span><span class="si">}</span><span class="s2">"</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Most exposed customer"</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">format_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
@@ -1601,7 +1601,7 @@ Storage (3 kW, 10 kWh): 0 of 96 steps diverged (0.00%)
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/0b3d4468a9392246f791267d7508db5e6cd23493aa4704a359ece7fbfb37080c.png" src="../../_images/0b3d4468a9392246f791267d7508db5e6cd23493aa4704a359ece7fbfb37080c.png" />
+<img alt="../../_images/928901ad965dc3bcea7aac503874f5840a6e72c71a58b6deb2ad0a2271d0e702.png" src="../../_images/928901ad965dc3bcea7aac503874f5840a6e72c71a58b6deb2ad0a2271d0e702.png" />
 </div>
 </div>
 <p style="text-align: justify">With no control, the busbar never passes 1.048 pu, yet the customers at the end of the longest service sit above EN 50160's 1.10 pu bound for 9 consecutive half-hours (four and a half hours) around midday on the second day, reaching 1.156 pu. A substation-only view would have reported this feeder compliant.</p>
@@ -1651,12 +1651,12 @@ ev_pen
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ev_plot</span> <span class="o">=</span> <span class="n">ev_summary</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="n">ev_plot</span><span class="p">[</span><span class="s2">"ev_pen_pct"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">ev_plot</span><span class="p">[</span><span class="s2">"ev_pen"</span><span class="p">]</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span> <span class="o">*</span> <span class="mf">0.55</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span> <span class="o">*</span> <span class="n">style</span><span class="o">.</span><span class="n">ASPECT</span><span class="p">))</span>
 <span class="n">style</span><span class="o">.</span><span class="n">plot_penetration_sweep</span><span class="p">(</span>
     <span class="n">ev_plot</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s2">"ev_pen_pct"</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="s2">"vmin_pu"</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Minimum LV busbar voltage vs. EV adoption"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Minimum busbar voltage"</span><span class="p">,</span>
     <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Voltage (pu)"</span><span class="p">,</span>
     <span class="n">hlines</span><span class="o">=</span><span class="p">{</span><span class="s2">"EN 50160 lower (0.90 pu)"</span><span class="p">:</span> <span class="n">limits</span><span class="o">.</span><span class="n">lower_pu</span><span class="p">},</span>
     <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -1665,7 +1665,7 @@ ev_pen
     <span class="n">ev_plot</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s2">"ev_pen_pct"</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="s2">"utilization_pct"</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Peak transformer utilization vs. EV adoption"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Peak transformer loading"</span><span class="p">,</span>
     <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Utilization (</span><span class="si">% o</span><span class="s2">f 500 kVA)"</span><span class="p">,</span>
     <span class="n">hlines</span><span class="o">=</span><span class="p">{</span><span class="s2">"100</span><span class="si">% r</span><span class="s2">ated"</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">},</span>
     <span class="n">from_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1676,7 +1676,7 @@ ev_pen
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/da22540851b6d15d1d8605e4803612d491865ea33cfcbee07a27165822e3d098.png" src="../../_images/da22540851b6d15d1d8605e4803612d491865ea33cfcbee07a27165822e3d098.png" />
+<img alt="../../_images/06422f7047bef66309df5a99dbfd19baf5effcf3eb6699ea8b4cfde58f622ebd.png" src="../../_images/06422f7047bef66309df5a99dbfd19baf5effcf3eb6699ea8b4cfde58f622ebd.png" />
 </div>
 </div>
 <p style="text-align: justify">Even at 100% adoption over these two days, neither constraint comes close to its limit: busbar voltage stays above 1.02 pu, and peak transformer loading reaches 64% of rating. Diversity is doing the work: real sessions do not all start at once, and 200 sessions drawn independently rarely coincide at their individual peaks.</p><section id="the-stress-test-uncoordinated-charging">

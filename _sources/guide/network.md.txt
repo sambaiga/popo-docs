@@ -1,39 +1,125 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python3
+---
+
 # Network
 
-{py:mod}`popo.network` covers the circuit as defined: buses, lines, transformers, loads and the topology
-that connects them. Solving it is {doc}`powerflow`.
+{py:mod}`popo.network` describes a circuit as it is defined: its lines, loads, transformers, PV systems
+and storage units. Solving the circuit and reading its results is covered in {doc}`powerflow`.
 
-## A handle on the compiled circuit
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-{py:class}`~popo.network.Circuit` is a view of whatever is compiled in the OpenDSS engine. It does not
-replace `opendssdirect`: circuits are still built with OpenDSS commands, through
-{py:meth}`~popo.network.Circuit.command` or the module itself.
+import os
 
-```python
-from popo.network import Circuit
+os.chdir("../..")  # run from the repository root, where tests/data is
 
-circuit = Circuit.load("feeder/Master.dss")    # Clear, Redirect and solve
-lines = pd.DataFrame(circuit.lines)              # one record per line
-transformers = list(circuit.transformers)        # popo.network.Transformer records
-circuit.command("? Line.A_B.length")             # anything not covered by a record
+import pandas as pd
+
+pd.set_option("display.precision", 3)
 ```
 
-OpenDSS runs one circuit per process, so a `Circuit` always sees the circuit compiled now: compiling
-another changes what every handle sees.
+## Loading a circuit
 
-## Transformers and customers
+{py:meth}`Circuit.load <popo.network.Circuit.load>` clears the OpenDSS engine, compiles a master file
+and solves it. The returned {py:class}`~popo.network.Circuit` is a view of the compiled circuit.
 
-- {py:func}`~popo.network.read_transformers` reads a `Transformers.dss` definition file into a frame,
-  keeping the nameplate and normal thermal ratings distinct. `Circuit.transformers` yields the same
-  records from a live circuit.
-- {py:func}`~popo.network.residential_loads` lists a feeder's low-voltage residential loads as
-  `(load name, bus)` pairs, the form every scenario function takes.
+```{code-cell} ipython3
+from pathlib import Path
 
-## Choosing a feeder on evidence
+from popo.network import Circuit
 
-- {py:func}`~popo.network.profile_circuit` describes a circuit at its defined loading: customers, buses,
-  rating, single-phase share and voltage range.
-- {py:func}`~popo.network.measure_sensitivity` raises the loading and re-solves, measuring how far the
-  worst bus voltage moves per megawatt: the quantity that decides whether a voltage constraint binds.
-- {py:func}`~popo.network.screen` steps a large feeder briefly to find the transformers that actually
-  bind, and {py:func}`~popo.network.select_by_utilisation` picks the ones worth monitoring.
+FEEDER = Path("tests/data/dss_uk_network_17_1_1149/master_network_17_1_1149.dss")
+
+circuit = Circuit.load(FEEDER)
+circuit.summary()
+```
+
+To build a circuit from OpenDSS commands instead of a file, create `Circuit()` and pass each command to
+{py:meth}`~popo.network.Circuit.command`, as the [quickstart](../getting-started/quickstart.md) does.
+
+## Elements as records
+
+The circuit yields its elements as records: {py:attr}`~popo.network.Circuit.lines`,
+{py:attr}`~popo.network.Circuit.loads`, {py:attr}`~popo.network.Circuit.transformers`,
+{py:attr}`~popo.network.Circuit.pvsystems` and {py:attr}`~popo.network.Circuit.storage_units`. Each
+record is a small dataclass, so a collection converts directly to a DataFrame.
+
+```{code-cell} ipython3
+lines = pd.DataFrame(circuit.lines)
+lines.head()
+```
+
+```{code-cell} ipython3
+list(circuit.transformers)
+```
+
+A {py:class}`~popo.network.Transformer` keeps its nameplate rating (500 kVA here) separate from its
+normal thermal rating (550 kVA), because a loading study needs to know which of the two it is comparing
+against.
+
+For a property that no record covers, {py:meth}`~popo.network.Circuit.command` passes an OpenDSS command
+through and returns its answer:
+
+```{code-cell} ipython3
+circuit.command("? Line.line1_1149_171_55.length")
+```
+
+## Customers
+
+{py:func}`~popo.network.residential_loads` lists a feeder's low-voltage residential loads as
+`(load name, bus)` pairs. Every scenario function in {doc}`scenarios` takes its customers in this form.
+
+```{code-cell} ipython3
+from popo.network import residential_loads
+
+customers = residential_loads(circuit.dss)
+len(customers), customers[:3]
+```
+
+## Describing a feeder
+
+{py:func}`~popo.network.profile_circuit` summarises a circuit at its defined loading.
+
+```{code-cell} ipython3
+from dataclasses import asdict
+
+from popo.network import measure_sensitivity, profile_circuit
+
+pd.Series(asdict(profile_circuit(circuit.dss, "UK feeder")))
+```
+
+{py:func}`~popo.network.measure_sensitivity` raises the loading, solves again and measures how far the
+lowest bus voltage moves per megawatt of substation demand. A high sensitivity means a voltage limit is
+likely to bind before the transformer's thermal rating does.
+
+```{code-cell} ipython3
+pd.Series(asdict(measure_sensitivity(circuit.dss, "UK feeder")))
+```
+
+Doubling the loading lowers the minimum voltage from 0.942 pu to 0.857 pu, a sensitivity of 0.45 pu per
+MW.
+
+## Feeders with many transformers
+
+A North American feeder can have hundreds of pole-mounted transformers. Recording all of them in every
+scenario is slow, so popo provides three steps for choosing which to monitor:
+
+- {py:func}`~popo.network.read_transformers` reads the transformers from an OpenDSS definition file,
+  keeping the nameplate and normal ratings separate.
+- {py:func}`~popo.network.screen` steps the feeder through a short window and returns each transformer's
+  peak apparent power and voltage extremes.
+- {py:func}`~popo.network.select_by_utilisation` takes the most heavily loaded transformers from the
+  screen, where a thermal limit can bind, and keeps that selection fixed across scenarios so a sweep
+  compares the same assets.
+
+## Limitations
+
+- OpenDSS runs one circuit per process. A `Circuit` is a view of whatever is compiled now, so loading
+  another circuit changes what every existing `Circuit` sees.
+- Records describe the circuit as defined, at its nominal ratings. Values that change during a
+  simulation, such as a load's demand at a given step, are read from {doc}`powerflow`.
+- `residential_loads` identifies customers by their nominal voltage, below 0.3 kV by default. A feeder
+  modelled with a different convention needs a different `secondary_kv`.

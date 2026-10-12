@@ -1,39 +1,151 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python3
+---
+
 # Power flow
 
-{py:mod}`popo.powerflow` solves a circuit over time and reads its results back as tables.
+{py:mod}`popo.powerflow` reads a solved circuit's results as tables and steps a circuit through time.
+It needs the `opendss` extra.
 
-## Results as tables
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-Each function takes the `opendssdirect` module with a solved circuit and returns a long frame, one row per
-element and phase.
+import os
+
+os.chdir("../..")  # run from the repository root, where tests/data is
+
+import pandas as pd
+
+pd.set_option("display.precision", 3)
+```
+
+## Results of a solved circuit
+
+Each results function takes the `opendssdirect` module holding a solved circuit and returns a long
+DataFrame. `Circuit` has the same functions as methods, for example `circuit.bus_voltages()`.
 
 | Function | One row per |
 |---|---|
-| {py:func}`~popo.powerflow.bus_voltages` | bus and phase, labelled by the phase it is connected on |
+| {py:func}`~popo.powerflow.bus_voltages` | bus and connected phase |
 | {py:func}`~popo.powerflow.line_currents` | line and phase |
 | {py:func}`~popo.powerflow.line_losses` | line |
-| {py:func}`~popo.powerflow.element_powers` | element and phase, for loads, lines, transformers, PV or storage |
-| {py:func}`~popo.powerflow.circuit_summary` | circuit: convergence, counts and total losses |
+| {py:func}`~popo.powerflow.element_powers` | element and phase, for one element type |
+| {py:func}`~popo.powerflow.circuit_summary` | circuit, as a dictionary |
 
-`Circuit` has the same tables as methods: `circuit.bus_voltages()` and so on.
+```{code-cell} ipython3
+from pathlib import Path
+
+from popo.network import Circuit
+from popo.powerflow import bus_voltages, element_powers, line_currents, line_losses
+
+FEEDER = Path("tests/data/dss_uk_network_17_1_1149/master_network_17_1_1149.dss")
+circuit = Circuit.load(FEEDER)
+dss = circuit.dss
+
+bus_voltages(dss).head()
+```
+
+Every bus is reported on the phases it is actually connected to. A single-phase customer on phase 2
+has one row, labelled phase 2.
+
+```{code-cell} ipython3
+line_currents(dss).head(3)
+```
+
+```{code-cell} ipython3
+losses = line_losses(dss)
+losses.sort_values("p_loss_kw", ascending=False).head(3)
+```
+
+```{code-cell} ipython3
+element_powers(dss, "transformers")
+```
+
+`element_powers` accepts `"lines"`, `"loads"`, `"pvsystems"`, `"storages"` and `"transformers"`. At this
+defined loading the transformer carries about 198 kW, unevenly split across its three phases.
 
 ## Time series
 
-{py:func}`~popo.powerflow.solve_time_series` steps the circuit through its load shapes, recording power and
-voltage at each monitored transformer's secondary and at the feeder head. Passing `buses=` also records a
-voltage trace at every customer, in the same run.
+{py:func}`~popo.powerflow.solve_time_series` steps the circuit through its load shapes, by default in
+30-minute steps. Here each customer is first given a household demand profile with
+{py:func}`~popo.scenarios.assign_household_profiles` (see {doc}`scenarios`).
 
-```python
-report = solve_time_series(dss, transformers, horizon=96, buses=customer_buses)
-report.require_convergence()              # raise if any step diverged
-traces = report.voltage_traces()          # bus -> voltage per step
+```{code-cell} ipython3
+import numpy as np
+
+from popo.network import residential_loads
+from popo.powerflow import solve_time_series
+from popo.scenarios import assign_household_profiles
+
+household_pool = pd.read_parquet("tests/data/uk_household_pu_96.parquet").to_numpy()
+customers = residential_loads(dss)
+assign_household_profiles(dss, customers, household_pool, np.random.default_rng(1))
+
+transformers = list(circuit.transformers)
+report = solve_time_series(dss, transformers, horizon=96, buses=[bus for _, bus in customers])
+report.records.head()
 ```
 
-The returned {py:class}`~popo.powerflow.SolveReport` carries how many steps did not converge. A diverged
-step's customer voltage is recorded as NaN, not as the solver's last guess.
+`report.records` has one row per step and monitored transformer: the active, reactive and apparent
+power at its secondary winding, the mean and minimum voltage on its secondary busbar, and the power at
+the head of the feeder. Passing `buses` also records the voltage at each of those buses, which
+{py:meth}`~popo.powerflow.SolveReport.voltage_traces` returns as one array per bus.
 
-## Sweeps
+```{code-cell} ipython3
+from popo.plotting import line_style, tokens
 
-{py:func}`~popo.powerflow.run_uk_sweep` and {py:func}`~popo.powerflow.run_us_sweep` sweep EV and PV
-penetration on a feeder, building a fresh circuit per scenario from the same seed, so the customers who hold
-PV at 40 % still hold it at 60 % and the sweep is a controlled comparison.
+line_style.configure(latex=False)
+traces = np.array(list(report.voltage_traces().values()))
+hours = np.arange(96) / 2
+
+busbar = report.records["v_lv_pu"].to_numpy()
+
+fig, ax = line_style.new_panel()
+ax.fill_between(hours, traces.min(axis=0), traces.max(axis=0), color=line_style.BAND_COLOR, lw=0,
+                label="Customers")
+ax.plot(hours, busbar, color=tokens.TEXT_MUTED, lw=line_style.LINE_WIDTH, label="Busbar")
+ax.set_xticks([0, 12, 24, 36, 48])
+ax.set_xlim(0, 48)
+ax.set_xlabel("Hour")
+line_style.set_y_axis(ax, traces, busbar)
+ax.set_ylabel("Voltage (pu)")
+line_style.finish(ax)
+line_style.legend_below(ax, ncol=2)
+line_style.show(fig)
+```
+
+Over the two days, customer voltages range from 1.015 to 1.041 pu, all below the busbar, which is held
+near 1.04 pu by the transformer.
+
+## Convergence
+
+A time-series solve can fail to converge at some steps, most often when many inverters run a Volt-VAr
+control loop. OpenDSS still reports a solution at those steps, so the report records how many steps
+diverged.
+
+```{code-cell} ipython3
+report.converged, report.diverged_steps, report.total_steps
+```
+
+At a diverged step, each recorded customer voltage is NaN. To stop a study when any step diverges, call
+{py:meth}`~popo.powerflow.SolveReport.require_convergence`, which raises
+{py:class}`~popo.powerflow.ConvergenceError`.
+
+## Penetration sweeps
+
+{py:func}`~popo.powerflow.run_uk_sweep` and {py:func}`~popo.powerflow.run_us_sweep` run a grid of EV and
+PV penetration levels on one feeder. Each scenario builds a fresh circuit from the same seed, so the
+customers who have PV at 40 % penetration still have it at 60 %. A sweep on this feeder takes several
+minutes, so it is not run on this page; the
+[time series tutorial](../tutorials/notebooks/02-timeseries-der-modeling.ipynb) runs one.
+
+## Limitations
+
+- The step length is fixed for a run, 30 minutes by default. Shorter events, such as a cloud passing,
+  are averaged out.
+- A bus's recorded voltage is the mean across its connected phases. For a single-phase customer that is
+  the voltage it sees; for a three-phase bus it hides any imbalance between phases.
+- The solver iterates the inverter control loop up to 200 times per step by default. A step that needs
+  more is reported as diverged; raise `max_control_iterations` only after checking why.

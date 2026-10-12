@@ -1,39 +1,160 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python3
+---
+
 # State estimation
 
-{py:mod}`popo.estimation` estimates every bus voltage of a feeder from the few measurements that exist,
-using pandapower's weighted-least-squares estimator. It needs the `estimation` extra.
+{py:mod}`popo.estimation` estimates the voltage at every bus of a feeder from the measurements that
+exist, using pandapower's weighted-least-squares estimator. It needs the `estimation` extra, and the
+`opendss` extra to convert a feeder.
 
-## Convert, then check
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-```python
-net, lv_bus = to_pandapower(Path("feeder/Master.dss"))
-check_conversion(net)          # pandapower against OpenDSS, bus by bus
+import logging
+import os
+import warnings
+
+os.chdir("../..")  # run from the repository root, where tests/data is
+warnings.filterwarnings("ignore")
+logging.getLogger("pandapower").setLevel(logging.CRITICAL)
+
+import pandas as pd
+
+pd.set_option("display.precision", 4)
 ```
 
-{py:func}`~popo.estimation.to_pandapower` restores each transformer's nameplate turns ratio, which the
-converter would otherwise replace with the ratio of its buses' voltage bases.
-{py:func}`~popo.estimation.check_conversion` solves both engines at the same loading so the model is checked
-before it is trusted. The difference that remains is the cost of a balanced model of an unbalanced feeder.
+## Converting a feeder
 
-## Estimate
+{py:func}`~popo.estimation.to_pandapower` converts an OpenDSS feeder to a pandapower network and returns
+it with the index of the substation's low-voltage busbar, where the substation measurement is taken.
 
-```python
-voltages, substation_mw, substation_mvar = true_state(net)
-observability(net, lv_bus, metered=len(metered))          # enough equations at all?
-estimate = estimate_voltages(
-    net, lv_bus, voltages[lv_bus], substation_mw, substation_mvar,
-    meter_mw, meter_mvar, metered=metered, line_flows=sensors,
-)
-voltage_error(estimate, voltages)
+```{code-cell} ipython3
+from pathlib import Path
+
+from popo.estimation import check_conversion, to_pandapower
+
+FEEDER = Path("tests/data/dss_uk_network_17_1_1149/master_network_17_1_1149.dss")
+net, lv_bus = to_pandapower(FEEDER)
+len(net.bus), len(net.load), lv_bus
 ```
 
-The substation is metered on its transformer; each metered customer enters as a pseudo-measurement of its
-demand with a 10 % uncertainty; line power-flow sensors can stand in for missing meters where they separate
-an unmetered customer from the rest. {py:func}`~popo.estimation.estimate_voltages` returns `None` when no
-estimate exists, which is a result rather than an error.
+The converter sets each transformer's turns ratio from the voltage bases of its buses. `to_pandapower`
+restores the nameplate ratio, 11/0.416 kV here, which would otherwise put every low-voltage bus about
+0.04 pu too low.
+
+{py:func}`~popo.estimation.check_conversion` solves both models at the same loading and compares them
+bus by bus. Check this before relying on any estimate.
+
+```{code-cell} ipython3
+comparison = check_conversion(net)
+comparison["difference_pu"].describe()
+```
+
+The two models agree within 0.0018 pu at every bus. The remaining difference comes from pandapower's
+balanced model of a feeder that OpenDSS models phase by phase.
+
+## Counting equations
+
+An estimator solves for a voltage magnitude and angle at every bus, less one reference angle: 759
+unknowns for this feeder's 380 buses. Each measurement supplies one equation, and each bus with no load
+supplies two. {py:func}`~popo.estimation.observability` counts both before an estimate is attempted.
+
+```{code-cell} ipython3
+from dataclasses import asdict
+
+from popo.estimation import observability
+
+customers = len(net.load)
+pd.DataFrame(
+    [
+        {"metered customers": metered, **asdict(observability(net, lv_bus, metered=metered))}
+        for metered in (customers, customers - 1, customers - 2)
+    ]
+).set_index("metered customers")
+```
+
+With every customer metered there are two equations to spare. With one customer unmetered the count is
+exact, because the substation measures the total and the missing customer is the difference. With two
+unmetered there are fewer equations than unknowns, and no estimate exists whatever the solver.
+
+## Estimating
+
+{py:func}`~popo.estimation.set_loading` sets each customer's demand for one step, and
+{py:func}`~popo.estimation.true_state` solves the power flow to give the true voltages and the
+substation reading. The example takes evening demand from the household pool.
+
+```{code-cell} ipython3
+import numpy as np
+
+from popo.estimation import set_loading, true_state
+
+household_pool = pd.read_parquet("tests/data/uk_household_pu_96.parquet").to_numpy()
+rng = np.random.default_rng(20260904)
+active_mw = household_pool[36, rng.integers(0, household_pool.shape[1], customers)] * 1.3 / 1000
+reactive_mvar = active_mw * np.tan(np.arccos(0.95))
+
+set_loading(net, active_mw, reactive_mvar)
+true_voltage, substation_mw, substation_mvar = true_state(net)
+```
+
+Real measurements carry error. {py:class}`~popo.estimation.MeasurementNoise` holds the standard
+deviations the estimator assumes: 0.002 pu for the busbar voltage, 2 % for the substation's power and 10 %
+for a smart meter. The readings below are drawn with that error.
+
+```{code-cell} ipython3
+from popo.estimation import MeasurementNoise, estimate_voltages, voltage_error
+
+noise = MeasurementNoise()
+r = np.random.default_rng(0)
+
+
+def read(metered):
+    """Noisy readings, and the estimate from them, with the given customers metered."""
+    return estimate_voltages(
+        net,
+        lv_bus,
+        voltage_pu=true_voltage[lv_bus] + r.normal(0, noise.voltage_pu),
+        active_mw=substation_mw * (1 + r.normal(0, noise.substation_pq_fraction)),
+        reactive_mvar=substation_mvar * (1 + r.normal(0, noise.substation_pq_fraction)),
+        customer_active_mw=active_mw * (1 + r.normal(0, noise.smart_meter_pq_fraction, customers)),
+        customer_reactive_mvar=reactive_mvar * (1 + r.normal(0, noise.smart_meter_pq_fraction, customers)),
+        metered=metered,
+    )
+
+
+estimate = read(metered=list(range(customers)))
+voltage_error(estimate, true_voltage)
+```
+
+With every customer metered, the estimate is within 0.001 pu of the true voltage at every bus. With two
+customers unmetered, `estimate_voltages` returns `None`, as the count predicted:
+
+```{code-cell} ipython3
+read(metered=list(range(customers - 2))) is None
+```
+
+## Line sensors
+
+Where a customer has no meter, a power-flow sensor on a line can supply the missing equations. Pass the
+sensors to `estimate_voltages` as `line_flows`, a mapping from line index to the measured active and
+reactive power, and to `observability` as `line_sensors`. A sensor helps only if the flow it measures
+separates an unmetered customer from the others; the
+[state estimation tutorial](../tutorials/notebooks/03-lv-state-estimation.ipynb) compares placements.
 
 ## Forecasts as inputs
 
-{py:func}`~popo.estimation.run_comparison` asks whether the kind of substation forecast matters: a coherent
-forecast, whose active power, reactive power and voltage describe a state the network can be in, against
-three separately calibrated forecasts of the same accuracy.
+{py:func}`~popo.estimation.run_comparison` tests whether the kind of substation forecast matters when it
+feeds an estimator. It compares a coherent forecast, whose active power, reactive power and voltage
+describe a state the network can be in, with three forecasts of the same accuracy made separately.
+
+## Limitations
+
+- pandapower's estimator uses a balanced model. On an unbalanced feeder this sets a floor on accuracy,
+  about 0.0018 pu on this feeder.
+- Smart-meter readings enter as measurements with an assumed 10 % error. If the real error is larger,
+  the estimate is worse than the assumed weights suggest.
+- A converged estimate is not necessarily correct. Compare it with the true state on a simulated case,
+  as above, before trusting it on a real feeder.

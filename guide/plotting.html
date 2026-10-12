@@ -534,31 +534,354 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="plotting">
 <h1>Plotting<a class="headerlink" href="#plotting" title="Link to this heading">#</a></h1>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting</span></code> draws figures and tables in one style: the palette and typography every figure on
-this site uses. It needs the <code class="docutils literal notranslate"><span class="pre">plot</span></code> extra.</p>
-<section id="network-diagrams">
-<h2>Network diagrams<a class="headerlink" href="#network-diagrams" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.plotting.network.plot_topology" title="popo.plotting.network.plot_topology"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_topology()</span></code></a> draws a feeder as a schematic: a lightning bolt for the
-source, transformer badges, houses, sun badges for PV, with every bus coloured by its voltage status.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting.network</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_topology</span><span class="p">,</span> <span class="n">topology_from_dss</span>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting</span></code> draws network diagrams, line plots and tables in one style, the style used by
+every figure in this documentation. It needs the <code class="docutils literal notranslate"><span class="pre">plot</span></code> extra.</p>
+<section id="figure-style">
+<h2>Figure style<a class="headerlink" href="#figure-style" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../api/index.html#popo.plotting.style.configure" title="popo.plotting.style.configure"><code class="xref py py-func docutils literal notranslate"><span class="pre">popo.plotting.style.configure()</span></code></a> applies the style to every figure that follows: serif type,
+thin axes without a grid, and the popo palette. With <code class="docutils literal notranslate"><span class="pre">latex=True</span></code>, the default, text is typeset by LaTeX,
+which must be installed; <code class="docutils literal notranslate"><span class="pre">latex=False</span></code> uses matplotlib’s own text rendering.
+<a class="reference internal" href="../api/index.html#module-popo.plotting.line_style" title="popo.plotting.line_style"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting.line_style</span></code></a> calls the same function and adds conventions for line plots.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">line_style</span>
 
-<span class="n">plot_topology</span><span class="p">(</span><span class="n">topology_from_dss</span><span class="p">(</span><span class="n">dss</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Feeder"</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">"horizontal"</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">latex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+</div>
 </section>
-<section id="figures">
-<h2>Figures<a class="headerlink" href="#figures" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="../api/index.html#popo.plotting.style.configure" title="popo.plotting.style.configure"><code class="xref py py-func docutils literal notranslate"><span class="pre">popo.plotting.style.configure()</span></code></a> applies the figure style: serif type set through LaTeX when it
-is installed, thin axes, no grid, the shared palette.</p></li>
-<li><p><a class="reference internal" href="../api/index.html#module-popo.plotting.line_style" title="popo.plotting.line_style"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting.line_style</span></code></a> adds compact line-plot conventions: the legend below the axes,
-dotted reference lines and a rounded y-axis (<code class="docutils literal notranslate"><span class="pre">legend_below</span></code>, <code class="docutils literal notranslate"><span class="pre">reference_line</span></code>, <code class="docutils literal notranslate"><span class="pre">set_y_axis</span></code>, <code class="docutils literal notranslate"><span class="pre">show</span></code>).</p></li>
-</ul>
+<section id="network-diagrams">
+<h2>Network diagrams<a class="headerlink" href="#network-diagrams" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../api/index.html#popo.plotting.network.topology_from_dss" title="popo.plotting.network.topology_from_dss"><code class="xref py py-func docutils literal notranslate"><span class="pre">topology_from_dss()</span></code></a> reads the topology and bus voltages of a solved
+circuit, and <a class="reference internal" href="../api/index.html#popo.plotting.network.plot_topology" title="popo.plotting.network.plot_topology"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_topology()</span></code></a> draws it as a schematic: a lightning bolt
+for the source, a transformer badge, a house for each customer, and every bus coloured by its voltage
+status.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.network</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circuit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting.network</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_topology</span><span class="p">,</span> <span class="n">topology_from_dss</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="s2">"Clear"</span><span class="p">,</span>
+    <span class="s2">"Set DefaultBaseFrequency=50"</span><span class="p">,</span>
+    <span class="s2">"New Circuit.Example"</span><span class="p">,</span>
+    <span class="s2">"Edit Vsource.Source bus1=SourceBus basekv=11 pu=1.0 phases=3"</span><span class="p">,</span>
+    <span class="s2">"New Transformer.LVTR Buses=[SourceBus, A.1.2.3] Conns=[delta wye] KVs=[11, 0.4] KVAs=[250 250] xhl=2.5"</span><span class="p">,</span>
+    <span class="s2">"New Linecode.240sq nphases=3 R1=0.127 X1=0.072 units=km"</span><span class="p">,</span>
+    <span class="s2">"New Linecode.16sq nphases=1 R1=1.15 X1=0.083 units=km"</span><span class="p">,</span>
+    <span class="s2">"New Line.A_B bus1=A.1.2.3 bus2=B.1.2.3 length=1 units=km linecode=240sq"</span><span class="p">,</span>
+    <span class="s2">"New Line.B_F bus1=B.1.2.3 bus2=F.1.2.3 length=1 units=km linecode=240sq"</span><span class="p">,</span>
+<span class="p">]:</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">feeder</span><span class="p">,</span> <span class="n">house</span><span class="p">,</span> <span class="n">kw</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([(</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"D"</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="s2">"F"</span><span class="p">,</span> <span class="s2">"G"</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="s2">"F"</span><span class="p">,</span> <span class="s2">"H"</span><span class="p">,</span> <span class="mi">9</span><span class="p">)],</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="sa">f</span><span class="s2">"New Line.L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> bus1=</span><span class="si">{</span><span class="n">feeder</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">phase</span><span class="si">}</span><span class="s2"> bus2=</span><span class="si">{</span><span class="n">house</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">phase</span><span class="si">}</span><span class="s2"> length=0.01 units=km linecode=16sq"</span><span class="p">)</span>
+    <span class="n">circuit</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="sa">f</span><span class="s2">"New Load.</span><span class="si">{</span><span class="n">house</span><span class="si">}</span><span class="s2"> bus1=</span><span class="si">{</span><span class="n">house</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">phase</span><span class="si">}</span><span class="s2"> phases=1 kV=0.23 kW=</span><span class="si">{</span><span class="n">kw</span><span class="si">}</span><span class="s2"> pf=0.95"</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s2">"Set VoltageBases=[11 0.4]"</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s2">"CalcVoltageBases"</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+
+<span class="n">plot_topology</span><span class="p">(</span><span class="n">topology_from_dss</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">dss</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Two-branch network"</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Failed to find font weight bold for cmr10, now using 400.
+</pre></div>
+</div>
+<img alt="../_images/a636c0b8458542f164d9dff1421b84517064a65abd8e35e5f2be9a813b60637e.png" src="../_images/a636c0b8458542f164d9dff1421b84517064a65abd8e35e5f2be9a813b60637e.png" />
+</div>
+</div>
+<p>Houses <code class="docutils literal notranslate"><span class="pre">C</span></code>, <code class="docutils literal notranslate"><span class="pre">G</span></code> and <code class="docutils literal notranslate"><span class="pre">H</span></code> fall below 0.94 pu and are drawn in orange. House <code class="docutils literal notranslate"><span class="pre">D</span></code>, at the same distance
+as <code class="docutils literal notranslate"><span class="pre">C</span></code> but alone on phase 2, stays at 1.00 pu: on an unbalanced network the phase a customer is on
+matters as much as its distance from the transformer. The colour thresholds default to 0.94 and 1.10 pu; pass <code class="docutils literal notranslate"><span class="pre">limits=</span></code> a <a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits" title="popo.standards.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a> to use
+a standard’s band instead. <code class="docutils literal notranslate"><span class="pre">orientation=&quot;horizontal&quot;</span></code> lays the tree out from left to right.</p>
+</section>
+<section id="line-plots">
+<h2>Line plots<a class="headerlink" href="#line-plots" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../api/index.html#module-popo.plotting.line_style" title="popo.plotting.line_style"><code class="xref py py-mod docutils literal notranslate"><span class="pre">line_style</span></code></a> provides the pieces of a line plot: <code class="docutils literal notranslate"><span class="pre">new_panel</span></code> for a panel at its
+final size (by default 0.40 of a 6.3 in text width, with an aspect of 0.74), <code class="docutils literal notranslate"><span class="pre">hour_axis</span></code> for a day
+from 00 to 24, <code class="docutils literal notranslate"><span class="pre">set_y_axis</span></code> for padded limits and a few round ticks, <code class="docutils literal notranslate"><span class="pre">reference_line</span></code> for a dotted level
+such as a limit, <code class="docutils literal notranslate"><span class="pre">finish</span></code> for the axes, and <code class="docutils literal notranslate"><span class="pre">legend_below</span></code> for a legend under the plot. <code class="docutils literal notranslate"><span class="pre">show</span></code> lays out
+the figure and places the legend. <code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting.tokens</span></code> names the palette colours by
+role: <code class="docutils literal notranslate"><span class="pre">PRIMARY</span></code> for the subject of a figure, <code class="docutils literal notranslate"><span class="pre">DANGER</span></code> for a failure, <code class="docutils literal notranslate"><span class="pre">TEXT_MUTED</span></code> for context.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">tokens</span>
+
+<span class="n">hours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">busbar</span> <span class="o">=</span> <span class="mf">1.035</span> <span class="o">+</span> <span class="mf">0.005</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">hours</span> <span class="o">/</span> <span class="mi">24</span><span class="p">)</span>
+<span class="n">far_end</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.12</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">hours</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span> <span class="o">/</span> <span class="mi">12</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">line_style</span><span class="o">.</span><span class="n">new_panel</span><span class="p">()</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">reference_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="mf">1.10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Limit"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">busbar</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">tokens</span><span class="o">.</span><span class="n">TEXT_MUTED</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">line_style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Busbar"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">far_end</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">tokens</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">line_style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Far end"</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">hour_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">set_y_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">busbar</span><span class="p">,</span> <span class="n">far_end</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.10</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Voltage (pu)"</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">line_style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5c29b9409081c0454407e92e419d14971a790f59623592d755671fedbb74c45a.png" src="../_images/5c29b9409081c0454407e92e419d14971a790f59623592d755671fedbb74c45a.png" />
+</div>
+</div>
 </section>
 <section id="tables">
 <h2>Tables<a class="headerlink" href="#tables" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.plotting.tables.themed_gt" title="popo.plotting.tables.themed_gt"><code class="xref py py-func docutils literal notranslate"><span class="pre">themed_gt()</span></code></a> styles any DataFrame or Great Tables object, and
-<a class="reference internal" href="../api/index.html#popo.plotting.tables.record_table" title="popo.plotting.tables.record_table"><code class="xref py py-func docutils literal notranslate"><span class="pre">record_table()</span></code></a> turns a one-row summary into a two-column table.</p>
+<p><a class="reference internal" href="../api/index.html#popo.plotting.tables.themed_gt" title="popo.plotting.tables.themed_gt"><code class="xref py py-func docutils literal notranslate"><span class="pre">themed_gt()</span></code></a> styles a DataFrame as a
+<a class="reference external" href="https://posit-dev.github.io/great-tables/">Great Tables</a> table in the same palette.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">record_table</span><span class="p">,</span> <span class="n">themed_gt</span>
+
+<span class="n">voltages</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">bus_voltages</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"bus in ['c', 'd', 'g', 'h']"</span><span class="p">)</span>
+<span class="n">themed_gt</span><span class="p">(</span><span class="n">voltages</span><span class="p">[[</span><span class="s2">"bus"</span><span class="p">,</span> <span class="s2">"phase"</span><span class="p">,</span> <span class="s2">"vmag_pu"</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="tdmvucgdmm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
+<style>
+#tdmvucgdmm table {
+          font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#tdmvucgdmm thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#tdmvucgdmm p { margin: 0; padding: 0; }
+ #tdmvucgdmm .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #tdmvucgdmm .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #tdmvucgdmm .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #tdmvucgdmm .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #tdmvucgdmm .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #tdmvucgdmm .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #tdmvucgdmm .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #tdmvucgdmm .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #tdmvucgdmm .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #tdmvucgdmm .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #tdmvucgdmm .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #tdmvucgdmm .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #tdmvucgdmm .gt_spanner_row { border-bottom-style: hidden; }
+ #tdmvucgdmm .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #tdmvucgdmm .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #tdmvucgdmm .gt_from_md> :first-child { margin-top: 0; }
+ #tdmvucgdmm .gt_from_md> :last-child { margin-bottom: 0; }
+ #tdmvucgdmm .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #tdmvucgdmm .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #tdmvucgdmm .gt_indent_1 { text-indent: 5px; }
+ #tdmvucgdmm .gt_indent_2 { text-indent: calc(5px * 2); }
+ #tdmvucgdmm .gt_indent_3 { text-indent: calc(5px * 3); }
+ #tdmvucgdmm .gt_indent_4 { text-indent: calc(5px * 4); }
+ #tdmvucgdmm .gt_indent_5 { text-indent: calc(5px * 5); }
+ #tdmvucgdmm .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #tdmvucgdmm .gt_row_group_first td { border-top-width: 2px; }
+ #tdmvucgdmm .gt_row_group_first th { border-top-width: 2px; }
+ #tdmvucgdmm .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #tdmvucgdmm .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #tdmvucgdmm .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #tdmvucgdmm .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #tdmvucgdmm .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #tdmvucgdmm .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #tdmvucgdmm .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #tdmvucgdmm .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #tdmvucgdmm .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #tdmvucgdmm .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #tdmvucgdmm .gt_left { text-align: left; }
+ #tdmvucgdmm .gt_center { text-align: center; }
+ #tdmvucgdmm .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #tdmvucgdmm .gt_font_normal { font-weight: normal; }
+ #tdmvucgdmm .gt_font_bold { font-weight: bold; }
+ #tdmvucgdmm .gt_font_italic { font-style: italic; }
+ #tdmvucgdmm .gt_super { font-size: 65%; }
+ #tdmvucgdmm .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #tdmvucgdmm .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #tdmvucgdmm .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #tdmvucgdmm .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #tdmvucgdmm .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #tdmvucgdmm .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+
+<tr class="gt_col_headings">
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="bus">bus</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="phase">phase</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="vmag_pu">vmag_pu</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+  <tr>
+    <td class="gt_row gt_left">c</td>
+    <td class="gt_row gt_right">1</td>
+    <td class="gt_row gt_right">0.940</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">d</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">2</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">1.003</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_left">g</td>
+    <td class="gt_row gt_right">3</td>
+    <td class="gt_row gt_right">0.927</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">h</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">1</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.920</td>
+  </tr>
+</tbody>
+
+</table>
+
+</div>
+</div></div>
+</div>
+<p><a class="reference internal" href="../api/index.html#popo.plotting.tables.record_table" title="popo.plotting.tables.record_table"><code class="xref py py-func docutils literal notranslate"><span class="pre">record_table()</span></code></a> shows a one-row summary, such as
+<a class="reference internal" href="../api/index.html#popo.network.Circuit.summary" title="popo.network.Circuit.summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">summary()</span></code></a>, as a two-column table.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">record_table</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">summary</span><span class="p">(),</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Circuit summary"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="uvrjmberfi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:60%;height:auto;">
+<style>
+#uvrjmberfi table {
+          font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#uvrjmberfi thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#uvrjmberfi p { margin: 0; padding: 0; }
+ #uvrjmberfi .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 60%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #uvrjmberfi .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #uvrjmberfi .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #uvrjmberfi .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #uvrjmberfi .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #uvrjmberfi .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #uvrjmberfi .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #uvrjmberfi .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #uvrjmberfi .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #uvrjmberfi .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #uvrjmberfi .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #uvrjmberfi .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #uvrjmberfi .gt_spanner_row { border-bottom-style: hidden; }
+ #uvrjmberfi .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #uvrjmberfi .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #uvrjmberfi .gt_from_md> :first-child { margin-top: 0; }
+ #uvrjmberfi .gt_from_md> :last-child { margin-bottom: 0; }
+ #uvrjmberfi .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #uvrjmberfi .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #uvrjmberfi .gt_indent_1 { text-indent: 5px; }
+ #uvrjmberfi .gt_indent_2 { text-indent: calc(5px * 2); }
+ #uvrjmberfi .gt_indent_3 { text-indent: calc(5px * 3); }
+ #uvrjmberfi .gt_indent_4 { text-indent: calc(5px * 4); }
+ #uvrjmberfi .gt_indent_5 { text-indent: calc(5px * 5); }
+ #uvrjmberfi .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #uvrjmberfi .gt_row_group_first td { border-top-width: 2px; }
+ #uvrjmberfi .gt_row_group_first th { border-top-width: 2px; }
+ #uvrjmberfi .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #uvrjmberfi .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #uvrjmberfi .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #uvrjmberfi .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #uvrjmberfi .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #uvrjmberfi .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #uvrjmberfi .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #uvrjmberfi .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #uvrjmberfi .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #uvrjmberfi .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #uvrjmberfi .gt_left { text-align: left; }
+ #uvrjmberfi .gt_center { text-align: center; }
+ #uvrjmberfi .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #uvrjmberfi .gt_font_normal { font-weight: normal; }
+ #uvrjmberfi .gt_font_bold { font-weight: bold; }
+ #uvrjmberfi .gt_font_italic { font-style: italic; }
+ #uvrjmberfi .gt_super { font-size: 65%; }
+ #uvrjmberfi .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #uvrjmberfi .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #uvrjmberfi .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #uvrjmberfi .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #uvrjmberfi .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #uvrjmberfi .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+
+  <tr class="gt_heading">
+    <td colspan="2" class="gt_heading gt_title gt_font_normal" style="color: #333333;font-weight: bold;">Circuit summary</td>
+  </tr>
+<tr class="gt_col_headings">
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="statistic">statistic</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="value">value</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+  <tr>
+    <td class="gt_row gt_left">converged</td>
+    <td class="gt_row gt_right">True</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">n buses</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">8</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_left">n lines</td>
+    <td class="gt_row gt_right">6</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">n loads</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">4</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_left">n transformers</td>
+    <td class="gt_row gt_right">1</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">total p loss kw</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">1.449</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_left">total q loss kvar</td>
+    <td class="gt_row gt_right">1.240</td>
+  </tr>
+</tbody>
+
+</table>
+
+</div>
+</div></div>
+</div>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_topology</span></code> suits networks of up to a few dozen buses. On a feeder with hundreds of buses the
+labels overlap; plot the voltages as a line or distribution instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configure</span></code> changes matplotlib’s global settings for the rest of the session. Call
+<code class="docutils literal notranslate"><span class="pre">matplotlib.rcdefaults()</span></code> to undo it.</p></li>
+<li><p>Great Tables output is HTML. It renders in notebooks and in this documentation, not in a plain
+terminal.</p></li>
+</ul>
 </section>
 </section>
 
@@ -609,9 +932,11 @@ dotted reference lines and a rounded y-axis (<code class="docutils literal notra
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figure-style">Figure style</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#network-diagrams">Network diagrams</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figures">Figures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#line-plots">Line plots</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tables">Tables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
 </ul>
   </nav></div>
 

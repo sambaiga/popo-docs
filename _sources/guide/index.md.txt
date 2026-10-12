@@ -1,15 +1,27 @@
 # User guide
 
-One page per subpackage, in the order a study uses them.
+The user guide explains each part of popo with examples that run when the documentation is built, so
+every table and figure on these pages is real output. Each page ends with the limitations you should
+know before relying on its results.
 
-| Subpackage | Answers |
+The pages follow the order of a study: load a network, simulate it, add customer technologies, check
+the result against a standard, and estimate the state of a network that is only partly measured.
+
+| Page | Covers |
 |---|---|
-| [`popo.network`](network.md) | What is in this circuit? |
-| [`popo.powerflow`](powerflow.md) | What does it do over time, and what does a sweep of scenarios show? |
-| [`popo.scenarios`](scenarios.md) | What if customers install solar, chargers or batteries? |
-| [`popo.standards`](standards.md) | Is that acceptable, and where is it not? |
-| [`popo.estimation`](estimation.md) | What is an unmeasured network doing now? |
-| [`popo.plotting`](plotting.md) | How do I show it? |
+| [Network](network.md) | Loading a circuit and reading its elements, customers and sensitivity |
+| [Power flow](powerflow.md) | Results tables, time-series solves and convergence |
+| [Scenarios](scenarios.md) | Household demand, rooftop solar, EV charging, storage and inverter control |
+| [Standards](standards.md) | Statutory voltage limits, violations, events and inverter characteristics |
+| [State estimation](estimation.md) | Converting a feeder, observability and weighted-least-squares estimation |
+| [Plotting](plotting.md) | Network diagrams, figure style and tables |
+
+## The example feeder
+
+The examples use a real low-voltage feeder from the UK: one 500 kVA, 11/0.416 kV transformer supplying
+188 single-phase customers over 378 lines. It is part of the repository's test data in `tests/data`,
+which is not included in the installed package. To run the examples, clone the repository (see
+[Installation](../getting-started/installation.md)) and run them from its root directory.
 
 ```{toctree}
 :hidden:

@@ -1,29 +1,134 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python3
+---
+
 # Standards
 
-{py:mod}`popo.standards` holds voltage limits and inverter characteristics as named standards rather than
-numbers, so a study records which standard it applied.
+{py:mod}`popo.standards` represents voltage limits and inverter characteristics as named standards. A
+study selects a standard by name, so its results record which standard was applied. This module needs
+no solver.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+import pandas as pd
+
+pd.set_option("display.precision", 3)
+```
 
 ## Voltage limits
 
-| Constructor | Band | Rule |
-|---|---|---|
-| {py:meth}`VoltageLimits.en_50160 <popo.standards.VoltageLimits.en_50160>` | 0.90 to 1.10 pu | 95 % of samples, no sample past +10 %/-15 % |
-| {py:meth}`VoltageLimits.ansi_c84_1_range_a <popo.standards.VoltageLimits.ansi_c84_1_range_a>` | 0.95 to 1.05 pu | every sample |
-| {py:meth}`VoltageLimits.ansi_c84_1_range_b <popo.standards.VoltageLimits.ansi_c84_1_range_b>` | 0.917 to 1.058 pu | every sample |
+A {py:class}`~popo.standards.VoltageLimits` holds a band and the rule for applying it: the share of
+samples that must lie inside the band (the coverage) and, where the standard sets one, an extreme bound
+that no sample may cross.
 
-```python
-limits = VoltageLimits.en_50160()
-limits.check(voltages["vmag_pu"]).summary()     # the verdict, and why
-limits.violations(voltages)                      # the readings outside the band, and by how much
-limits.event_summary(report.voltage_traces())    # per customer: how often, how far, how long
+```{code-cell} ipython3
+from dataclasses import asdict
+
+from popo.standards import VoltageLimits
+
+standards = [
+    VoltageLimits.en_50160(),
+    VoltageLimits.ansi_c84_1_range_a(),
+    VoltageLimits.ansi_c84_1_range_b(),
+]
+pd.DataFrame([asdict(limits) for limits in standards]).set_index("name")
 ```
 
-`event_summary` separates a customer who briefly touches a limit from one who sits outside it for hours.
+EN 50160 requires 95 % of the ten-minute mean voltages in a week to lie within ±10 % of nominal, and
+none below 0.85 pu. Its extreme upper bound equals its band, so any sample above 1.10 pu fails. ANSI
+C84.1 Range A requires every sample to lie within ±5 %.
 
-## Inverters
+## Checking a series
 
-- {py:class}`~popo.standards.InverterCapability`: reactive capability, by standard (IEEE 1547 category B,
-  EREC G99).
-- {py:class}`~popo.standards.VoltVarCurve`: reactive power against terminal voltage.
-- {py:class}`~popo.standards.VoltWattCurve`: active power curtailed against terminal voltage, with the IEEE
-  1547 default.
+{py:meth}`~popo.standards.VoltageLimits.check` applies the full rule to a series and returns a
+{py:class}`~popo.standards.ComplianceReport`. The example below is one week of ten-minute means: near
+nominal, with a dip to 0.88 pu from 18:00 to 18:40 each day.
+
+```{code-cell} ipython3
+import numpy as np
+
+samples = np.arange(7 * 144)  # one week of ten-minute means
+voltage = 1.0 + 0.015 * np.sin(2 * np.pi * samples / 144)
+time_of_day = samples % 144
+voltage[(time_of_day >= 108) & (time_of_day < 112)] = 0.88  # 18:00 to 18:40, four samples a day
+
+pd.DataFrame([asdict(limits.check(voltage)) for limits in standards]).set_index("standard")
+```
+
+The same series complies with EN 50160 and fails both ANSI ranges. EN 50160 permits 5 % of samples
+outside its band, and 97.2 % lie inside; ANSI permits none. `summary()` states the verdict in one line:
+
+```{code-cell} ipython3
+print(VoltageLimits.en_50160().check(voltage).summary())
+```
+
+## Where and for how long
+
+{py:meth}`~popo.standards.VoltageLimits.violations` returns the readings outside the band, with the side
+and the distance past the bound. It takes any frame with a `vmag_pu` column, such as the output of
+{py:func}`~popo.powerflow.bus_voltages`.
+
+```{code-cell} ipython3
+readings = pd.DataFrame({"bus": ["a", "b", "c", "d"], "vmag_pu": [0.93, 1.0, 1.06, 1.12]})
+VoltageLimits.ansi_c84_1_range_a().violations(readings)
+```
+
+{py:meth}`~popo.standards.VoltageLimits.event_summary` takes one voltage trace per customer and counts
+the steps outside the band, their mean severity and the longest unbroken run. Two customers with the
+same maximum voltage can differ in duration:
+
+```{code-cell} ipython3
+traces = {
+    "brief": [1.02, 1.04, 1.12, 1.04, 1.02, 1.02, 1.02, 1.02],
+    "sustained": [1.02, 1.11, 1.12, 1.12, 1.11, 1.11, 1.04, 1.02],
+}
+VoltageLimits.en_50160().event_summary(traces)
+```
+
+## Inverter characteristics
+
+{py:class}`~popo.standards.InverterCapability` is the reactive power an inverter must be able to supply,
+as a fraction of its rating: 0.44 under IEEE 1547 category B and 0.33 under EREC G99.
+{py:class}`~popo.standards.VoltVarCurve` sets reactive power against voltage, and
+{py:class}`~popo.standards.VoltWattCurve` sets the share of active power allowed against voltage. Both
+have an IEEE 1547 default.
+
+```{code-cell} ipython3
+import matplotlib.pyplot as plt
+
+from popo.plotting import line_style, style, tokens
+from popo.standards import VoltVarCurve, VoltWattCurve
+
+line_style.configure(latex=False)
+volts = np.linspace(0.88, 1.12, 241)
+volt_var = VoltVarCurve.ieee_1547_default()
+volt_watt = VoltWattCurve.ieee_1547_default()
+
+fig, (left, right) = plt.subplots(1, 2, figsize=style.panel(0.8, 0.37))
+left.plot(volts, volt_var.reactive_power_pu(volts), color=tokens.PRIMARY, lw=line_style.LINE_WIDTH)
+left.set_title("Volt-VAr", fontsize=10)
+left.set_ylabel("Reactive power (pu)")
+right.plot(volts, volt_watt.active_power_pu(volts), color=tokens.PRIMARY, lw=line_style.LINE_WIDTH)
+right.set_title("Volt-Watt", fontsize=10)
+right.set_ylabel("Active power limit (pu)")
+for ax in (left, right):
+    ax.set_xlabel("Voltage (pu)")
+    line_style.finish(ax)
+line_style.show(fig)
+```
+
+The Volt-VAr curve supplies reactive power below 0.98 pu and absorbs it above 1.02 pu, reaching the
+0.44 pu capability at 0.92 and 1.08 pu. The Volt-Watt curve starts curtailing at 1.06 pu and reaches
+its 0.2 pu floor at 1.10 pu. {doc}`scenarios` installs both on a feeder.
+
+## Limitations
+
+- `check` treats each sample as given. EN 50160 is defined on ten-minute means over a week; a
+  simulation in 30-minute steps over two days is an approximation of that rule.
+- The limits apply to the voltage at the customer's connection. A voltage at the substation busbar
+  says little about compliance further along the feeder (see {doc}`powerflow`).
+- The standards here cover steady-state voltage magnitude. Flicker, unbalance and harmonics, which
+  EN 50160 also limits, are not modelled.

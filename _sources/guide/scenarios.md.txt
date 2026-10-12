@@ -1,30 +1,153 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python3
+---
+
 # Scenarios
 
-{py:mod}`popo.scenarios` builds the counterfactual networks a study compares: customers given real demand
-profiles, and a share of them given rooftop solar, an EV charger or a battery.
+{py:mod}`popo.scenarios` changes a circuit to represent a future one: customers with real demand
+profiles, and a share of them with rooftop solar, an EV charger or a battery. It needs the `opendss`
+extra.
 
-## Profiles and penetration
+```{code-cell} ipython3
+:tags: [remove-cell]
 
-- {py:func}`~popo.scenarios.assign_household_profiles` gives each existing load its own demand shape, drawn
-  from a pool of real household profiles.
-- {py:func}`~popo.scenarios.attach_generation` fits rooftop arrays to a fraction of customers, sized by
-  {py:class}`~popo.scenarios.ArraySizing`.
-- {py:func}`~popo.scenarios.attach_charging` gives a fraction of customers a charger, each driven by its own
-  recorded session, so the diversified sum at the substation reflects real coincidence.
+import os
 
-Penetration is the fraction of customers holding the technology. Every installation connects on its
-customer's own phase ({py:func}`~popo.scenarios.service_connection`), unless a phase is forced with
-`connection=`.
+os.chdir("../..")  # run from the repository root, where tests/data is
 
-## Mitigation
+import pandas as pd
 
-| Lever | How | What it costs |
-|---|---|---|
-| Volt-VAr | `attach_generation(volt_var=VoltVarCurve(...))` | reactive power, adding to transformer loading |
-| Volt-Watt | `attach_generation(volt_watt=VoltWattCurve.ieee_1547_default())` | curtailed generation |
-| Storage | `attach_storage(dss, customers, ..., dispatch=StorageDispatch())` | a battery per customer |
+pd.set_option("display.precision", 3)
+```
 
-OpenDSS gives each inverter one control, so Volt-VAr and Volt-Watt are installed one at a time.
-{py:class}`~popo.scenarios.StorageDispatch` charges through the middle of the day and discharges in the
-evening so a battery starts the next day empty; a schedule shared by every battery concentrates their
-charging and discharging in time, which the second tutorial shows moving the over-voltage into the evening.
+## Household demand
+
+{py:func}`~popo.scenarios.assign_household_profiles` gives each customer its own demand shape, drawn from
+a pool of recorded household profiles. It returns the number of customers it assigned.
+
+```{code-cell} ipython3
+from pathlib import Path
+
+import numpy as np
+
+from popo.network import Circuit, residential_loads
+from popo.scenarios import assign_household_profiles
+
+FEEDER = Path("tests/data/dss_uk_network_17_1_1149/master_network_17_1_1149.dss")
+household_pool = pd.read_parquet("tests/data/uk_household_pu_96.parquet").to_numpy()
+pv_profile = pd.read_parquet("tests/data/uk_pv_unit_96.parquet").to_numpy().ravel()
+ev_pool = pd.read_parquet("tests/data/uk_ev_kw_96.parquet").to_numpy()
+
+circuit = Circuit.load(FEEDER)
+customers = residential_loads(circuit.dss)
+assign_household_profiles(circuit.dss, customers, household_pool, np.random.default_rng(1))
+```
+
+Each column of the pool is one household over 96 half-hours. The pool here has 400 households.
+
+## Rooftop solar
+
+{py:func}`~popo.scenarios.attach_generation` fits a rooftop array to a fraction of customers, the
+penetration. Array sizes are drawn from {py:class}`~popo.scenarios.ArraySizing`, by default a mean of
+3.5 kWp clipped to between 2 and 12 kWp, and every array follows the same per-unit generation profile.
+
+```{code-cell} ipython3
+from popo.scenarios import attach_generation
+
+attach_generation(circuit.dss, customers, 0.6, pv_profile, np.random.default_rng(2), kv=0.23)
+pd.DataFrame(circuit.pvsystems).head()
+```
+
+At 60 % penetration, 113 of the 188 customers have an array. The random generator decides which
+customers are chosen; with the same seed, the customers chosen at 40 % are also chosen at 60 %, so
+results at different penetrations compare the same households.
+
+Each array is connected on its customer's own phase. The bus suffix `.1.0` means phase 1 to neutral.
+{py:func}`~popo.scenarios.service_connection` returns the suffix for any customer, and the `connection`
+argument of every scenario function overrides it.
+
+## EV charging and storage
+
+{py:func}`~popo.scenarios.attach_charging` gives a fraction of customers an EV charger. Each charger
+follows its own recorded session series, so the total at the substation reflects how often chargers
+actually coincide.
+
+{py:func}`~popo.scenarios.attach_storage` gives customers a battery that charges and discharges in fixed
+daily windows, set by {py:class}`~popo.scenarios.StorageDispatch`. The default is a 3 kW, 10 kWh battery
+that charges from 10:00 to 17:00, while rooftop generation is high, and discharges from 18:00 to 22:00.
+
+## Comparing scenarios
+
+The function below rebuilds the feeder for each case with the same seeds, so every case has the same
+households and the same 113 arrays. It solves two days and counts how many customers exceed the EN 50160
+upper limit at least once.
+
+```{code-cell} ipython3
+from popo.scenarios import attach_charging, attach_storage
+from popo.standards import VoltageLimits, VoltVarCurve, VoltWattCurve
+
+
+def simulate(case):
+    circuit = Circuit.load(FEEDER)
+    dss = circuit.dss
+    customers = residential_loads(dss)
+    assign_household_profiles(dss, customers, household_pool, np.random.default_rng(1))
+    control = {
+        "Volt-VAr": {"volt_var": VoltVarCurve.ieee_1547_default()},
+        "Volt-Watt": {"volt_watt": VoltWattCurve.ieee_1547_default()},
+    }.get(case, {})
+    attach_generation(dss, customers, 0.6, pv_profile, np.random.default_rng(2), kv=0.23, **control)
+    if case == "Storage":
+        pv_buses = {pv.bus1.split(".")[0] for pv in circuit.pvsystems}
+        with_pv = [(load, bus) for load, bus in customers if bus in pv_buses]
+        attach_storage(dss, with_pv, 1.0, np.random.default_rng(3), kv=0.23)
+    if case == "EV charging":
+        attach_charging(dss, customers, 0.3, ev_pool, np.random.default_rng(4), kv=0.23)
+
+    report = circuit.solve_time_series(96, buses=[bus for _, bus in customers])
+    traces = report.voltage_traces()
+    events = VoltageLimits.en_50160().event_summary(traces)
+    return {
+        "case": case,
+        "max voltage (pu)": events["v_max_pu"].max(),
+        "min voltage (pu)": events["v_min_pu"].min(),
+        "customers over limit": int((events["over_steps"] > 0).sum()),
+        "peak transformer load (kVA)": report.records["s_kva"].max(),
+        "converged": report.converged,
+    }
+
+
+cases = ["No control", "Volt-VAr", "Volt-Watt", "Storage", "EV charging"]
+pd.DataFrame([simulate(case) for case in cases]).set_index("case")
+```
+
+Without control, 142 customers exceed 1.10 pu. The cases differ in what they cost:
+
+- **Volt-VAr** absorbs reactive power as voltage rises. It keeps every customer within the limit but
+  raises the transformer's peak load, because the reactive power flows through it.
+- **Volt-Watt** curtails active power as voltage rises. It also keeps every customer within the limit,
+  and halves the transformer's peak load, at the cost of generation that is not exported.
+- **Storage** behind every array reduces the export but does not remove it. Charging at 3 kW, a
+  10 kWh battery is full after about 3.3 hours, while the arrays are still generating. Discharging in
+  the evening also lowers the minimum voltage, from 1.015 to 0.969 pu.
+- **EV charging** at 30 % penetration barely changes the midday peak, because most charging happens
+  in the evening.
+
+## Inverter control
+
+Volt-VAr and Volt-Watt are installed through `attach_generation`, with the `volt_var` or `volt_watt`
+argument, or added afterwards to every inverter with {py:func}`~popo.scenarios.install_volt_var` and
+{py:func}`~popo.scenarios.install_volt_watt`. The curves themselves are standards, described in
+{doc}`standards`.
+
+## Limitations
+
+- OpenDSS allows one control per inverter, so a case uses Volt-VAr or Volt-Watt, not both.
+- Every array follows the same generation profile. The same irradiance at every roof is reasonable on
+  one feeder, but the profile carries no local cloud cover.
+- Battery dispatch follows fixed windows and does not respond to voltage. All batteries charge and
+  discharge at the same times, which can move a voltage problem into the evening.
+- The penetration is a fraction of the customers passed in. Pass only eligible customers, for example
+  houses with a suitable roof, if the study needs that distinction.

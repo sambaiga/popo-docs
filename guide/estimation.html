@@ -534,40 +534,237 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="state-estimation">
 <h1>State estimation<a class="headerlink" href="#state-estimation" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../api/index.html#module-popo.estimation" title="popo.estimation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.estimation</span></code></a> estimates every bus voltage of a feeder from the few measurements that exist,
-using pandapower’s weighted-least-squares estimator. It needs the <code class="docutils literal notranslate"><span class="pre">estimation</span></code> extra.</p>
-<section id="convert-then-check">
-<h2>Convert, then check<a class="headerlink" href="#convert-then-check" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="p">,</span> <span class="n">lv_bus</span> <span class="o">=</span> <span class="n">to_pandapower</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"feeder/Master.dss"</span><span class="p">))</span>
-<span class="n">check_conversion</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>          <span class="c1"># pandapower against OpenDSS, bus by bus</span>
+<p><a class="reference internal" href="../api/index.html#module-popo.estimation" title="popo.estimation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.estimation</span></code></a> estimates the voltage at every bus of a feeder from the measurements that
+exist, using pandapower’s weighted-least-squares estimator. It needs the <code class="docutils literal notranslate"><span class="pre">estimation</span></code> extra, and the
+<code class="docutils literal notranslate"><span class="pre">opendss</span></code> extra to convert a feeder.</p>
+<section id="converting-a-feeder">
+<h2>Converting a feeder<a class="headerlink" href="#converting-a-feeder" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../api/index.html#popo.estimation.to_pandapower" title="popo.estimation.to_pandapower"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_pandapower()</span></code></a> converts an OpenDSS feeder to a pandapower network and returns
+it with the index of the substation’s low-voltage busbar, where the substation measurement is taken.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_conversion</span><span class="p">,</span> <span class="n">to_pandapower</span>
+
+<span class="n">FEEDER</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"tests/data/dss_uk_network_17_1_1149/master_network_17_1_1149.dss"</span><span class="p">)</span>
+<span class="n">net</span><span class="p">,</span> <span class="n">lv_bus</span> <span class="o">=</span> <span class="n">to_pandapower</span><span class="p">(</span><span class="n">FEEDER</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">bus</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">load</span><span class="p">),</span> <span class="n">lv_bus</span>
 </pre></div>
 </div>
-<p><a class="reference internal" href="../api/index.html#popo.estimation.to_pandapower" title="popo.estimation.to_pandapower"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_pandapower()</span></code></a> restores each transformer’s nameplate turns ratio, which the
-converter would otherwise replace with the ratio of its buses’ voltage bases.
-<a class="reference internal" href="../api/index.html#popo.estimation.check_conversion" title="popo.estimation.check_conversion"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_conversion()</span></code></a> solves both engines at the same loading so the model is checked
-before it is trusted. The difference that remains is the cost of a balanced model of an unbalanced feeder.</p>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(380, 188, 2)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The converter sets each transformer’s turns ratio from the voltage bases of its buses. <code class="docutils literal notranslate"><span class="pre">to_pandapower</span></code>
+restores the nameplate ratio, 11/0.416 kV here, which would otherwise put every low-voltage bus about
+0.04 pu too low.</p>
+<p><a class="reference internal" href="../api/index.html#popo.estimation.check_conversion" title="popo.estimation.check_conversion"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_conversion()</span></code></a> solves both models at the same loading and compares them
+bus by bus. Check this before relying on any estimate.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">comparison</span> <span class="o">=</span> <span class="n">check_conversion</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+<span class="n">comparison</span><span class="p">[</span><span class="s2">"difference_pu"</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>count    3.8000e+02
+mean     1.7972e-03
+std      1.6035e-04
+min      2.2284e-07
+25%      1.8063e-03
+50%      1.8149e-03
+75%      1.8318e-03
+max      1.8434e-03
+Name: difference_pu, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The two models agree within 0.0018 pu at every bus. The remaining difference comes from pandapower’s
+balanced model of a feeder that OpenDSS models phase by phase.</p>
 </section>
-<section id="estimate">
-<h2>Estimate<a class="headerlink" href="#estimate" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">voltages</span><span class="p">,</span> <span class="n">substation_mw</span><span class="p">,</span> <span class="n">substation_mvar</span> <span class="o">=</span> <span class="n">true_state</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
-<span class="n">observability</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">lv_bus</span><span class="p">,</span> <span class="n">metered</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">metered</span><span class="p">))</span>          <span class="c1"># enough equations at all?</span>
-<span class="n">estimate</span> <span class="o">=</span> <span class="n">estimate_voltages</span><span class="p">(</span>
-    <span class="n">net</span><span class="p">,</span> <span class="n">lv_bus</span><span class="p">,</span> <span class="n">voltages</span><span class="p">[</span><span class="n">lv_bus</span><span class="p">],</span> <span class="n">substation_mw</span><span class="p">,</span> <span class="n">substation_mvar</span><span class="p">,</span>
-    <span class="n">meter_mw</span><span class="p">,</span> <span class="n">meter_mvar</span><span class="p">,</span> <span class="n">metered</span><span class="o">=</span><span class="n">metered</span><span class="p">,</span> <span class="n">line_flows</span><span class="o">=</span><span class="n">sensors</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">voltage_error</span><span class="p">(</span><span class="n">estimate</span><span class="p">,</span> <span class="n">voltages</span><span class="p">)</span>
+<section id="counting-equations">
+<h2>Counting equations<a class="headerlink" href="#counting-equations" title="Link to this heading">#</a></h2>
+<p>An estimator solves for a voltage magnitude and angle at every bus, less one reference angle: 759
+unknowns for this feeder’s 380 buses. Each measurement supplies one equation, and each bus with no load
+supplies two. <a class="reference internal" href="../api/index.html#popo.estimation.observability" title="popo.estimation.observability"><code class="xref py py-func docutils literal notranslate"><span class="pre">observability()</span></code></a> counts both before an estimate is attempted.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">observability</span>
+
+<span class="n">customers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">load</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">{</span><span class="s2">"metered customers"</span><span class="p">:</span> <span class="n">metered</span><span class="p">,</span> <span class="o">**</span><span class="n">asdict</span><span class="p">(</span><span class="n">observability</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">lv_bus</span><span class="p">,</span> <span class="n">metered</span><span class="o">=</span><span class="n">metered</span><span class="p">))}</span>
+        <span class="k">for</span> <span class="n">metered</span> <span class="ow">in</span> <span class="p">(</span><span class="n">customers</span><span class="p">,</span> <span class="n">customers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">customers</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"metered customers"</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The substation is metered on its transformer; each metered customer enters as a pseudo-measurement of its
-demand with a 10 % uncertainty; line power-flow sensors can stand in for missing meters where they separate
-an unmetered customer from the rest. <a class="reference internal" href="../api/index.html#popo.estimation.estimate_voltages" title="popo.estimation.estimate_voltages"><code class="xref py py-func docutils literal notranslate"><span class="pre">estimate_voltages()</span></code></a> returns <code class="docutils literal notranslate"><span class="pre">None</span></code> when no
-estimate exists, which is a result rather than an error.</p>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>buses</th>
+      <th>required</th>
+      <th>available</th>
+    </tr>
+    <tr>
+      <th>metered customers</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>188</th>
+      <td>380</td>
+      <td>759</td>
+      <td>761</td>
+    </tr>
+    <tr>
+      <th>187</th>
+      <td>380</td>
+      <td>759</td>
+      <td>759</td>
+    </tr>
+    <tr>
+      <th>186</th>
+      <td>380</td>
+      <td>759</td>
+      <td>757</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>With every customer metered there are two equations to spare. With one customer unmetered the count is
+exact, because the substation measures the total and the missing customer is the difference. With two
+unmetered there are fewer equations than unknowns, and no estimate exists whatever the solver.</p>
+</section>
+<section id="estimating">
+<h2>Estimating<a class="headerlink" href="#estimating" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../api/index.html#popo.estimation.set_loading" title="popo.estimation.set_loading"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_loading()</span></code></a> sets each customer’s demand for one step, and
+<a class="reference internal" href="../api/index.html#popo.estimation.true_state" title="popo.estimation.true_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">true_state()</span></code></a> solves the power flow to give the true voltages and the
+substation reading. The example takes evening demand from the household pool.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_loading</span><span class="p">,</span> <span class="n">true_state</span>
+
+<span class="n">household_pool</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s2">"tests/data/uk_household_pu_96.parquet"</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">20260904</span><span class="p">)</span>
+<span class="n">active_mw</span> <span class="o">=</span> <span class="n">household_pool</span><span class="p">[</span><span class="mi">36</span><span class="p">,</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">household_pool</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">customers</span><span class="p">)]</span> <span class="o">*</span> <span class="mf">1.3</span> <span class="o">/</span> <span class="mi">1000</span>
+<span class="n">reactive_mvar</span> <span class="o">=</span> <span class="n">active_mw</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="mf">0.95</span><span class="p">))</span>
+
+<span class="n">set_loading</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">active_mw</span><span class="p">,</span> <span class="n">reactive_mvar</span><span class="p">)</span>
+<span class="n">true_voltage</span><span class="p">,</span> <span class="n">substation_mw</span><span class="p">,</span> <span class="n">substation_mvar</span> <span class="o">=</span> <span class="n">true_state</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Real measurements carry error. <a class="reference internal" href="../api/index.html#popo.estimation.MeasurementNoise" title="popo.estimation.MeasurementNoise"><code class="xref py py-class docutils literal notranslate"><span class="pre">MeasurementNoise</span></code></a> holds the standard
+deviations the estimator assumes: 0.002 pu for the busbar voltage, 2 % for the substation’s power and 10 %
+for a smart meter. The readings below are drawn with that error.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeasurementNoise</span><span class="p">,</span> <span class="n">estimate_voltages</span><span class="p">,</span> <span class="n">voltage_error</span>
+
+<span class="n">noise</span> <span class="o">=</span> <span class="n">MeasurementNoise</span><span class="p">()</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="n">metered</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Noisy readings, and the estimate from them, with the given customers metered."""</span>
+    <span class="k">return</span> <span class="n">estimate_voltages</span><span class="p">(</span>
+        <span class="n">net</span><span class="p">,</span>
+        <span class="n">lv_bus</span><span class="p">,</span>
+        <span class="n">voltage_pu</span><span class="o">=</span><span class="n">true_voltage</span><span class="p">[</span><span class="n">lv_bus</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">voltage_pu</span><span class="p">),</span>
+        <span class="n">active_mw</span><span class="o">=</span><span class="n">substation_mw</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">substation_pq_fraction</span><span class="p">)),</span>
+        <span class="n">reactive_mvar</span><span class="o">=</span><span class="n">substation_mvar</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">substation_pq_fraction</span><span class="p">)),</span>
+        <span class="n">customer_active_mw</span><span class="o">=</span><span class="n">active_mw</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">smart_meter_pq_fraction</span><span class="p">,</span> <span class="n">customers</span><span class="p">)),</span>
+        <span class="n">customer_reactive_mvar</span><span class="o">=</span><span class="n">reactive_mvar</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">smart_meter_pq_fraction</span><span class="p">,</span> <span class="n">customers</span><span class="p">)),</span>
+        <span class="n">metered</span><span class="o">=</span><span class="n">metered</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="n">estimate</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">metered</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">customers</span><span class="p">)))</span>
+<span class="n">voltage_error</span><span class="p">(</span><span class="n">estimate</span><span class="p">,</span> <span class="n">true_voltage</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'mean_abs_pu': 0.0002402426842926578,
+ 'max_abs_pu': 0.000986565306525744,
+ 'at_worst_bus_pu': 0.0002766590175647954}
+</pre></div>
+</div>
+</div>
+</div>
+<p>With every customer metered, the estimate is within 0.001 pu of the true voltage at every bus. With two
+customers unmetered, <code class="docutils literal notranslate"><span class="pre">estimate_voltages</span></code> returns <code class="docutils literal notranslate"><span class="pre">None</span></code>, as the count predicted:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">read</span><span class="p">(</span><span class="n">metered</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">customers</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)))</span> <span class="ow">is</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="line-sensors">
+<h2>Line sensors<a class="headerlink" href="#line-sensors" title="Link to this heading">#</a></h2>
+<p>Where a customer has no meter, a power-flow sensor on a line can supply the missing equations. Pass the
+sensors to <code class="docutils literal notranslate"><span class="pre">estimate_voltages</span></code> as <code class="docutils literal notranslate"><span class="pre">line_flows</span></code>, a mapping from line index to the measured active and
+reactive power, and to <code class="docutils literal notranslate"><span class="pre">observability</span></code> as <code class="docutils literal notranslate"><span class="pre">line_sensors</span></code>. A sensor helps only if the flow it measures
+separates an unmetered customer from the others; the
+<span class="xref myst">state estimation tutorial</span> compares placements.</p>
 </section>
 <section id="forecasts-as-inputs">
 <h2>Forecasts as inputs<a class="headerlink" href="#forecasts-as-inputs" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.estimation.run_comparison" title="popo.estimation.run_comparison"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_comparison()</span></code></a> asks whether the kind of substation forecast matters: a coherent
-forecast, whose active power, reactive power and voltage describe a state the network can be in, against
-three separately calibrated forecasts of the same accuracy.</p>
+<p><a class="reference internal" href="../api/index.html#popo.estimation.run_comparison" title="popo.estimation.run_comparison"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_comparison()</span></code></a> tests whether the kind of substation forecast matters when it
+feeds an estimator. It compares a coherent forecast, whose active power, reactive power and voltage
+describe a state the network can be in, with three forecasts of the same accuracy made separately.</p>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>pandapower’s estimator uses a balanced model. On an unbalanced feeder this sets a floor on accuracy,
+about 0.0018 pu on this feeder.</p></li>
+<li><p>Smart-meter readings enter as measurements with an assumed 10 % error. If the real error is larger,
+the estimate is worse than the assumed weights suggest.</p></li>
+<li><p>A converged estimate is not necessarily correct. Compare it with the true state on a simulated case,
+as above, before trusting it on a real feeder.</p></li>
+</ul>
 </section>
 </section>
 
@@ -618,9 +815,12 @@ three separately calibrated forecasts of the same accuracy.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-then-check">Convert, then check</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimate">Estimate</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-a-feeder">Converting a feeder</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#counting-equations">Counting equations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating">Estimating</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#line-sensors">Line sensors</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forecasts-as-inputs">Forecasts as inputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
 </ul>
   </nav></div>
 

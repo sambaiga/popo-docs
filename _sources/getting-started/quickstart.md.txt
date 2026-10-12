@@ -164,12 +164,13 @@ colors = {"c": tokens.TEXT_MUTED, "d": tokens.HIGHLIGHT, "e": tokens.PRIMARY}
 
 fig, ax = line_style.new_panel()
 for bus, trace in traces.items():
-    ax.plot(hours, trace, color=colors[bus], label=f"House {bus.upper()}")
-ax.set_xlabel("Hour")
+    ax.plot(hours, trace, color=colors[bus], lw=line_style.LINE_WIDTH, label=f"House {bus.upper()}")
+line_style.hour_axis(ax)
+line_style.set_y_axis(ax, *traces.values())
 ax.set_ylabel("Voltage (pu)")
-ax.set_xticks([0, 6, 12, 18, 24])
 line_style.finish(ax)
-line_style.legend_below(ax, ncol=3);
+line_style.legend_below(ax, ncol=3)
+line_style.show(fig)
 ```
 
 While the PV system generates, the voltage at house `E` rises to about 1.02 pu. The unbalanced flow

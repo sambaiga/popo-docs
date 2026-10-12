@@ -1,27 +1,131 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python3
+---
+
 # Plotting
 
-{py:mod}`popo.plotting` draws figures and tables in one style: the palette and typography every figure on
-this site uses. It needs the `plot` extra.
+{py:mod}`popo.plotting` draws network diagrams, line plots and tables in one style, the style used by
+every figure in this documentation. It needs the `plot` extra.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+import os
+
+os.chdir("../..")  # run from the repository root, where tests/data is
+```
+
+## Figure style
+
+{py:func}`popo.plotting.style.configure` applies the style to every figure that follows: serif type,
+thin axes without a grid, and the popo palette. With `latex=True`, the default, text is typeset by LaTeX,
+which must be installed; `latex=False` uses matplotlib's own text rendering.
+{py:mod}`popo.plotting.line_style` calls the same function and adds conventions for line plots.
+
+```{code-cell} ipython3
+from popo.plotting import line_style
+
+line_style.configure(latex=False)
+```
 
 ## Network diagrams
 
-{py:func}`~popo.plotting.network.plot_topology` draws a feeder as a schematic: a lightning bolt for the
-source, transformer badges, houses, sun badges for PV, with every bus coloured by its voltage status.
+{py:func}`~popo.plotting.network.topology_from_dss` reads the topology and bus voltages of a solved
+circuit, and {py:func}`~popo.plotting.network.plot_topology` draws it as a schematic: a lightning bolt
+for the source, a transformer badge, a house for each customer, and every bus coloured by its voltage
+status.
 
-```python
+```{code-cell} ipython3
+from popo.network import Circuit
 from popo.plotting.network import plot_topology, topology_from_dss
 
-plot_topology(topology_from_dss(dss), title="Feeder", orientation="horizontal")
+circuit = Circuit()
+for command in [
+    "Clear",
+    "Set DefaultBaseFrequency=50",
+    "New Circuit.Example",
+    "Edit Vsource.Source bus1=SourceBus basekv=11 pu=1.0 phases=3",
+    "New Transformer.LVTR Buses=[SourceBus, A.1.2.3] Conns=[delta wye] KVs=[11, 0.4] KVAs=[250 250] xhl=2.5",
+    "New Linecode.240sq nphases=3 R1=0.127 X1=0.072 units=km",
+    "New Linecode.16sq nphases=1 R1=1.15 X1=0.083 units=km",
+    "New Line.A_B bus1=A.1.2.3 bus2=B.1.2.3 length=1 units=km linecode=240sq",
+    "New Line.B_F bus1=B.1.2.3 bus2=F.1.2.3 length=1 units=km linecode=240sq",
+]:
+    circuit.command(command)
+for i, (feeder, house, kw) in enumerate([("B", "C", 7), ("B", "D", 6), ("F", "G", 7), ("F", "H", 9)], start=1):
+    phase = 1 + (i - 1) % 3
+    circuit.command(f"New Line.L{i} bus1={feeder}.{phase} bus2={house}.{phase} length=0.01 units=km linecode=16sq")
+    circuit.command(f"New Load.{house} bus1={house}.{phase} phases=1 kV=0.23 kW={kw} pf=0.95")
+circuit.command("Set VoltageBases=[11 0.4]")
+circuit.command("CalcVoltageBases")
+circuit.solve()
+
+plot_topology(topology_from_dss(circuit.dss), title="Two-branch network", figsize=(6.0, 4.2));
 ```
 
-## Figures
+Houses `C`, `G` and `H` fall below 0.94 pu and are drawn in orange. House `D`, at the same distance
+as `C` but alone on phase 2, stays at 1.00 pu: on an unbalanced network the phase a customer is on
+matters as much as its distance from the transformer. The colour thresholds default to 0.94 and 1.10 pu; pass `limits=` a {py:class}`~popo.standards.VoltageLimits` to use
+a standard's band instead. `orientation="horizontal"` lays the tree out from left to right.
 
-- {py:func}`popo.plotting.style.configure` applies the figure style: serif type set through LaTeX when it
-  is installed, thin axes, no grid, the shared palette.
-- {py:mod}`popo.plotting.line_style` adds compact line-plot conventions: the legend below the axes,
-  dotted reference lines and a rounded y-axis (`legend_below`, `reference_line`, `set_y_axis`, `show`).
+## Line plots
+
+{py:mod}`~popo.plotting.line_style` provides the pieces of a line plot: `new_panel` for a panel at its
+final size (by default 0.40 of a 6.3 in text width, with an aspect of 0.74), `hour_axis` for a day
+from 00 to 24, `set_y_axis` for padded limits and a few round ticks, `reference_line` for a dotted level
+such as a limit, `finish` for the axes, and `legend_below` for a legend under the plot. `show` lays out
+the figure and places the legend. {py:mod}`popo.plotting.tokens` names the palette colours by
+role: `PRIMARY` for the subject of a figure, `DANGER` for a failure, `TEXT_MUTED` for context.
+
+```{code-cell} ipython3
+import numpy as np
+
+from popo.plotting import tokens
+
+hours = np.arange(48) / 2
+busbar = 1.035 + 0.005 * np.sin(np.pi * hours / 24)
+far_end = 1.0 + 0.12 * np.clip(np.sin(np.pi * (hours - 6) / 12), 0, None)
+
+fig, ax = line_style.new_panel()
+line_style.reference_line(ax, 1.10, label="Limit")
+ax.plot(hours, busbar, color=tokens.TEXT_MUTED, lw=line_style.LINE_WIDTH, label="Busbar")
+ax.plot(hours, far_end, color=tokens.PRIMARY, lw=line_style.LINE_WIDTH, label="Far end")
+line_style.hour_axis(ax)
+line_style.set_y_axis(ax, busbar, far_end, [1.10])
+ax.set_ylabel("Voltage (pu)")
+line_style.finish(ax)
+line_style.legend_below(ax, ncol=3)
+line_style.show(fig)
+```
 
 ## Tables
 
-{py:func}`~popo.plotting.tables.themed_gt` styles any DataFrame or Great Tables object, and
-{py:func}`~popo.plotting.tables.record_table` turns a one-row summary into a two-column table.
+{py:func}`~popo.plotting.tables.themed_gt` styles a DataFrame as a
+[Great Tables](https://posit-dev.github.io/great-tables/) table in the same palette.
+
+```{code-cell} ipython3
+import pandas as pd
+
+from popo.plotting.tables import record_table, themed_gt
+
+voltages = circuit.bus_voltages().query("bus in ['c', 'd', 'g', 'h']")
+themed_gt(voltages[["bus", "phase", "vmag_pu"]].reset_index(drop=True), decimals=3)
+```
+
+{py:func}`~popo.plotting.tables.record_table` shows a one-row summary, such as
+{py:meth}`~popo.network.Circuit.summary`, as a two-column table.
+
+```{code-cell} ipython3
+record_table(circuit.summary(), title="Circuit summary")
+```
+
+## Limitations
+
+- `plot_topology` suits networks of up to a few dozen buses. On a feeder with hundreds of buses the
+  labels overlap; plot the voltages as a line or distribution instead.
+- `configure` changes matplotlib's global settings for the rest of the session. Call
+  `matplotlib.rcdefaults()` to undo it.
+- Great Tables output is HTML. It renders in notebooks and in this documentation, not in a plain
+  terminal.
