@@ -492,67 +492,82 @@ dl.py.class > dt, dl.py.function > dt, dl.py.method > dt {
 .po-code-snippet .st { color: #a8d8e0; }
 
 /* ════════════════════════════════════════════════════════════════
-   FEATURE CARD GRID  (2-col static cards on landing page)
+   TASK PANELS  (Model, Simulate, Estimate on the landing page)
    ════════════════════════════════════════════════════════════════ */
 
-.po-feature-grid {
+.po-tasks {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
-  margin-bottom: 3rem;
+  margin: 1rem 0 3rem;
 }
 
-@media (max-width: 768px) {
-  .po-feature-grid { grid-template-columns: 1fr; }
-}
+@media (max-width: 900px) { .po-tasks { grid-template-columns: 1fr; } }
 
-.po-fcard {
+.po-task {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.4rem 1.4rem 1.1rem;
+  padding: 1rem 1.2rem 1.1rem;
   background: var(--po-white);
   border: 1px solid var(--po-border);
   border-radius: 10px;
-  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
 
-html[data-theme="dark"] .po-fcard { background: var(--po-surface); }
+html[data-theme="dark"] .po-task { background: var(--po-surface); }
 
-.po-fcard:hover {
+.po-task:hover {
   box-shadow: 0 4px 20px rgba(16,117,145,0.12);
-  transform: translateY(-2px);
   border-color: var(--po-teal-mid);
 }
 
-.po-fcard-header {
+/* The figures are drawn on white; the frame keeps them on white in both themes,
+   and gives the taller network diagram the same footprint as the two charts. */
+.po-task-figure {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  justify-content: center;
+  height: 210px;
+  margin: 0 0 1rem;
+  padding: 0.5rem;
+  background: #ffffff;
+  border-radius: 6px;
 }
 
-.po-fcard-title {
+html[data-theme="dark"] .po-task-figure { border: 1px solid var(--po-border); }
+
+.po-task-figure img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+.po-task-title {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.15rem;
   color: var(--po-teal);
-  margin: 0;
+  margin: 0 0 0.5rem;
   border: none !important;
   padding: 0 !important;
-  line-height: 1.3;
 }
 
-.po-fcard-body {
+.po-task-body {
   font-size: 0.875rem;
   color: var(--po-slate);
-  line-height: 1.7;
-  margin: 0;
+  line-height: 1.65;
+  margin: 0 0 0.75rem;
   flex: 1;
 }
 
-html[data-theme="dark"] .po-fcard-body { color: #8aabb4; }
+html[data-theme="dark"] .po-task-body { color: #8aabb4; }
 
-.po-fcard-link {
+.po-task-tools {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin: 0 0 0.75rem;
+}
+
+.po-task-tools span { font-weight: 600; color: var(--po-text); }
+.po-task-tools code { font-size: 0.78rem; }
+
+.po-task-link {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -563,126 +578,10 @@ html[data-theme="dark"] .po-fcard-body { color: #8aabb4; }
   text-transform: uppercase;
   color: var(--po-teal) !important;
   text-decoration: none !important;
-  margin-top: 0.25rem;
   transition: gap 0.15s, color 0.15s;
 }
 
-.po-fcard-link:hover {
-  color: var(--po-teal-mid) !important;
-  gap: 8px;
-  text-decoration: none !important;
-}
-
-/* ── Accordion feature list (Why popo section) ── */
-.po-features {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 3rem;
-}
-
-/* Strip browser default <details> marker */
-.po-feature { list-style: none; }
-.po-feature summary { list-style: none; }
-.po-feature summary::-webkit-details-marker { display: none; }
-
-.po-feature {
-  border: 1px solid var(--po-border);
-  border-radius: 10px;
-  background: var(--po-white);
-  overflow: hidden;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
-}
-
-html[data-theme="dark"] .po-feature { background: var(--po-surface); }
-
-.po-feature[open] {
-  border-color: var(--po-teal-mid);
-  box-shadow: 0 4px 18px rgba(6,159,172,0.10);
-}
-
-.po-feature-summary {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.9rem 1.1rem;
-  cursor: pointer;
-  -webkit-user-select: none;
-  user-select: none;
-  outline: none;
-}
-
-.po-feature-summary:hover { background: rgba(6,159,172,0.04); }
-html[data-theme="dark"] .po-feature-summary:hover { background: rgba(6,159,172,0.08); }
-
-/* Coloured icon dot */
-.po-feature-dot {
-  flex-shrink: 0;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  color: #fff;
-}
-
-/* Bold title */
-.po-feature-title {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  font-size: 0.93rem;
-  color: var(--po-charcoal);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-html[data-theme="dark"] .po-feature-title { color: var(--po-text); }
-
-/* Muted one-line teaser - grows to fill space */
-.po-feature-teaser {
-  flex: 1;
-  font-size: 0.84rem;
-  color: var(--po-slate);
-  line-height: 1.4;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-html[data-theme="dark"] .po-feature-teaser { color: #8aabb4; }
-
-/* Chevron icon - rotates when open */
-.po-feature-chevron {
-  flex-shrink: 0;
-  font-size: 0.8rem;
-  color: var(--po-slate);
-  transition: transform 0.22s ease;
-}
-.po-feature[open] .po-feature-chevron { transform: rotate(180deg); }
-
-/* Expanded body */
-.po-feature-body {
-  padding: 0 1.1rem 1rem 4.2rem;
-  font-size: 0.875rem;
-  line-height: 1.7;
-  color: var(--po-slate);
-  border-top: 1px solid var(--po-border);
-}
-html[data-theme="dark"] .po-feature-body { color: #8aabb4; }
-
-.po-feature-body p { margin: 0.75rem 0 0; }
-.po-feature-body code {
-  font-size: 0.8rem;
-  background: var(--po-teal-light);
-  color: var(--po-teal);
-  padding: 0.05em 0.35em;
-  border-radius: 3px;
-}
-
-@media (max-width: 600px) {
-  .po-feature-teaser { display: none; }
-  .po-feature-body { padding-left: 1.1rem; }
-}
+.po-task-link:hover { color: var(--po-teal-mid) !important; gap: 8px; }
 
 /* Edit on GitHub button */
 .bd-header-article a.btn { border-color: var(--po-teal); color: var(--po-teal); font-size: 0.82rem; }
@@ -694,33 +593,12 @@ html[data-theme="dark"] .po-feature-body { color: #8aabb4; }
 }
 
 /* ════════════════════════════════════════════════════════════════
-   WHY TWIGA  (core strengths strip on landing page)
-   ════════════════════════════════════════════════════════════════ */
-
-.po-why {
-  margin: 2.5rem 0 0.5rem;
-}
-
-.po-why-lead {
-  font-size: 0.875rem;
-  line-height: 1.7;
-  color: var(--po-slate);
-  max-width: 780px;
-  margin: 0 0 2rem;
-  border-left: 3px solid var(--po-teal);
-  padding-left: 1rem;
-}
-
-html[data-theme="dark"] .po-why-lead { color: #8aabb4; }
-
-
-/* ════════════════════════════════════════════════════════════════
-   NAV CARDS  (Bokeh-style section grid on landing page)
+   NAV CARDS  (section grid at the foot of the landing page)
    ════════════════════════════════════════════════════════════════ */
 
 .po-nav-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
   margin: 2.5rem 0;
 }
@@ -730,7 +608,7 @@ html[data-theme="dark"] .po-why-lead { color: #8aabb4; }
 
 .po-nav-card {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 1rem;
   padding: 1.25rem 1.25rem 1.1rem;
   background: var(--po-white);
@@ -750,23 +628,24 @@ html[data-theme="dark"] .po-nav-card { background: var(--po-surface); }
   text-decoration: none !important;
 }
 
-.po-nav-card-icon {
-  flex-shrink: 0;
-  width: 48px; height: 48px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: #fff;
-}
-
-.po-nav-card-icon i {
-  font-size: 1.45rem;
-  line-height: 1;
-  color: #fff;
-}
-
 .po-nav-card-body { flex: 1; }
+
+/* Button at the foot of each nav card, in popo's outline-button style. */
+.po-nav-card-button {
+  font-family: 'Poppins', sans-serif;
+  align-self: flex-start;
+  padding: 6px 14px;
+  border: 1.5px solid var(--po-teal);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--po-teal);
+  transition: background 0.15s, color 0.15s;
+}
+
+.po-nav-card:hover .po-nav-card-button { background: var(--po-teal); color: #fff; }
+html[data-theme="dark"] .po-nav-card:hover .po-nav-card-button { color: #161d22; }
+
 
 .po-nav-card-body h3 {
   font-family: 'Poppins', sans-serif;
@@ -1249,100 +1128,6 @@ html[data-theme="dark"] table.dataframe tbody tr:hover {
   background: var(--po-teal-bg);
 }
 
-/* ── Contributors section ────────────────────────────────────────── */
-.po-contributors {
-  margin: 3rem 0 1rem;
-  text-align: center;
-}
-
-.po-section-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--po-teal);
-  margin: 0 0 0.4rem;
-}
-
-.po-contributors-lead {
-  font-size: 0.95rem;
-  color: var(--po-slate);
-  margin: 0 0 1.5rem;
-}
-
-html[data-theme="dark"] .po-contributors-lead { color: #8aabb4; }
-
-.po-contributor-cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-}
-
-.po-contributor-card a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  width: 130px;
-  transition: transform 0.2s, opacity 0.2s;
-}
-
-@media (max-width: 480px) {
-  .po-contributor-cards {
-    gap: 1.5rem;
-  }
-  .po-contributor-card a {
-    width: min(42vw, 130px);
-    padding: 0.5rem;
-  }
-  .po-contributor-card img {
-    width: 56px;
-    height: 56px;
-  }
-  .po-contributor-role {
-    font-size: 0.65rem;
-  }
-}
-
-.po-contributor-card a:hover {
-  transform: translateY(-3px);
-  opacity: 0.85;
-}
-
-html[data-theme="dark"] .po-contributor-card a {
-  background: transparent;
-}
-
-.po-contributor-card img {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--po-teal);
-}
-
-.po-contributor-name {
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--po-dark);
-  text-align: center;
-}
-
-html[data-theme="dark"] .po-contributor-name { color: var(--po-text); }
-
-.po-contributor-role {
-  font-size: 0.72rem;
-  color: var(--po-slate);
-  text-align: center;
-  line-height: 1.4;
-}
-
-html[data-theme="dark"] .po-contributor-role { color: #8aabb4; }
-
 /* Header rows follow popo.plotting.tables.themed_gt: dark text on white under a teal rule. */
 html[data-theme="dark"] table.docutils th,
 html[data-theme="dark"] .output_area table.dataframe th,
@@ -1364,9 +1149,18 @@ html[data-theme="dark"] div.cell_output table th { color: var(--po-text); }
 .po-code-snippet .s { color: #ffc98f; }
 .po-code-snippet .c { color: #8a9ba3; font-style: italic; }
 
+/* Section headings on the landing page. */
+.po-section-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--po-teal);
+  margin: 0 0 0.4rem;
+}
+
 /* Overview figure: full width, framed like a card. */
 .po-overview {
-  margin: 2.2rem 0 1.6rem;
+  margin: 0.8rem 0 1.6rem;
   border: 1px solid var(--po-border);
   border-radius: 12px;
   overflow: hidden;
@@ -1393,5 +1187,7 @@ html[data-theme="dark"] .po-companion { color: var(--po-text); }
 .po-install-box { overflow-x: auto; }
 .po-install-code { white-space: nowrap; }
 
-/* The overview figure carries its own day and night halves; keep it undimmed in dark mode. */
-html[data-theme="dark"] .po-overview img { filter: none; }
+/* The overview figure carries its own day and night halves, and the panel figures sit on
+   their own white frame; keep both undimmed in dark mode. */
+html[data-theme="dark"] .po-overview img,
+html[data-theme="dark"] .po-task-figure img { filter: none; }
