@@ -5,7 +5,7 @@
    "id": "0",
    "metadata": {},
    "source": [
-    "# Time-Series Simulation and DER Modeling\n",
+    "# Time series and DER\n",
     "\n",
     "## Objectives\n",
     "\n",

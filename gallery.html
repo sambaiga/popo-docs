@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial gallery &#8212; popo</title>
+    <title>Tutorials &#8212; popo</title>
   
   
   
@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="_static/css/popo.css?v=43b86f58" />
+    <link rel="stylesheet" type="text/css" href="_static/css/popo.css?v=60897174" />
     <link crossorigin="anonymous" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   
   <!-- So that users can add custom icons -->
@@ -59,8 +59,6 @@
     <link rel="icon" href="_static/favicon.svg"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API reference" href="api/index.html" />
-    <link rel="prev" title="LV State Estimation" href="tutorials/notebooks/03-lv-state-estimation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -167,13 +165,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorials/index.html">
     Tutorials
-  </a>
-</li>
-
-
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#" aria-current="page">
-    Gallery
   </a>
 </li>
 
@@ -308,6 +299,8 @@
       
       
       
+        
+      
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
         
@@ -341,13 +334,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorials/index.html">
     Tutorials
-  </a>
-</li>
-
-
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#" aria-current="page">
-    Gallery
   </a>
 </li>
 
@@ -490,7 +476,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Tutorial gallery</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Tutorials</span></li>
   </ul>
 </nav>
 </div>
@@ -507,71 +493,10 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="tutorial-gallery">
-<h1>Tutorial gallery<a class="headerlink" href="#tutorial-gallery" title="Link to this heading">#</a></h1>
-<p>Every tutorial, by topic and level. Click a card to open the notebook.</p>
-<div class="po-gallery-filters">
-  <button class="po-filter active" onclick="poFilter('all')">All</button>
-  <button class="po-filter po-filter-beginner" onclick="poFilter('beginner')">
-    <i class="bi bi-circle-fill"></i> Beginner
-  </button>
-  <button class="po-filter po-filter-intermediate" onclick="poFilter('intermediate')">
-    <i class="bi bi-circle-fill"></i> Intermediate
-  </button>
-  <button class="po-filter po-filter-advanced" onclick="poFilter('advanced')">
-    <i class="bi bi-circle-fill"></i> Advanced
-  </button>
-</div>
-
-<div class="po-gallery">
-
-  <a class="po-gallery-card" href="tutorials/notebooks/01-opendss-lv-modeling.html" data-level="beginner">
-    <div class="po-gallery-thumb" style="background:linear-gradient(135deg,#107591 0%,#00c0bf 100%)">
-      <span class="po-gallery-num">01</span>
-      <i class="bi bi-diagram-3-fill po-gallery-icon"></i>
-    </div>
-    <div class="po-gallery-info">
-      <span class="po-level po-level-beginner"><i class="bi bi-circle-fill"></i> Beginner</span>
-      <h4>OpenDSS LV modelling</h4>
-      <p>Build a feeder, read it back as records and tables, and check it against EN 50160.</p>
-    </div>
-  </a>
-
-  <a class="po-gallery-card" href="tutorials/notebooks/02-timeseries-der-modeling.html" data-level="intermediate">
-    <div class="po-gallery-thumb" style="background:linear-gradient(135deg,#f69a48 0%,#d9741f 100%)">
-      <span class="po-gallery-num">02</span>
-      <i class="bi bi-sun-fill po-gallery-icon"></i>
-    </div>
-    <div class="po-gallery-info">
-      <span class="po-level po-level-intermediate"><i class="bi bi-circle-fill"></i> Intermediate</span>
-      <h4>Time series and DER</h4>
-      <p>Hosting capacity on a real UK feeder, every customer's voltage, and three ways to fix it.</p>
-    </div>
-  </a>
-
-  <a class="po-gallery-card" href="tutorials/notebooks/03-lv-state-estimation.html" data-level="advanced">
-    <div class="po-gallery-thumb" style="background:linear-gradient(135deg,#1b2329 0%,#107591 100%)">
-      <span class="po-gallery-num">03</span>
-      <i class="bi bi-speedometer2 po-gallery-icon"></i>
-    </div>
-    <div class="po-gallery-info">
-      <span class="po-level po-level-advanced"><i class="bi bi-circle-fill"></i> Advanced</span>
-      <h4>LV state estimation</h4>
-      <p>How much has to be measured to know every customer's voltage.</p>
-    </div>
-  </a>
-
-</div>
-
-<script>
-  function poFilter(level) {
-    document.querySelectorAll('.po-filter').forEach(function (b) { b.classList.remove('active'); });
-    event.currentTarget.classList.add('active');
-    document.querySelectorAll('.po-gallery-card').forEach(function (card) {
-      card.style.display = (level === 'all' || card.dataset.level === level) ? '' : 'none';
-    });
-  }
-</script></section>
+  <section id="tutorials">
+<h1>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">#</a></h1>
+<p>The tutorial gallery has moved to <a class="reference internal" href="tutorials/index.html"><span class="doc">Tutorials</span></a>.</p>
+<meta http-equiv="refresh" content="0; url=tutorials/index.html"></section>
 
 
                 </article>
@@ -583,24 +508,6 @@
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="tutorials/notebooks/03-lv-state-estimation.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">LV State Estimation</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="api/index.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">API reference</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               

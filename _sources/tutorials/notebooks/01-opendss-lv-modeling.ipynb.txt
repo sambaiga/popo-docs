@@ -5,7 +5,7 @@
    "id": "0",
    "metadata": {},
    "source": [
-    "# OpenDSS LV Modeling with popo\n",
+    "# OpenDSS LV modelling\n",
     "\n",
     "## Objectives\n",
     "\n",

@@ -5,7 +5,7 @@
    "id": "0",
    "metadata": {},
    "source": [
-    "# LV State Estimation\n",
+    "# LV state estimation\n",
     "\n",
     "## Objectives\n",
     "\n",

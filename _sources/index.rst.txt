@@ -31,7 +31,7 @@ popo
        </script>
        <div class="po-hero-actions">
          <a class="po-btn-primary" href="getting-started/quickstart.html">Get Started</a>
-         <a class="po-btn-secondary" href="gallery.html">Tutorials</a>
+         <a class="po-btn-secondary" href="tutorials/index.html">Tutorials</a>
        </div>
      </div>
      <div class="po-hero-right">
@@ -163,13 +163,6 @@ popo
    :caption: Tutorials
 
    Tutorials <tutorials/index>
-
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-   :caption: Gallery
-
-   Gallery <gallery>
 
 .. toctree::
    :maxdepth: 2

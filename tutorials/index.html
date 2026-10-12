@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/popo.css?v=43b86f58" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/popo.css?v=60897174" />
     <link crossorigin="anonymous" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   
   <!-- So that users can add custom icons -->
@@ -59,7 +59,7 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="OpenDSS LV Modeling with popo" href="notebooks/01-opendss-lv-modeling.html" />
+    <link rel="next" title="OpenDSS LV modelling" href="notebooks/01-opendss-lv-modeling.html" />
     <link rel="prev" title="Plotting" href="../guide/plotting.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -167,13 +167,6 @@
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="#" aria-current="page">
     Tutorials
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../gallery.html">
-    Gallery
   </a>
 </li>
 
@@ -346,13 +339,6 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../gallery.html">
-    Gallery
-  </a>
-</li>
-
-
-<li class="nav-item ">
   <a class="nav-link nav-internal" href="../api/index.html">
     Reference
   </a>
@@ -462,9 +448,9 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="notebooks/01-opendss-lv-modeling.html">OpenDSS LV Modeling with popo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/02-timeseries-der-modeling.html">Time-Series Simulation and DER Modeling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/03-lv-state-estimation.html">LV State Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/01-opendss-lv-modeling.html">OpenDSS LV modelling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/02-timeseries-der-modeling.html">Time series and DER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/03-lv-state-estimation.html">LV state estimation</a></li>
 </ul>
 </div>
 </nav></div>
@@ -524,26 +510,52 @@
                   
   <section id="tutorials">
 <h1>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">#</a></h1>
-<p>Three end-to-end notebooks, each running on real feeders that ship with popo. They are executed every time
-these pages are built, so every number and figure below comes from the current code.</p>
-<dl class="simple">
-<dt><strong>Modelling</strong> (01)</dt><dd><p>Build a low-voltage circuit in OpenDSS, read it back with <code class="docutils literal notranslate"><span class="pre">Circuit</span></code> and the result tables, check it
-against a statutory limit, and work through three network-expansion exercises.</p>
-</dd>
-<dt><strong>Time series and DER</strong> (02)</dt><dd><p>A real 188-customer UK feeder with real household, PV and EV profiles: a two-day time series, a
-hosting-capacity sweep, every customer’s voltage alongside the substation’s, and Volt-VAr, Volt-Watt and
-storage compared.</p>
-</dd>
-<dt><strong>State estimation</strong> (03)</dt><dd><p>The same feeder estimated from what is measured: the substation, smart meters and line sensors, and how
-many of each are enough.</p>
-</dd>
-</dl>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/01-opendss-lv-modeling.html">OpenDSS LV Modeling with popo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/02-timeseries-der-modeling.html">Time-Series Simulation and DER Modeling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/03-lv-state-estimation.html">LV State Estimation</a></li>
-</ul>
+<p>Three notebooks that each work through a complete study. They run when the documentation is built, so
+every number and figure in them comes from the current code. The feeders and profiles they use are in
+the repository’s test data (<code class="docutils literal notranslate"><span class="pre">tests/data</span></code>); to run a notebook yourself, clone the repository (see
+<a class="reference internal" href="../getting-started/installation.html"><span class="doc">Installation</span></a>) and open it from the <code class="docutils literal notranslate"><span class="pre">notebooks</span></code> directory.</p>
+<div class="po-gallery">
+
+  <a class="po-gallery-card" href="notebooks/01-opendss-lv-modeling.html">
+    <div class="po-gallery-thumb">
+      <img src="../_static/img/panel-model.svg"
+           alt="The expanded network of tutorial 01, each bus coloured by voltage status." />
+    </div>
+    <div class="po-gallery-info">
+      <span class="po-gallery-num">Tutorial 01</span>
+      <h3>OpenDSS LV modelling</h3>
+      <p>Build a low-voltage circuit with OpenDSS commands, read it back as records and tables, check
+      it against EN 50160, and extend it with new branches and rooftop PV.</p>
+    </div>
+  </a>
+
+  <a class="po-gallery-card" href="notebooks/02-timeseries-der-modeling.html">
+    <div class="po-gallery-thumb">
+      <img src="../_static/img/panel-simulate.svg"
+           alt="Voltage over two days at 80% PV: the busbar against the most exposed customer." />
+    </div>
+    <div class="po-gallery-info">
+      <span class="po-gallery-num">Tutorial 02</span>
+      <h3>Time series and DER</h3>
+      <p>Simulate a 188-customer UK feeder over two days with recorded household, PV and EV profiles,
+      find its hosting capacity, and compare Volt-VAr, Volt-Watt and storage.</p>
+    </div>
+  </a>
+
+  <a class="po-gallery-card" href="notebooks/03-lv-state-estimation.html">
+    <div class="po-gallery-thumb">
+      <img src="../_static/img/panel-estimate.svg"
+           alt="True and estimated voltage at every bus of the UK feeder." />
+    </div>
+    <div class="po-gallery-info">
+      <span class="po-gallery-num">Tutorial 03</span>
+      <h3>LV state estimation</h3>
+      <p>Estimate every bus voltage on the same feeder from the substation, smart meters and line
+      sensors, and find how many measurements are needed.</p>
+    </div>
+  </a>
+
+</div><div class="toctree-wrapper compound">
 </div>
 </section>
 
@@ -571,7 +583,7 @@ many of each are enough.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">OpenDSS LV Modeling with popo</p>
+        <p class="prev-next-title">OpenDSS LV modelling</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

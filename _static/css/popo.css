@@ -654,156 +654,84 @@ html[data-theme="dark"] .po-nav-card:hover .po-nav-card-button { color: #161d22;
 html[data-theme="dark"] .po-nav-card-body p { color: #8aabb4; }
 
 /* ════════════════════════════════════════════════════════════════
-   GALLERY PAGE
+   TUTORIAL GALLERY  (thumbnails from each tutorial's own figures)
    ════════════════════════════════════════════════════════════════ */
 
-/* Filter bar */
-.po-gallery-filters {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
-}
-
-.po-filter {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.82rem; font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 6px 16px;
-  border-radius: 20px;
-  border: 2px solid var(--po-border);
-  background: var(--po-white);
-  color: var(--po-slate);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-html[data-theme="dark"] .po-filter { background: var(--po-surface); color: #8aabb4; }
-
-.po-filter:hover {
-  border-color: var(--po-teal);
-  color: var(--po-teal);
-  background: var(--po-teal-light);
-}
-
-.po-filter.active {
-  background: var(--po-teal);
-  border-color: var(--po-teal);
-  color: #fff;
-}
-
-/* Colored dots on filter buttons */
-.po-filter-beginner     .bi-circle-fill { color: #2e7d32; font-size: 0.6rem; }
-.po-filter-intermediate .bi-circle-fill { color: #f57f17; font-size: 0.6rem; }
-.po-filter-advanced     .bi-circle-fill { color: #c62828; font-size: 0.6rem; }
-.po-filter.active .bi-circle-fill       { color: rgba(255,255,255,0.85); }
-
-/* Gallery grid */
 .po-gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.35rem;
-  margin-bottom: 3rem;
+  gap: 1.25rem;
+  margin: 1.5rem 0 3rem;
 }
 
-@media (max-width: 960px) { .po-gallery { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .po-gallery { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .po-gallery { grid-template-columns: 1fr; } }
 
-/* Card */
 .po-gallery-card {
   display: flex;
   flex-direction: column;
+  padding: 1rem 1.2rem 1.1rem;
   border: 1px solid var(--po-border);
   border-radius: 10px;
-  overflow: hidden;
+  background: var(--po-white);
   text-decoration: none !important;
   color: var(--po-text) !important;
-  background: var(--po-white);
-  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
 
 html[data-theme="dark"] .po-gallery-card { background: var(--po-surface); }
 
 .po-gallery-card:hover {
-  box-shadow: 0 6px 24px rgba(16,117,145,0.16);
-  transform: translateY(-3px);
-  border-color: var(--po-teal);
-  text-decoration: none !important;
+  box-shadow: 0 4px 20px rgba(16,117,145,0.12);
+  border-color: var(--po-teal-mid);
 }
 
-/* Thumbnail gradient area */
+/* Same frame as the landing page's task panels: figures drawn on white, at one footprint. */
 .po-gallery-thumb {
-  height: 90px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 18px;
-  position: relative;
+  justify-content: center;
+  height: 210px;
+  margin: 0 0 1rem;
+  padding: 0.5rem;
+  background: #ffffff;
+  border-radius: 6px;
 }
+
+html[data-theme="dark"] .po-gallery-thumb { border: 1px solid var(--po-border); }
+html[data-theme="dark"] .po-gallery-thumb img { filter: none; }
+
+.po-gallery-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+.po-gallery-info { display: flex; flex-direction: column; gap: 0.35rem; }
 
 .po-gallery-num {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--po-slate);
+}
+
+html[data-theme="dark"] .po-gallery-num { color: #8aabb4; }
+
+.po-gallery-info h3 {
   font-family: 'Poppins', sans-serif;
-  font-weight: 700; font-size: 2rem;
-  color: rgba(255,255,255,0.35);
-  line-height: 1;
-}
-
-.po-gallery-icon {
-  font-size: 2rem;
-  line-height: 1;
-  color: rgba(255,255,255,0.9);
-}
-
-/* Card info section */
-.po-gallery-info {
-  padding: 1rem 1rem 0.9rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.po-gallery-info h4 {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700; font-size: 0.92rem;
-  margin: 0.2rem 0 0.25rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0;
   color: var(--po-teal);
-  border: none; padding: 0;
+  border: none;
+  padding: 0;
 }
 
 .po-gallery-info p {
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   color: var(--po-slate);
-  line-height: 1.5; margin: 0;
+  line-height: 1.65;
+  margin: 0;
 }
 
 html[data-theme="dark"] .po-gallery-info p { color: #8aabb4; }
-
-/* Difficulty badges */
-.po-level {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.72rem; font-weight: 700;
-  letter-spacing: 0.04em;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 9px;
-  border-radius: 10px;
-  width: fit-content;
-}
-
-.po-level .bi-circle-fill { font-size: 0.5rem; }
-
-.po-level-beginner     { background: #e8f5e9; color: #2e7d32; }
-.po-level-intermediate { background: #fffde7; color: #f57f17; }
-.po-level-advanced     { background: #fce4ec; color: #c62828; }
-
-html[data-theme="dark"] .po-level-beginner     { background: rgba(46,125,50,0.2);  color: #81c784; }
-html[data-theme="dark"] .po-level-intermediate { background: rgba(245,127,23,0.2); color: #ffcc02; }
-html[data-theme="dark"] .po-level-advanced     { background: rgba(198,40,40,0.2);  color: #ef9a9a; }
 
 /* ════════════════════════════════════════════════════════════════
    SUBSYSTEM GRADIENT HEADERS  (new - MLOps & overview cards)

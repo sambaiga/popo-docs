@@ -1,24 +1,58 @@
 Tutorials
 =========
 
-Three end-to-end notebooks, each running on real feeders that ship with popo. They are executed every time
-these pages are built, so every number and figure below comes from the current code.
+Three notebooks that each work through a complete study. They run when the documentation is built, so
+every number and figure in them comes from the current code. The feeders and profiles they use are in
+the repository's test data (``tests/data``); to run a notebook yourself, clone the repository (see
+:doc:`../getting-started/installation`) and open it from the ``notebooks`` directory.
 
-**Modelling** (01)
-   Build a low-voltage circuit in OpenDSS, read it back with ``Circuit`` and the result tables, check it
-   against a statutory limit, and work through three network-expansion exercises.
+.. raw:: html
 
-**Time series and DER** (02)
-   A real 188-customer UK feeder with real household, PV and EV profiles: a two-day time series, a
-   hosting-capacity sweep, every customer's voltage alongside the substation's, and Volt-VAr, Volt-Watt and
-   storage compared.
+   <div class="po-gallery">
 
-**State estimation** (03)
-   The same feeder estimated from what is measured: the substation, smart meters and line sensors, and how
-   many of each are enough.
+     <a class="po-gallery-card" href="notebooks/01-opendss-lv-modeling.html">
+       <div class="po-gallery-thumb">
+         <img src="../_static/img/panel-model.svg"
+              alt="The expanded network of tutorial 01, each bus coloured by voltage status." />
+       </div>
+       <div class="po-gallery-info">
+         <span class="po-gallery-num">Tutorial 01</span>
+         <h3>OpenDSS LV modelling</h3>
+         <p>Build a low-voltage circuit with OpenDSS commands, read it back as records and tables, check
+         it against EN 50160, and extend it with new branches and rooftop PV.</p>
+       </div>
+     </a>
+
+     <a class="po-gallery-card" href="notebooks/02-timeseries-der-modeling.html">
+       <div class="po-gallery-thumb">
+         <img src="../_static/img/panel-simulate.svg"
+              alt="Voltage over two days at 80% PV: the busbar against the most exposed customer." />
+       </div>
+       <div class="po-gallery-info">
+         <span class="po-gallery-num">Tutorial 02</span>
+         <h3>Time series and DER</h3>
+         <p>Simulate a 188-customer UK feeder over two days with recorded household, PV and EV profiles,
+         find its hosting capacity, and compare Volt-VAr, Volt-Watt and storage.</p>
+       </div>
+     </a>
+
+     <a class="po-gallery-card" href="notebooks/03-lv-state-estimation.html">
+       <div class="po-gallery-thumb">
+         <img src="../_static/img/panel-estimate.svg"
+              alt="True and estimated voltage at every bus of the UK feeder." />
+       </div>
+       <div class="po-gallery-info">
+         <span class="po-gallery-num">Tutorial 03</span>
+         <h3>LV state estimation</h3>
+         <p>Estimate every bus voltage on the same feeder from the substation, smart meters and line
+         sensors, and find how many measurements are needed.</p>
+       </div>
+     </a>
+
+   </div>
 
 .. toctree::
-   :maxdepth: 1
+   :hidden:
 
    notebooks/01-opendss-lv-modeling
    notebooks/02-timeseries-der-modeling
