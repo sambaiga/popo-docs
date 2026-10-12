@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/documentation_options.js?v=a58bc63e"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -63,7 +63,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.0" />
+  <meta name="docsearch:version" content="0.1.1" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -221,15 +221,15 @@
     type="button"
     data-bs-toggle="dropdown"
     aria-expanded="false"
-    aria-label="popo version 0.1.0"
+    aria-label="popo version 0.1.1"
   >
-    <span class="po-version-label">v0.1.0</span>
+    <span class="po-version-label">v0.1.1</span>
     <span class="po-alpha-pill">alpha</span>
   </button>
   <div class="dropdown-menu dropdown-menu-end po-version-menu">
     <div class="po-version-info">
       <p>
-        <strong>popo 0.1.0</strong> is in alpha.
+        <strong>popo 0.1.1</strong> is in alpha.
         The API may change before 1.0.
       </p>
       <a
@@ -296,6 +296,10 @@
     </div>
   
 
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
   
 </div>
 
@@ -388,15 +392,15 @@
     type="button"
     data-bs-toggle="dropdown"
     aria-expanded="false"
-    aria-label="popo version 0.1.0"
+    aria-label="popo version 0.1.1"
   >
-    <span class="po-version-label">v0.1.0</span>
+    <span class="po-version-label">v0.1.1</span>
     <span class="po-alpha-pill">alpha</span>
   </button>
   <div class="dropdown-menu dropdown-menu-end po-version-menu">
     <div class="po-version-info">
       <p>
-        <strong>popo 0.1.0</strong> is in alpha.
+        <strong>popo 0.1.1</strong> is in alpha.
         The API may change before 1.0.
       </p>
       <a
@@ -518,8 +522,102 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h1>
-<p>popo has not been released yet. The changelog is generated from the commit history at each release, and
-appears here from the first one.</p>
+<p>All notable changes to popo are listed here, newest first. Versions follow
+<a class="reference external" href="https://semver.org">semantic versioning</a>; before 1.0 the API may change.</p>
+<section id="v0-1-1-2026-10-12">
+<h2>v0.1.1 (2026-10-12)<a class="headerlink" href="#v0-1-1-2026-10-12" title="Link to this heading">#</a></h2>
+<section id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>readme:</strong> Replace the internal status notes with a public status and citation</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-1-0-2026-10-12">
+<h2>v0.1.0 (2026-10-12)<a class="headerlink" href="#v0-1-0-2026-10-12" title="Link to this heading">#</a></h2>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>standards:</strong> Voltage limits and inverter capability curves</p></li>
+<li><p><strong>network:</strong> Transformer reader capturing both rating conventions</p></li>
+<li><p>Extract power flow, scenarios, estimation and network survey</p></li>
+<li><p><strong>scenarios,network:</strong> Port power-factor profile and residential-load enumeration</p></li>
+<li><p><strong>network,powerflow:</strong> Add weather, screening and sweep orchestration modules</p></li>
+<li><p><strong>estimation:</strong> Port coherent-vs-incoherent state-estimation study</p></li>
+<li><p><strong>profiles:</strong> Extract household, PV, EV and SMART-DS profile synthesis</p></li>
+<li><p><strong>plotting:</strong> Add popo.plotting, a standalone figure-style subpackage</p></li>
+<li><p>Add Circuit, result tables, Volt-Watt, storage and per-customer voltage events</p></li>
+<li><p><strong>estimation:</strong> Check conversions, count observability, add line sensors</p></li>
+<li><p><strong>brand:</strong> A bat whose wing bones are a feeder, and a day/night overview</p></li>
+</ul>
+</section>
+<section id="bug-fixes">
+<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>ci:</strong> Pin UV_PYTHON per matrix leg so the 3.13 test job actually runs on 3.13</p></li>
+<li><p><strong>test:</strong> Widen US sweep regression tolerance for cross-platform solver variation</p></li>
+<li><p><strong>scenarios:</strong> Widen write_load_shape’s values type to ArrayLike</p></li>
+<li><p><strong>powerflow:</strong> Rename run_eu_sweep to run_uk_sweep, matching what it reproduces</p></li>
+<li><p><strong>plotting:</strong> Correct LaTeX rendering, make the logo black</p></li>
+<li><p><strong>docs:</strong> Give the overview figure’s top label proper margin</p></li>
+<li><p><strong>plotting:</strong> Resolve ty type-check errors</p></li>
+<li><p><strong>powerflow:</strong> Read the whole transformer secondary</p></li>
+<li><p><strong>scenarios:</strong> Connect each installation on its customer’s own phase</p></li>
+<li><p><strong>estimation:</strong> Correct the meter sign, failure detection, substation measurement and conversion ratio</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>Documentation<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Record what is being extracted and why</p></li>
+<li><p>Correct stale Status section to reflect actual extraction progress</p></li>
+<li><p>Add end-to-end simulation guide for the DSS-US case study</p></li>
+<li><p>Document all three thesis datasets accurately, add DSS-UK walkthrough</p></li>
+<li><p><strong>notebooks:</strong> Add OpenDSS LV modeling tutorial on popo’s API</p></li>
+<li><p><strong>notebooks:</strong> Add DER time-series modeling tutorial on popo’s API</p></li>
+<li><p>Add popo.profiles to the module table, link the two tutorial notebooks</p></li>
+<li><p>Trim README prose, drop em-dashes, add overview figure</p></li>
+<li><p>Restore schematic overview figure, match thesis serif typography</p></li>
+<li><p>Add a bat logo mark, embed it in the overview figure</p></li>
+<li><p><strong>notebooks:</strong> Write the tutorials as guides to popo, from corrected results</p></li>
+<li><p><strong>notebooks:</strong> Add an LV state-estimation tutorial</p></li>
+<li><p>Add a Sphinx site in popo’s brand, ported from twiga-forecast’s</p></li>
+</ul>
+</section>
+<section id="tests">
+<h3>Tests<a class="headerlink" href="#tests" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>estimation:</strong> Raise model/wls/study coverage without requiring pandapower</p></li>
+<li><p><strong>integration:</strong> Add US sweep regression test against a real recorded run</p></li>
+<li><p><strong>integration:</strong> Add UK sweep regression test against a real recorded run</p></li>
+<li><p><strong>plotting:</strong> Add unit tests for popo.plotting</p></li>
+</ul>
+</section>
+<section id="build-and-packaging">
+<h3>Build and packaging<a class="headerlink" href="#build-and-packaging" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Publish as pop-flow on PyPI</p></li>
+<li><p>Keep test data and the secrets baseline out of the sdist</p></li>
+<li><p>Publish as popo-flow on PyPI</p></li>
+</ul>
+</section>
+<section id="continuous-integration">
+<h3>Continuous integration<a class="headerlink" href="#continuous-integration" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Add a manual release workflow</p></li>
+<li><p>Re-lock after a release bump; use absolute README image URLs</p></li>
+<li><p>Build docs on pull requests and publish them to sambaiga/popo-docs</p></li>
+<li><p><strong>publish:</strong> Let the PyPI job read the private repository, and retry a tag by hand</p></li>
+</ul>
+</section>
+<section id="maintenance">
+<h3>Maintenance<a class="headerlink" href="#maintenance" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Project scaffolding, tooling and package skeleton</p></li>
+<li><p><strong>pre-commit:</strong> Sort imports as a hook of its own</p></li>
+</ul>
+</section>
+</section>
 </section>
 
 
@@ -547,6 +645,37 @@ appears here from the first one.</p>
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-1-1-2026-10-12">v0.1.1 (2026-10-12)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-1-0-2026-10-12">v0.1.0 (2026-10-12)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bug-fixes">Bug fixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Documentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tests">Tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-packaging">Build and packaging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-integration">Continuous integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maintenance">Maintenance</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
