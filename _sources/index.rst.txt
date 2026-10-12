@@ -39,7 +39,7 @@ popo
      <div class="po-hero-right">
        <div class="po-install-box">
          <span class="po-install-label">Install</span>
-         <code class="po-install-code">pip install "pop-flow[all]"</code>
+         <code class="po-install-code">pip install "popo-flow[all]"</code>
        </div>
        <div class="po-code-snippet" id="po-hero-code"></div>
        <script>

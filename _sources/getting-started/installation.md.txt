@@ -1,9 +1,9 @@
 # Installation
 
-popo is published on PyPI as **`pop-flow`** and imported as **`popo`**. It needs Python 3.12 or later.
+popo is published on PyPI as **`popo-flow`** and imported as **`popo`**. It needs Python 3.12 or later.
 
 ```bash
-pip install pop-flow
+pip install popo-flow
 ```
 
 The core package reads network definitions, judges voltages against standards and works with results.
@@ -19,13 +19,13 @@ definition or check a limit:
 | `all` | everything above | |
 
 ```bash
-pip install "pop-flow[all]"
+pip install "popo-flow[all]"
 ```
 
 With [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv add "pop-flow[all]"
+uv add "popo-flow[all]"
 ```
 
 OpenDSSDirect.py bundles the OpenDSS engine, so nothing else needs installing on any operating system.

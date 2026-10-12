@@ -19,7 +19,7 @@
     "<li style=\"text-align: justify\">See how the quality of a substation forecast carries through to the estimate, with <code>run_comparison</code>.</li>\n",
     "</ul>\n",
     "\n",
-    "<p style=\"text-align: justify\">State estimation needs pandapower: <code>uv add pop-flow[estimation]</code>.</p>"
+    "<p style=\"text-align: justify\">State estimation needs pandapower: <code>uv add popo-flow[estimation]</code>.</p>"
    ]
   },
   {
