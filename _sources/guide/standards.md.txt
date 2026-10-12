@@ -1,0 +1,29 @@
+# Standards
+
+{py:mod}`popo.standards` holds voltage limits and inverter characteristics as named standards rather than
+numbers, so a study records which standard it applied.
+
+## Voltage limits
+
+| Constructor | Band | Rule |
+|---|---|---|
+| {py:meth}`VoltageLimits.en_50160 <popo.standards.VoltageLimits.en_50160>` | 0.90 to 1.10 pu | 95 % of samples, no sample past +10 %/-15 % |
+| {py:meth}`VoltageLimits.ansi_c84_1_range_a <popo.standards.VoltageLimits.ansi_c84_1_range_a>` | 0.95 to 1.05 pu | every sample |
+| {py:meth}`VoltageLimits.ansi_c84_1_range_b <popo.standards.VoltageLimits.ansi_c84_1_range_b>` | 0.917 to 1.058 pu | every sample |
+
+```python
+limits = VoltageLimits.en_50160()
+limits.check(voltages["vmag_pu"]).summary()     # the verdict, and why
+limits.violations(voltages)                      # the readings outside the band, and by how much
+limits.event_summary(report.voltage_traces())    # per customer: how often, how far, how long
+```
+
+`event_summary` separates a customer who briefly touches a limit from one who sits outside it for hours.
+
+## Inverters
+
+- {py:class}`~popo.standards.InverterCapability`: reactive capability, by standard (IEEE 1547 category B,
+  EREC G99).
+- {py:class}`~popo.standards.VoltVarCurve`: reactive power against terminal voltage.
+- {py:class}`~popo.standards.VoltWattCurve`: active power curtailed against terminal voltage, with the IEEE
+  1547 default.

@@ -1,0 +1,42 @@
+# Key concepts
+
+## Per unit
+
+Voltages are reported **per unit** of each bus's own base voltage: 1.0 pu is nominal, whether the bus is
+an 11 kV substation bus or a 230 V house. Statutory limits are expressed the same way, so a single number
+compares across voltage levels.
+
+## Phases
+
+Low-voltage customers are usually connected to **one phase**. A European feeder spreads its single-phase
+customers across all three phases; a North American one splits each house across the two legs of a
+centre-tapped transformer. popo keeps track of which phase each customer is on: results label every bus by
+the phase it is actually connected to, and rooftop arrays, chargers and batteries are installed on their
+customer's own phase.
+
+## Statutory limits
+
+A limit is a rule, not a number. EN 50160 asks that 95 % of ten-minute means over a week sit within
+±10 % of nominal, so a network can hold a low voltage for an hour and still comply; ANSI C84.1 Range A is
+±5 % with no such allowance. {py:class}`~popo.standards.VoltageLimits` carries both the band and the rule,
+and a study selects a standard by name.
+
+## Busbar and customers
+
+A secondary substation's busbar is where most networks are measured. It is not where voltage problems
+appear: rooftop solar raises voltage furthest from the substation, at the end of the longest service. A
+feeder can look compliant at the busbar while its farthest customers are well over the limit, which is why
+{py:func}`~popo.powerflow.solve_time_series` can record every customer's voltage as well as the busbar's.
+
+## Convergence
+
+A time-series solve whose inverter control loop fails to converge still reports a solved power flow, with
+reactive power that means nothing. popo returns convergence as part of every result
+({py:class}`~popo.powerflow.SolveReport`) rather than leaving it to a log line.
+
+## Observability
+
+A state estimator solves for a voltage magnitude and angle at every bus, less one reference angle:
+$2N - 1$ unknowns for $N$ buses. Each measurement supplies one equation, and each bus known to inject
+nothing supplies two. Fewer equations than unknowns means no estimate exists at all, whatever the solver;
+{py:func}`~popo.estimation.observability` counts them before an estimate is attempted.

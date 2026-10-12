@@ -1,0 +1,39 @@
+# Power flow
+
+{py:mod}`popo.powerflow` solves a circuit over time and reads its results back as tables.
+
+## Results as tables
+
+Each function takes the `opendssdirect` module with a solved circuit and returns a long frame, one row per
+element and phase.
+
+| Function | One row per |
+|---|---|
+| {py:func}`~popo.powerflow.bus_voltages` | bus and phase, labelled by the phase it is connected on |
+| {py:func}`~popo.powerflow.line_currents` | line and phase |
+| {py:func}`~popo.powerflow.line_losses` | line |
+| {py:func}`~popo.powerflow.element_powers` | element and phase, for loads, lines, transformers, PV or storage |
+| {py:func}`~popo.powerflow.circuit_summary` | circuit: convergence, counts and total losses |
+
+`Circuit` has the same tables as methods: `circuit.bus_voltages()` and so on.
+
+## Time series
+
+{py:func}`~popo.powerflow.solve_time_series` steps the circuit through its load shapes, recording power and
+voltage at each monitored transformer's secondary and at the feeder head. Passing `buses=` also records a
+voltage trace at every customer, in the same run.
+
+```python
+report = solve_time_series(dss, transformers, horizon=96, buses=customer_buses)
+report.require_convergence()              # raise if any step diverged
+traces = report.voltage_traces()          # bus -> voltage per step
+```
+
+The returned {py:class}`~popo.powerflow.SolveReport` carries how many steps did not converge. A diverged
+step's customer voltage is recorded as NaN, not as the solver's last guess.
+
+## Sweeps
+
+{py:func}`~popo.powerflow.run_uk_sweep` and {py:func}`~popo.powerflow.run_us_sweep` sweep EV and PV
+penetration on a feeder, building a fresh circuit per scenario from the same seed, so the customers who hold
+PV at 40 % still hold it at 60 % and the sweep is a controlled comparison.

@@ -1,0 +1,228 @@
+:html_theme.sidebar_secondary.remove:
+:html_theme.sidebar_primary.remove:
+
+popo
+====
+
+.. raw:: html
+
+   <section class="po-landing">
+
+   <!-- ── Hero ──────────────────────────────────────────────── -->
+   <div class="po-hero">
+     <div class="po-hero-left">
+       <img src="_static/img/logo.svg" alt="popo" class="po-hero-logo only-light" />
+       <img src="_static/img/logo-dark.svg" alt="popo" class="po-hero-logo only-dark" />
+       <p class="po-hero-tagline">
+         Simulate what a low-voltage network will do.<br>
+         Estimate what it is doing.
+       </p>
+       <div class="po-hero-badges">
+         <span class="po-badge">Python 3.12</span>
+         <span class="po-badge">Apache 2.0</span>
+         <span class="po-badge">OpenDSS · pandapower</span>
+         <span class="po-badge" id="po-version-badge"></span>
+       </div>
+       <script>
+         document.addEventListener('DOMContentLoaded', function () {
+           var el = document.getElementById('po-version-badge');
+           if (el && typeof DOCUMENTATION_OPTIONS !== 'undefined') {
+             el.textContent = 'v' + DOCUMENTATION_OPTIONS.VERSION;
+           }
+         });
+       </script>
+       <div class="po-hero-actions">
+         <a class="po-btn-primary" href="getting-started/quickstart.html">Get Started</a>
+         <a class="po-btn-secondary" href="gallery.html">Tutorials</a>
+       </div>
+     </div>
+     <div class="po-hero-right">
+       <div class="po-install-box">
+         <span class="po-install-label">Install</span>
+         <code class="po-install-code">pip install "pop-flow[all]"</code>
+       </div>
+       <div class="po-code-snippet" id="po-hero-code"></div>
+       <script>
+         document.getElementById('po-hero-code').innerHTML =
+           '<pre>' +
+           '<span class="k">from</span> popo.network <span class="k">import</span> Circuit\n' +
+           '<span class="k">from</span> popo.standards <span class="k">import</span> VoltageLimits\n\n' +
+           'circuit = Circuit.load(<span class="s">&quot;feeder/Master.dss&quot;</span>, solve=<span class="k">False</span>)\n' +
+           'customers = [load.bus1.split(<span class="s">&quot;.&quot;</span>)[0] <span class="k">for</span> load <span class="k">in</span> circuit.loads]\n\n' +
+           '<span class="c"># every customer&#39;s voltage, half-hourly, for two days</span>\n' +
+           'report = circuit.solve_time_series(96, buses=customers)\n' +
+           'events = VoltageLimits.en_50160().event_summary(\n' +
+           '    report.voltage_traces()\n' +
+           ')' +
+           '</pre>';
+       </script>
+     </div>
+   </div>
+
+   <!-- ── Overview ──────────────────────────────────────────── -->
+   <div class="po-overview">
+     <img src="_static/img/overview.svg"
+          alt="popo simulates a feeder forward under rooftop solar and EV uptake, and estimates its state backward from the few measurements that exist." />
+   </div>
+
+   <!-- ── Why popo ──────────────────────────────────────────── -->
+   <div class="po-why">
+     <p class="po-why-lead">
+       Low-voltage networks are barely measured: a meter at the substation and little
+       downstream, while the decisions that matter, how much solar or how many electric
+       vehicles a feeder can take, depend on every customer's connection. popo simulates
+       what a network would do under a given level of uptake, and reconstructs what it
+       is doing from what little is metered.
+     </p>
+
+     <div class="po-feature-grid">
+
+       <div class="po-fcard">
+         <div class="po-fcard-header">
+           <span class="po-feature-dot" style="background:linear-gradient(135deg,#107591,#0b5a70)">
+             <i class="bi bi-diagram-3-fill"></i>
+           </span>
+           <h3 class="po-fcard-title">Networks as Python, not as COM calls</h3>
+         </div>
+         <p class="po-fcard-body"><code>Circuit</code> reads a compiled OpenDSS circuit back
+         as records: lines, loads, transformers, PV and storage. Results come back as long
+         tables, one row per element and phase, with every bus labelled by the phase it is
+         actually on.</p>
+         <a href="guide/network.html" class="po-fcard-link">Network &amp; Circuit <i class="bi bi-arrow-right"></i></a>
+       </div>
+
+       <div class="po-fcard">
+         <div class="po-fcard-header">
+           <span class="po-feature-dot" style="background:linear-gradient(135deg,#00c0bf,#068f8e)">
+             <i class="bi bi-lightning-charge-fill"></i>
+           </span>
+           <h3 class="po-fcard-title">Time series with convergence reported</h3>
+         </div>
+         <p class="po-fcard-body"><code>solve_time_series</code> steps a feeder through real
+         profiles, records the substation and, optionally, every customer's voltage, and
+         returns how many steps did not converge, rather than leaving it to a log line.</p>
+         <a href="guide/powerflow.html" class="po-fcard-link">Power flow &amp; results <i class="bi bi-arrow-right"></i></a>
+       </div>
+
+       <div class="po-fcard">
+         <div class="po-fcard-header">
+           <span class="po-feature-dot" style="background:linear-gradient(135deg,#f69a48,#d9741f)">
+             <i class="bi bi-sun-fill"></i>
+           </span>
+           <h3 class="po-fcard-title">DER uptake and mitigation</h3>
+         </div>
+         <p class="po-fcard-body">Attach real household, PV and EV profiles at a given
+         penetration, each on its customer's own phase, sweep hosting capacity, and compare
+         Volt-VAr, Volt-Watt and battery storage on the same customers.</p>
+         <a href="guide/scenarios.html" class="po-fcard-link">DER &amp; mitigation <i class="bi bi-arrow-right"></i></a>
+       </div>
+
+       <div class="po-fcard">
+         <div class="po-fcard-header">
+           <span class="po-feature-dot" style="background:linear-gradient(135deg,#525252,#2b2b2b)">
+             <i class="bi bi-check-circle-fill"></i>
+           </span>
+           <h3 class="po-fcard-title">Standards, not bare numbers</h3>
+         </div>
+         <p class="po-fcard-body">EN 50160, ANSI C84.1, IEEE 1547 and EREC G99 as named
+         objects carrying their own rules. A verdict says why, <code>violations</code> says
+         where, and <code>event_summary</code> separates a brief touch from an afternoon
+         over the limit.</p>
+         <a href="guide/standards.html" class="po-fcard-link">Standards <i class="bi bi-arrow-right"></i></a>
+       </div>
+
+       <div class="po-fcard">
+         <div class="po-fcard-header">
+           <span class="po-feature-dot" style="background:linear-gradient(135deg,#1b2329,#107591)">
+             <i class="bi bi-speedometer2"></i>
+           </span>
+           <h3 class="po-fcard-title">State estimation for unmeasured feeders</h3>
+         </div>
+         <p class="po-fcard-body">Convert a feeder to pandapower and check it against
+         OpenDSS, count whether a measurement set can determine the state, and estimate every
+         bus from the substation, smart meters and line sensors.</p>
+         <a href="guide/estimation.html" class="po-fcard-link">State estimation <i class="bi bi-arrow-right"></i></a>
+       </div>
+
+       <div class="po-fcard">
+         <div class="po-fcard-header">
+           <span class="po-feature-dot" style="background:linear-gradient(135deg,#00c0bf,#107591)">
+             <i class="bi bi-bar-chart-line-fill"></i>
+           </span>
+           <h3 class="po-fcard-title">Figures and tables in one style</h3>
+         </div>
+         <p class="po-fcard-body">Schematic network diagrams drawn with icons and coloured by
+         voltage status, publication line plots, and Great Tables in the same palette as
+         every figure on this site.</p>
+         <a href="guide/plotting.html" class="po-fcard-link">Plotting <i class="bi bi-arrow-right"></i></a>
+       </div>
+
+     </div>
+   </div>
+
+   <!-- ── Companion ─────────────────────────────────────────── -->
+   <div class="po-companion">
+     <p><strong>popo</strong> is Swahili for bat, and a companion to
+     <a href="https://sambaiga.github.io/twiga-docs/">twiga</a>, Swahili for giraffe.
+     twiga sees far, forecasting ahead in time; popo sees in the dark, inferring the state
+     of a network that is not measured.</p>
+   </div>
+
+   <!-- ── Contributors ─────────────────────────────────────── -->
+   <div class="po-contributors">
+     <h2 class="po-section-title">Contributors</h2>
+     <div class="po-contributor-cards">
+       <div class="po-contributor-card">
+         <a href="https://github.com/sambaiga" target="_blank" rel="noopener">
+           <img src="https://avatars.githubusercontent.com/u/338440?v=4" alt="Anthony Faustine"/>
+           <span class="po-contributor-name">Anthony Faustine</span>
+           <span class="po-contributor-role">Code · Research · Maintenance</span>
+         </a>
+       </div>
+     </div>
+   </div>
+
+   </section>
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: Get started
+
+   Get started <getting-started/index>
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: User guide
+
+   User guide <guide/index>
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: Tutorials
+
+   Tutorials <tutorials/index>
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+   :caption: Gallery
+
+   Gallery <gallery>
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: Reference
+
+   Reference <api/index>
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+   :caption: More
+
+   Contributing <contributing>
+   Changelog <changelog>

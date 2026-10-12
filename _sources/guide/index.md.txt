@@ -1,0 +1,23 @@
+# User guide
+
+One page per subpackage, in the order a study uses them.
+
+| Subpackage | Answers |
+|---|---|
+| [`popo.network`](network.md) | What is in this circuit? |
+| [`popo.powerflow`](powerflow.md) | What does it do over time, and what does a sweep of scenarios show? |
+| [`popo.scenarios`](scenarios.md) | What if customers install solar, chargers or batteries? |
+| [`popo.standards`](standards.md) | Is that acceptable, and where is it not? |
+| [`popo.estimation`](estimation.md) | What is an unmeasured network doing now? |
+| [`popo.plotting`](plotting.md) | How do I show it? |
+
+```{toctree}
+:hidden:
+
+network
+powerflow
+scenarios
+standards
+estimation
+plotting
+```

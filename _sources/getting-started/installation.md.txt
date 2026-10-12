@@ -1,0 +1,31 @@
+# Installation
+
+popo is published on PyPI as **`pop-flow`** and imported as **`popo`**. It needs Python 3.12 or later.
+
+```bash
+pip install pop-flow
+```
+
+The core package reads network definitions, judges voltages against standards and works with results.
+The power-flow and estimation engines are optional extras, because neither is needed to read a network
+definition or check a limit:
+
+| Extra | Adds | For |
+|---|---|---|
+| `opendss` | OpenDSSDirect.py | building and solving circuits, time series, sweeps |
+| `estimation` | pandapower | state estimation |
+| `plot` | matplotlib, seaborn, Great Tables | figures and tables |
+| `notebooks` | matplotlib, Great Tables | running the tutorials |
+| `all` | everything above | |
+
+```bash
+pip install "pop-flow[all]"
+```
+
+With [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv add "pop-flow[all]"
+```
+
+OpenDSSDirect.py bundles the OpenDSS engine, so nothing else needs installing on any operating system.

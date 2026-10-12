@@ -1,0 +1,69 @@
+# API reference
+
+Every public class and function, by subpackage.
+
+## popo.network
+
+```{eval-rst}
+.. automodule:: popo.network
+   :members:
+   :imported-members:
+```
+
+## popo.powerflow
+
+```{eval-rst}
+.. automodule:: popo.powerflow
+   :members:
+   :imported-members:
+```
+
+## popo.scenarios
+
+```{eval-rst}
+.. automodule:: popo.scenarios
+   :members:
+   :imported-members:
+```
+
+## popo.standards
+
+```{eval-rst}
+.. automodule:: popo.standards
+   :members:
+   :imported-members:
+```
+
+## popo.estimation
+
+```{eval-rst}
+.. automodule:: popo.estimation
+   :members:
+   :imported-members:
+```
+
+## popo.profiles
+
+```{eval-rst}
+.. automodule:: popo.profiles.smartds
+   :members:
+
+.. automodule:: popo.profiles.synthetic
+   :members:
+```
+
+## popo.plotting
+
+```{eval-rst}
+.. automodule:: popo.plotting.network
+   :members: NetworkTopology, topology_from_dss, plot_topology, topology_layout, bus_roles, voltage_status
+
+.. automodule:: popo.plotting.tables
+   :members:
+
+.. automodule:: popo.plotting.style
+   :members: configure, style, sketch, panel, pad_limits, tex_safe, format_axes, despine
+
+.. automodule:: popo.plotting.line_style
+   :members: configure, new_panel, reference_line, set_y_axis, legend_below, finish, show, save
+```

@@ -1,0 +1,12 @@
+Get started
+===========
+
+Install popo, build and solve a first network, and meet the handful of ideas
+the rest of the documentation relies on.
+
+.. toctree::
+   :maxdepth: 1
+
+   installation
+   quickstart
+   key-concepts

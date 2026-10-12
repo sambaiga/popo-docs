@@ -1,0 +1,4 @@
+# Changelog
+
+popo has not been released yet. The changelog is generated from the commit history at each release, and
+appears here from the first one.

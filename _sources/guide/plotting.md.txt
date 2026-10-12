@@ -1,0 +1,27 @@
+# Plotting
+
+{py:mod}`popo.plotting` draws figures and tables in one style: the palette and typography every figure on
+this site uses. It needs the `plot` extra.
+
+## Network diagrams
+
+{py:func}`~popo.plotting.network.plot_topology` draws a feeder as a schematic: a lightning bolt for the
+source, transformer badges, houses, sun badges for PV, with every bus coloured by its voltage status.
+
+```python
+from popo.plotting.network import plot_topology, topology_from_dss
+
+plot_topology(topology_from_dss(dss), title="Feeder", orientation="horizontal")
+```
+
+## Figures
+
+- {py:func}`popo.plotting.style.configure` applies the figure style: serif type set through LaTeX when it
+  is installed, thin axes, no grid, the shared palette.
+- {py:mod}`popo.plotting.line_style` adds compact line-plot conventions: the legend below the axes,
+  dotted reference lines and a rounded y-axis (`legend_below`, `reference_line`, `set_y_axis`, `show`).
+
+## Tables
+
+{py:func}`~popo.plotting.tables.themed_gt` styles any DataFrame or Great Tables object, and
+{py:func}`~popo.plotting.tables.record_table` turns a one-row summary into a two-column table.

@@ -1,0 +1,30 @@
+# Scenarios
+
+{py:mod}`popo.scenarios` builds the counterfactual networks a study compares: customers given real demand
+profiles, and a share of them given rooftop solar, an EV charger or a battery.
+
+## Profiles and penetration
+
+- {py:func}`~popo.scenarios.assign_household_profiles` gives each existing load its own demand shape, drawn
+  from a pool of real household profiles.
+- {py:func}`~popo.scenarios.attach_generation` fits rooftop arrays to a fraction of customers, sized by
+  {py:class}`~popo.scenarios.ArraySizing`.
+- {py:func}`~popo.scenarios.attach_charging` gives a fraction of customers a charger, each driven by its own
+  recorded session, so the diversified sum at the substation reflects real coincidence.
+
+Penetration is the fraction of customers holding the technology. Every installation connects on its
+customer's own phase ({py:func}`~popo.scenarios.service_connection`), unless a phase is forced with
+`connection=`.
+
+## Mitigation
+
+| Lever | How | What it costs |
+|---|---|---|
+| Volt-VAr | `attach_generation(volt_var=VoltVarCurve(...))` | reactive power, adding to transformer loading |
+| Volt-Watt | `attach_generation(volt_watt=VoltWattCurve.ieee_1547_default())` | curtailed generation |
+| Storage | `attach_storage(dss, customers, ..., dispatch=StorageDispatch())` | a battery per customer |
+
+OpenDSS gives each inverter one control, so Volt-VAr and Volt-Watt are installed one at a time.
+{py:class}`~popo.scenarios.StorageDispatch` charges through the middle of the day and discharges in the
+evening so a battery starts the next day empty; a schedule shared by every battery concentrates their
+charging and discharging in time, which the second tutorial shows moving the over-voltage into the evening.

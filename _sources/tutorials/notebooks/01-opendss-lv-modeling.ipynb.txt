@@ -1,0 +1,1193 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "0",
+   "metadata": {},
+   "source": [
+    "# OpenDSS LV Modeling with popo\n",
+    "\n",
+    "## Objectives\n",
+    "\n",
+    "<p style=\"text-align: justify\">This notebook is a guide to modeling a low-voltage (LV) distribution network and running a power flow, the foundational skill most of <code>popo</code>'s other tooling builds on. By the end you will be able to:</p>\n",
+    "\n",
+    "<ul>\n",
+    "<li style=\"text-align: justify\">Model an LV network in OpenDSS: a transformer, lines, and single-phase house loads.</li>\n",
+    "<li style=\"text-align: justify\">Read the circuit's elements (lines, loads, transformers) back as records with <code>popo.network.Circuit</code>.</li>\n",
+    "<li style=\"text-align: justify\">Extract power, current, voltage and loss results as tables with <code>popo.powerflow.results</code>.</li>\n",
+    "<li style=\"text-align: justify\">Check bus voltages against a statutory limit, and list the readings that break it, with <code>popo.standards.VoltageLimits</code>.</li>\n",
+    "<li style=\"text-align: justify\">Read a transformer definition file with <code>popo.network.read_transformers</code>.</li>\n",
+    "<li style=\"text-align: justify\">Visualize the network's topology and work through three expansion exercises.</li>\n",
+    "</ul>\n",
+    "\n",
+    "<p style=\"text-align: justify\">Building a circuit is ordinary <code>opendssdirect</code> usage: native OpenDSS commands sent through <code>dss.Text.Command(...)</code>. <code>popo</code> does its work on the way back out. <code>Circuit</code> turns the compiled circuit into Python records, <code>popo.powerflow.results</code> turns a solved one into tables, and <code>VoltageLimits</code> judges those tables against a named standard. OpenDSS stays one call away throughout, for anything <code>popo</code> does not cover.</p>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1",
+   "metadata": {},
+   "source": [
+    "## 1. Building the circuit\n",
+    "\n",
+    "<p style=\"text-align: justify\">The network is small on purpose: a transformer (11 kV/0.4 kV), a three-phase line connecting bus A with bus B, and three single-phase lines connecting bus B with buses C, D and E, the connection points of three houses.</p>\n",
+    "\n",
+    "<ul>\n",
+    "<li style=\"text-align: justify\">The 11 kV and 0.4 kV are line-to-line nominal voltages; OpenDSS wants line-to-line kV for a three-phase bus and line-to-neutral kV for a single-phase load.</li>\n",
+    "<li style=\"text-align: justify\"><code>dss</code> below is the <code>opendssdirect</code> module itself. OpenDSS runs one engine per process, so every <code>dss.Text.Command(...)</code> call changes the one compiled circuit for the rest of the session. The circuit is built through it directly; Section 2 reads it back with <code>popo</code>.</li>\n",
+    "</ul>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import opendssdirect as dss\n",
+    "\n",
+    "print(\"Backed by OpenDSSDirect.py, no external OpenDSS install needed on any OS\")\n",
+    "print(dss.__class__.__module__)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3",
+   "metadata": {},
+   "source": [
+    "### 1.1 Creating a circuit\n",
+    "\n",
+    "<ol>\n",
+    "<li style=\"text-align: justify\"><strong><code>Clear</code></strong> clears any existing model.</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>Set DefaultBaseFrequency=50</code></strong> sets the circuit's frequency to 50 Hz.</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>New Circuit.Simple_LV_Network</code></strong> creates a new circuit named <code>Simple_LV_Network</code>.</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>Edit vsource.source ...</code></strong> edits the source bus (OpenDSS's name for the slack bus) and sets its parameters.</li>\n",
+    "</ol>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dss.Text.Command(\"Clear\")\n",
+    "dss.Text.Command(\"Set DefaultBaseFrequency=50\")\n",
+    "dss.Text.Command(\"New Circuit.Simple_LV_Network\")\n",
+    "dss.Text.Command(\"Edit vsource.source bus1=sourceBus basekv=11 pu=1.0 phases=3\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5",
+   "metadata": {},
+   "source": [
+    "### 1.2 Adding the 11kV/0.4kV transformer\n",
+    "\n",
+    "<ul>\n",
+    "<li style=\"text-align: justify\"><strong><code>New Transformer.LVTR</code></strong> creates a new transformer named LVTR.</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>Buses=[sourceBus, A.1.2.3]</code></strong> sets the two buses it connects: <code>sourceBus</code> and bus <code>A</code>.</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>Conns=[delta wye]</code></strong> sets a delta-wye connection.</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>KVs=[11, 0.4]</code></strong> sets the transformer ratio, 11 kV to 0.4 kV.</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>KVAs=[250 250]</code></strong> sets the rated apparent power of each winding.</li>\n",
+    "</ul>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dss.Text.Command(\n",
+    "    \"New transformer.LVTR Buses=[sourcebus, A.1.2.3] Conns=[delta wye] \"\n",
+    "    \"KVs=[11, 0.4] KVAs=[250 250] %Rs=0.00 xhl=2.5 %loadloss=0\"\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7",
+   "metadata": {},
+   "source": [
+    "### 1.3 Creating linecodes\n",
+    "\n",
+    "<p style=\"text-align: justify\">When multiple lines share the same conductor characteristics, a <strong>linecode</strong> is defined once and reused. <code>linecode.240sq</code> describes a three-phase segment with 240 mm² conductors; <code>linecode.16sq</code> describes a single-phase segment with 16 mm² conductors.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dss.Text.Command(\"new linecode.240sq nphases=3 R1=0.127 X1=0.072 R0=0.342 X0=0.089 units=km\")\n",
+    "dss.Text.Command(\"new linecode.16sq nphases=1 R1=1.15 X1=0.083 R0=1.2 X0=0.083 units=km\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9",
+   "metadata": {},
+   "source": [
+    "### 1.4 Creating the 400V and 230V lines\n",
+    "\n",
+    "<p style=\"text-align: justify\">One three-phase line connects bus A and bus B; three single-phase lines connect B to C, D, and E respectively.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "10",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dss.Text.Command(\"new line.A_B bus1=A.1.2.3 bus2=B.1.2.3 length=1 phases=3 units=km linecode=240sq\")\n",
+    "dss.Text.Command(\"new line.B_L1 bus1=B.1 bus2=C.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "dss.Text.Command(\"new line.B_L2 bus1=B.2 bus2=D.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "dss.Text.Command(\"new line.B_L3 bus1=B.3 bus2=E.1 length=0.01 phases=1 units=km linecode=16sq\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "11",
+   "metadata": {},
+   "source": [
+    "### 1.5 Connecting loads to a bus\n",
+    "\n",
+    "<p style=\"text-align: justify\">Each single-phase load represents one house:</p>\n",
+    "\n",
+    "| Load Name | Phases | Connected bus | Peak Demand (kW) | PF |\n",
+    "|:---|:---|:---|:---|:---|\n",
+    "| Load_1 | 1 | C | 7 | 0.95 |\n",
+    "| Load_2 | 1 | D | 6 | 0.95 |\n",
+    "| Load_3 | 1 | E | 8 | 0.95 |"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "12",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dss.Text.Command(\n",
+    "    \"new load.Load_1 bus1=C.1 phases=1 kV=(0.4 3 sqrt /) kW=7 pf=0.95 \"\n",
+    "    \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    ")\n",
+    "dss.Text.Command(\n",
+    "    \"new load.Load_2 bus1=D.1 phases=1 kV=(0.4 3 sqrt /) kW=6 pf=0.95 \"\n",
+    "    \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    ")\n",
+    "dss.Text.Command(\n",
+    "    \"new load.Load_3 bus1=E.1 phases=1 kV=(0.4 3 sqrt /) kW=8 pf=0.95 \"\n",
+    "    \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "13",
+   "metadata": {},
+   "source": [
+    "### 1.6 Control mode and voltage bases\n",
+    "\n",
+    "<p style=\"text-align: justify\">We are not controlling network elements (e.g. on-load tap changers) or running a time series, so <code>controlmode</code> and <code>mode</code> are set to <strong>static</strong> and <strong>snapshot</strong>: a single power flow run. <code>Set VoltageBases</code> and <code>calcvoltagebases</code> are what let OpenDSS report voltages in per unit.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "14",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dss.Text.Command(\"set controlmode=static\")\n",
+    "dss.Text.Command(\"set mode=snapshot\")\n",
+    "dss.Text.Command(\"Set VoltageBases=[11 0.4]\")\n",
+    "dss.Text.Command(\"calcvoltagebases\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "15",
+   "metadata": {},
+   "source": [
+    "### 1.7 Solving the power flow\n",
+    "\n",
+    "<p style=\"text-align: justify\">If the solve fails, OpenDSS raises an exception naming exactly which command caused it, usually a modeling error above, not something <code>popo</code> or <code>opendssdirect</code> got wrong.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "16",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dss.Solution.Solve()\n",
+    "if dss.Solution.Converged():\n",
+    "    print(\"The circuit was solved successfully\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "17",
+   "metadata": {},
+   "source": [
+    "## 2. Reading circuit properties\n",
+    "\n",
+    "<p style=\"text-align: justify\"><code>opendssdirect</code> mirrors OpenDSS's COM interface: reading every line means calling <code>dss.Lines.First()</code> and <code>dss.Lines.Next()</code> by hand and reading each property off a shared active-element pointer. <code>popo.network.Circuit</code> does that walk for you and yields small frozen records instead, so <code>pd.DataFrame(circuit.lines)</code> is the whole table.</p>\n",
+    "\n",
+    "<p style=\"text-align: justify\"><code>Circuit(dss)</code> is a view of whatever is compiled in the engine right now, not a copy. OpenDSS runs one circuit per process, so every later <code>dss.Text.Command(...)</code> in this notebook changes what <code>circuit</code> sees. (<code>Circuit.load(path)</code> does the <code>Clear</code> and <code>Redirect</code> of a feeder kept in files, which the next notebook uses.)</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "18",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "from popo.network import Circuit\n",
+    "from popo.plotting.tables import themed_gt\n",
+    "\n",
+    "circuit = Circuit(dss)\n",
+    "lines_df = pd.DataFrame(circuit.lines)\n",
+    "themed_gt(lines_df, decimals=3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "19",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "line = next(circuit.lines)\n",
+    "print(f\"Line {line.name} connected between buses ({line.bus1}, {line.bus2}) has a length of {line.length} km\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "20",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">Loads, PV systems and batteries come back the same way. A transformer comes back as the same <code>popo.network.Transformer</code> record <code>read_transformers</code> produces from a definition file (Section 5), so a live circuit can be handed to <code>popo.powerflow.solve_time_series</code> without first finding that file.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "21",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(next(circuit.transformers))\n",
+    "themed_gt(pd.DataFrame(circuit.loads), decimals=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "22",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">For anything without a record field, <code>circuit.command</code> runs any OpenDSS command and returns its text result, such as a <code>?</code> property query. <code>circuit.dss</code> is the <code>opendssdirect</code> module itself.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "23",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(circuit.command(\"? line.a_b.length\"))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "24",
+   "metadata": {},
+   "source": [
+    "### Loop through elements\n",
+    "\n",
+    "<p style=\"text-align: justify\">The records iterate like any Python sequence:</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "25",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "line_lengths = {line.name: line.length for line in circuit.lines}\n",
+    "print(line_lengths)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "26",
+   "metadata": {},
+   "source": [
+    "## 3. Extracting results\n",
+    "\n",
+    "<p style=\"text-align: justify\">Once the circuit is solved, <code>popo.powerflow.results</code> reads its results back as long tables, one row per (element, phase), so a result can be filtered and joined rather than indexed into by position. Each function takes the <code>dss</code> module; <code>Circuit</code> has the same tables as methods (<code>circuit.bus_voltages()</code> and so on).</p>\n",
+    "\n",
+    "### Load active (P) and reactive (Q) power"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "27",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from popo.powerflow import bus_voltages, circuit_summary, element_powers, line_currents, line_losses\n",
+    "\n",
+    "themed_gt(element_powers(dss, \"loads\"), decimals=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "28",
+   "metadata": {},
+   "source": [
+    "### Active (P) and reactive (Q) power of a three-phase element\n",
+    "\n",
+    "<p style=\"text-align: justify\"><code>element_powers</code> works the same way for any element type, here the transformer: one row per phase rather than a flat list of P/Q pairs to index into by hand.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "29",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "themed_gt(element_powers(dss, \"transformers\"), decimals=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "30",
+   "metadata": {},
+   "source": [
+    "### Line currents\n",
+    "\n",
+    "<p style=\"text-align: justify\">Per-phase current magnitude at each line's sending end, one row per (line, phase).</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "31",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "themed_gt(line_currents(dss), decimals=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "32",
+   "metadata": {},
+   "source": [
+    "### Bus voltages\n",
+    "\n",
+    "<p style=\"text-align: justify\">One row per (bus, phase), in per unit of the bus's own base voltage. Each row is labelled with the phase the bus is actually connected on. That matters on a real feeder: a single-phase house on phase 2 is reported by OpenDSS as one value, and numbering values 1, 2, 3 in order would label it phase 1, silently.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "33",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "voltages = bus_voltages(dss)\n",
+    "themed_gt(voltages.head(), decimals=4)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "34",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "load = next(circuit.loads)\n",
+    "house_bus = load.bus1.split(\".\")[0]\n",
+    "house_voltage = voltages.query(\"bus == @house_bus\")[\"vmag_pu\"].iloc[0]\n",
+    "print(f\"The voltage at the bus connected to {load.name} is {house_voltage:.3f} pu\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "35",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">The same DataFrame answers the three-phase case for free: filter to one bus and every phase's magnitude and angle is right there as rows, instead of indexing into a flat array at 0, 2, 4.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "36",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "themed_gt(voltages.query(\"bus == 'a'\"), decimals=4)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "37",
+   "metadata": {},
+   "source": [
+    "### Checking bus voltages against a statutory limit\n",
+    "\n",
+    "<p style=\"text-align: justify\">This is where <code>popo.standards.VoltageLimits</code> replaces doing the comparison by hand. Rather than eyeballing each <code>vmag_pu</code> against a hard-coded band, the per-unit voltages are judged against a named standard and the verdict carries <em>why</em> it passed or failed, not just a bare true/false. EN 50160 is the right choice here: a European LV network, not a North American one, so ANSI C84.1's narrower band would be a category error, not a more conservative check.</p>\n",
+    "\n",
+    "<p style=\"text-align: justify\">The verdict says whether the network complies; <code>violations</code> says where it does not, listing each reading outside the band with the side it falls on and how far past the bound it sits. The source bus is excluded first: it is held at its setpoint by construction, so it says nothing about what a customer sees.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "38",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from popo.standards import VoltageLimits\n",
+    "\n",
+    "en50160 = VoltageLimits.en_50160()\n",
+    "customer_side = voltages.query(\"bus != @circuit.source_bus\")\n",
+    "report = en50160.check(customer_side[\"vmag_pu\"])\n",
+    "print(report.summary())\n",
+    "print(f\"Readings outside the EN 50160 band: {len(en50160.violations(customer_side))}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "39",
+   "metadata": {},
+   "source": [
+    "### Line losses\n",
+    "\n",
+    "<p style=\"text-align: justify\">Worth capturing this network's peak-loading loss in a plain variable here, not just printing it: OpenDSSDirect.py is a singleton engine, so every later <code>dss.Text.Command(...)</code> call below mutates the same compiled circuit, and Exercise 1 below compares its own peak-loading losses back against this baseline. <code>line_losses</code> breaks the total down by line; <code>circuit_summary</code> is the one-line health check.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "40",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from IPython.display import display\n",
+    "\n",
+    "from popo.plotting.tables import record_table\n",
+    "\n",
+    "display(themed_gt(line_losses(dss), decimals=4))\n",
+    "\n",
+    "summary = circuit_summary(dss)\n",
+    "base_peak_loss_kw = summary[\"total_p_loss_kw\"]\n",
+    "base_peak_loss_kvar = summary[\"total_q_loss_kvar\"]\n",
+    "record_table(summary, title=\"Peak-loading summary\", decimals=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "41",
+   "metadata": {},
+   "source": [
+    "## 4. Visualizing the network\n",
+    "\n",
+    "<p style=\"text-align: justify\">A bus-voltage table answers &quot;what is the voltage,&quot; a network diagram answers &quot;where.&quot; Both matter for the same reason: a violation only makes sense once you can see how far it is from the source. <code>popo.plotting.network</code> draws that view: <code>topology_from_dss</code> reads the solved circuit's lines, transformers, loads, PV systems and bus voltages into plain Python data, and <code>plot_topology</code> draws it as a schematic, with a <a href=\"https://icons.getbootstrap.com/\">Bootstrap Icons</a> glyph for each bus's role (grid source, transformer, junction, house, PV) and each bus coloured by its voltage status against the 0.94-1.10 pu band. There is no bus coordinate data here, so the layout is a tree grown from the source bus, not a geographic one. That is fine for reading topology, not for reading distance.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "42",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "from style import configure\n",
+    "\n",
+    "from popo.plotting.network import plot_topology, topology_from_dss\n",
+    "\n",
+    "configure()\n",
+    "\n",
+    "plot_topology(topology_from_dss(dss), title=\"Simple LV network (Figure 1)\")\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "43",
+   "metadata": {},
+   "source": [
+    "### Export commands\n",
+    "\n",
+    "<p style=\"text-align: justify\">For anything else, OpenDSS's own <code>export</code> command is still available through <code>dss.Text.Command</code>, the same escape hatch as above.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "44",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from pathlib import Path\n",
+    "import tempfile\n",
+    "\n",
+    "\n",
+    "def export_to_df(measurement: str) -> pd.DataFrame:\n",
+    "    # `export <type> <name>` writes next to the working directory and the second\n",
+    "    # word is often an element name rather than a path override (e.g. a monitor's\n",
+    "    # name for \"monitors <name>\"), so the written file's actual location is read\n",
+    "    # back from `dss.Text.Result()` instead of assumed.\n",
+    "    dss.Text.Command(f\"export {measurement}\")\n",
+    "    saved_file = dss.Text.Result()\n",
+    "    try:\n",
+    "        return pd.read_csv(saved_file, index_col=0)\n",
+    "    finally:\n",
+    "        Path(saved_file).unlink(missing_ok=True)\n",
+    "\n",
+    "\n",
+    "themed_gt(export_to_df(\"voltages\"), decimals=4)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "45",
+   "metadata": {},
+   "source": [
+    "## 5. Reading transformers with `popo.network.read_transformers`\n",
+    "\n",
+    "<p style=\"text-align: justify\"><code>popo.network.read_transformers</code> parses a saved <code>Transformers.dss</code>-style definition file (the per-winding <code>wdg=.../bus=.../Kv=.../kva=...</code> format a real feeder model ships as a separate file) into a tidy frame, with the nameplate (<code>kva=</code>) and normal thermal (<code>normhkva=</code>) ratings kept distinct. The <code>Buses=[...]/KVs=[...]</code> bracket syntax used to build this toy circuit in Section 1 is a different, perfectly valid OpenDSS shorthand that this reader does not parse; it targets the per-winding style a real feeder export uses. The equivalent per-winding definition of this notebook's own LVTR transformer is written to a temporary file below, purely to demonstrate the reader against the transformer this notebook actually built.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "46",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from popo.network import read_transformers\n",
+    "\n",
+    "transformer_definition = (\n",
+    "    \"New Transformer.LVTR phases=3 windings=2 %loadloss=0 normhkva=275 \"\n",
+    "    \"wdg=1 conn=delta bus=sourcebus Kv=11 kva=250 \"\n",
+    "    \"wdg=2 conn=wye bus=A.1.2.3 Kv=0.4 kva=250\\n\"\n",
+    ")\n",
+    "\n",
+    "with tempfile.TemporaryDirectory() as tmp:\n",
+    "    definition_path = Path(tmp) / \"Transformers.dss\"\n",
+    "    definition_path.write_text(transformer_definition)\n",
+    "    transformers_df = read_transformers(definition_path, secondary_kv=0.4)\n",
+    "\n",
+    "themed_gt(transformers_df, decimals=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "47",
+   "metadata": {},
+   "source": [
+    "## 6. Monitors and meters\n",
+    "\n",
+    "<p style=\"text-align: justify\">&quot;Monitors&quot; and &quot;Meters&quot; are OpenDSS's own time-series data-collection features, not something <code>popo</code> wraps. They're a good last example of the escape hatch: everything below is a direct, unwrapped <code>dss.Text.Command</code> call.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "48",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Deploy monitors before solving, to capture the time-series\n",
+    "dss.Text.Command(\"new monitor.Vbb element=transformer.LVTR terminal=2 mode=0\")\n",
+    "dss.Text.Command(\"new monitor.SS element=transformer.LVTR terminal=1 mode=1 ppolar=no\")\n",
+    "dss.Text.Command(\"new monitor.Tap element=transformer.LVTR terminal=1 mode=2\")\n",
+    "\n",
+    "# Meters, to check energy exports/imports and losses\n",
+    "dss.Text.Command(\"new energymeter.Grid element=transformer.LVTR terminal=1\")\n",
+    "dss.Text.Command(\"new energymeter.mloadB element=line.B_L1 terminal=1\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "49",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dss.Solution.Solve()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "50",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">Monitors and meters only record data once told to <code>take</code> a snapshot after a solve.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "51",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dss.Text.Command(\"monitor.SS.action=take\")\n",
+    "dss.Text.Command(\"monitor.Vbb.action=take\")\n",
+    "dss.Text.Command(\"monitor.Tap.action=take\")\n",
+    "dss.Text.Command(\"energymeter.Grid.action=take\")\n",
+    "dss.Text.Command(\"energymeter.mloadB.action=take\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "52",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ss_monitor = export_to_df(\"monitors SS\")\n",
+    "themed_gt(ss_monitor, decimals=3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "53",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "meters_monitor = export_to_df(\"meters\")\n",
+    "themed_gt(meters_monitor, decimals=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "54",
+   "metadata": {},
+   "source": [
+    "## Do it yourself\n",
+    "\n",
+    "<p style=\"text-align: justify\">The three exercises below build on the network above. Each has a worked solution afterward, but it's worth attempting the exercise first: the point is practicing <code>dss.Text.Command(...)</code> calls and reading the results back, not reading someone else's answer.</p>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "55",
+   "metadata": {},
+   "source": [
+    "### Exercise 1: Expanding the simple LV network\n",
+    "\n",
+    "<p style=\"text-align: justify\">This exercise covers two expansions. First, expand the LV network above with a new bus F and three new houses (G, H, J) off it, the same way bus B feeds C, D and E. Second, add solar PV systems to those new houses (Exercise 2 below), gated behind a flag so the two exercises can share one builder function.</p>\n",
+    "\n",
+    "#### Solution\n",
+    "\n",
+    "<p style=\"text-align: justify\"><code>build_expanded_lv_network</code> rebuilds the network from scratch, then extends it with bus F and the three new houses, the exact same <code>dss.Text.Command(...)</code> calls as Section 1, just continued. Building it as a function (rather than one long cell) is what lets Exercise 2 reuse it with an <code>include_pv</code> flag below, instead of duplicating the whole circuit definition.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "56",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def build_expanded_lv_network(include_pv: bool = False) -> None:\n",
+    "    dss.Text.Command(\"Clear\")\n",
+    "    dss.Text.Command(\"Set DefaultBaseFrequency=50\")\n",
+    "    dss.Text.Command(\"New Circuit.Simple_LV_Network\")\n",
+    "    dss.Text.Command(\"Edit vsource.source bus1=sourceBus basekv=11 pu=1.0 phases=3\")\n",
+    "    dss.Text.Command(\n",
+    "        \"New transformer.LVTR Buses=[sourcebus, A.1.2.3] Conns=[delta wye] \"\n",
+    "        \"KVs=[11, 0.4] KVAs=[250 250] %Rs=0.00 xhl=2.5 %loadloss=0\"\n",
+    "    )\n",
+    "    dss.Text.Command(\"new linecode.240sq nphases=3 R1=0.127 X1=0.072 R0=0.342 X0=0.089 units=km\")\n",
+    "    dss.Text.Command(\"new linecode.16sq nphases=1 R1=1.15 X1=0.083 R0=1.2 X0=0.083 units=km\")\n",
+    "\n",
+    "    dss.Text.Command(\"new line.A_B bus1=A.1.2.3 bus2=B.1.2.3 length=1 phases=3 units=km linecode=240sq\")\n",
+    "    dss.Text.Command(\"new line.B_L1 bus1=B.1 bus2=C.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "    dss.Text.Command(\"new line.B_L2 bus1=B.2 bus2=D.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "    dss.Text.Command(\"new line.B_L3 bus1=B.3 bus2=E.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_1 bus1=C.1 phases=1 kV=(0.4 3 sqrt /) kW=7 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_2 bus1=D.1 phases=1 kV=(0.4 3 sqrt /) kW=6 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_3 bus1=E.1 phases=1 kV=(0.4 3 sqrt /) kW=8 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "\n",
+    "    # Exercise 1: bus F and three more houses, G/H/J\n",
+    "    dss.Text.Command(\"new line.B_F bus1=B.1.2.3 bus2=F.1.2.3 length=1 phases=3 units=km linecode=240sq\")\n",
+    "    dss.Text.Command(\"new line.F_L1 bus1=F.1 bus2=G.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "    dss.Text.Command(\"new line.F_L2 bus1=F.2 bus2=H.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "    dss.Text.Command(\"new line.F_L3 bus1=F.3 bus2=J.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_4 bus1=G.1 phases=1 kV=(0.4 3 sqrt /) kW=7 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_5 bus1=H.1 phases=1 kV=(0.4 3 sqrt /) kW=9 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_6 bus1=J.1 phases=1 kV=(0.4 3 sqrt /) kW=8 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "\n",
+    "    if include_pv:\n",
+    "        # Exercise 2: PV systems on the three new houses, right after their loads\n",
+    "        dss.Text.Command(\"new PVSystem.PV4 bus1=G.1 phases=1 kva=5 pmpp=5 pf=1 kV=(0.4 3 sqrt /) model=1\")\n",
+    "        dss.Text.Command(\"new PVSystem.PV5 bus1=H.1 phases=1 kva=5 pmpp=5 pf=1 kV=(0.4 3 sqrt /) model=1\")\n",
+    "        dss.Text.Command(\"new PVSystem.PV6 bus1=J.1 phases=1 kva=5 pmpp=5 pf=1 kV=(0.4 3 sqrt /) model=1\")\n",
+    "\n",
+    "    dss.Text.Command(\"set controlmode=static\")\n",
+    "    dss.Text.Command(\"set mode=snapshot\")\n",
+    "    dss.Text.Command(\"Set VoltageBases=[11 0.4]\")\n",
+    "    dss.Text.Command(\"calcvoltagebases\")\n",
+    "    dss.Solution.Solve()\n",
+    "\n",
+    "\n",
+    "build_expanded_lv_network()\n",
+    "plot_topology(topology_from_dss(dss), title=\"Expanded LV network (Figure 2)\")\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "57",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">The loads are <code>status=fixed</code>, so (as noted in Section 1.5) a global load multiplier would not touch them; each load's <code>kW</code> has to be edited directly. <code>evaluate_loading_levels</code> rebuilds the circuit fresh at each loading level (safest way to avoid any state leaking between solves), edits every load to <code>peak_kw * fraction</code>, solves, and collects both the circuit's voltages and its energy losses (weighted by the hours spent at that level across a year) for the comparison below.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "58",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from style import plot_voltage_compliance, show\n",
+    "\n",
+    "LEVELS_TABLE_2 = [\n",
+    "    (\"Peak\", 1.0, 1650),\n",
+    "    (\"Medium\", 0.67, 4280),\n",
+    "    (\"Minimum\", 0.33, 2830),\n",
+    "]\n",
+    "\n",
+    "\n",
+    "def circuit_bus_voltages() -> pd.DataFrame:\n",
+    "    return bus_voltages(dss)\n",
+    "\n",
+    "\n",
+    "def circuit_total_p_loss_kw() -> float:\n",
+    "    return dss.Circuit.Losses()[0] / 1000\n",
+    "\n",
+    "\n",
+    "def evaluate_loading_levels(build_circuit, peak_kw: dict, levels, houses: list):\n",
+    "    voltage_rows = []\n",
+    "    annual_loss_kwh = 0.0\n",
+    "    for label, fraction, hours in levels:\n",
+    "        build_circuit()\n",
+    "        for load_name, kw in peak_kw.items():\n",
+    "            dss.Text.Command(f\"edit load.{load_name} kW={kw * fraction}\")\n",
+    "        dss.Solution.Solve()\n",
+    "\n",
+    "        annual_loss_kwh += circuit_total_p_loss_kw() * hours\n",
+    "\n",
+    "        v = circuit_bus_voltages()\n",
+    "        for house in houses:\n",
+    "            vmag_pu = v.query(\"bus == @house\")[\"vmag_pu\"].mean()\n",
+    "            voltage_rows.append({\"level\": label, \"load_fraction\": fraction, \"bus\": house, \"vmag_pu\": vmag_pu})\n",
+    "\n",
+    "    voltage_df = pd.DataFrame(voltage_rows)\n",
+    "    voltage_df[\"level\"] = pd.Categorical(voltage_df[\"level\"], categories=[lvl for lvl, _, _ in levels], ordered=True)\n",
+    "    return voltage_df, annual_loss_kwh\n",
+    "\n",
+    "\n",
+    "expanded_peak_kw = {\"Load_1\": 7, \"Load_2\": 6, \"Load_3\": 8, \"Load_4\": 7, \"Load_5\": 9, \"Load_6\": 8}\n",
+    "expanded_houses = [\"c\", \"d\", \"e\", \"g\", \"h\", \"j\"]\n",
+    "\n",
+    "expanded_voltage_df, expanded_annual_loss_kwh = evaluate_loading_levels(\n",
+    "    lambda: build_expanded_lv_network(include_pv=False), expanded_peak_kw, LEVELS_TABLE_2, expanded_houses\n",
+    ")\n",
+    "print(f\"E1.1: total annual energy losses (expanded network) = {expanded_annual_loss_kwh:.1f} kWh\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "59",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">For a fair comparison against Figure 1, run both networks at the same peak loading and compare their total losses directly, rather than the annual totals (which cover different sets of houses over different hours, so they aren't comparable on their own).</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "60",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "build_expanded_lv_network()\n",
+    "for load_name, kw in expanded_peak_kw.items():\n",
+    "    dss.Text.Command(f\"edit load.{load_name} kW={kw}\")\n",
+    "dss.Solution.Solve()\n",
+    "expanded_peak_loss_kw = circuit_total_p_loss_kw()\n",
+    "\n",
+    "print(f\"Base 3-house network's peak-loading losses (Section 3 above) = {base_peak_loss_kw:.3f} kW\")\n",
+    "print(f\"Expanded 6-house network's peak-loading losses = {expanded_peak_loss_kw:.3f} kW\")\n",
+    "print(\n",
+    "    \"Higher: the new branch through bus F carries 24 kW of additional peak demand, \"\n",
+    "    \"and that current also flows through the shared line A_B on its way from the \"\n",
+    "    \"transformer, which is where line losses (I^2*R) come from.\"\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "61",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "show(plot_voltage_compliance(expanded_voltage_df, \"E1.2: house voltages by loading level (no PV)\"))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "62",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">Read against the dotted 0.94-1.10 pu lines: at Medium and Minimum loading every house is inside them, but at Peak loading the three houses on the new branch through bus F fall below 0.94 pu, J furthest at 0.920 pu. The first three houses sag a little under the extra load too, but stay inside at every level.</p>\n",
+    "\n",
+    "<p style=\"text-align: justify\">Whether that is a violation depends on the standard. EN 50160's lower bound is 0.90 pu, so the feeder is compliant under it; against the tighter 0.94 pu band the charts draw, <code>violations</code> lists exactly which readings break it and by how much:</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "63",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from popo.standards import VoltageLimits\n",
+    "\n",
+    "print(VoltageLimits.en_50160().check(expanded_voltage_df[\"vmag_pu\"]).summary())\n",
+    "\n",
+    "# The 0.94-1.10 pu band the charts draw is not a named standard in popo, so it is built directly.\n",
+    "chart_band = VoltageLimits(name=\"0.94-1.10 pu band\", lower_pu=0.94, upper_pu=1.10)\n",
+    "themed_gt(chart_band.violations(expanded_voltage_df).reset_index(drop=True), decimals=4)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "64",
+   "metadata": {},
+   "source": [
+    "### Exercise 2: Add PV systems\n",
+    "\n",
+    "<p style=\"text-align: justify\">Now add solar PV systems to each of the new houses.</p>\n",
+    "\n",
+    "<p style=\"text-align: justify\">The command to add a PV system is: <code>new PVSystem.PV4 bus1=G.1 phases=1 kva=5 pmpp=5 pf=1 kV=(0.4 3 sqrt /) model=1</code>, where:</p>\n",
+    "\n",
+    "<ul>\n",
+    "<li style=\"text-align: justify\"><strong><code>New PVSystem.PV4</code></strong> creates a new PV system named &quot;PV4&quot; (because PV1-PV3 would collide with the base network's load names if a different convention weren't used).</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>bus1=G.1</code></strong> connects it to the same bus and phase as the house's own load.</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>kva=5 pmpp=5</code></strong> rates it at 5 kVA / 5 kW peak output.</li>\n",
+    "<li style=\"text-align: justify\"><strong><code>pf=1</code></strong> sets unity power factor: no reactive power exchange.</li>\n",
+    "</ul>\n",
+    "\n",
+    "#### Solution\n",
+    "\n",
+    "<p style=\"text-align: justify\"><code>build_expanded_lv_network(include_pv=True)</code> is the same function from Exercise 1's solution; the PV block was already written in, gated behind the flag, for exactly this reuse. The one thing to notice: PV systems aren't touched by <code>evaluate_loading_levels</code>'s load-editing loop, so they keep generating at their rated <code>pmpp</code> regardless of load level.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "65",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pv_voltage_df, pv_annual_loss_kwh = evaluate_loading_levels(\n",
+    "    lambda: build_expanded_lv_network(include_pv=True), expanded_peak_kw, LEVELS_TABLE_2, expanded_houses\n",
+    ")\n",
+    "\n",
+    "print(f\"Annual energy losses with PV = {pv_annual_loss_kwh:.1f} kWh\")\n",
+    "print(f\"Annual energy losses without PV (Exercise 1) = {expanded_annual_loss_kwh:.1f} kWh\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "66",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "show(plot_voltage_compliance(pv_voltage_df, \"E2.1: house voltages by loading level (with PV)\"))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "67",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">This is the standard PV-on-an-LV-feeder story: at <strong>Minimum</strong> loading (33% of peak demand, but each PV system still exporting its full 5 kW), generation on the PV-connected houses (G, H, J) can exceed local demand and push power back upstream, raising the voltage there relative to the no-PV case, exactly the opposite direction from the sag at Peak loading. Whether that crosses the 1.10 pu upper limit on this specific feeder is a question the chart and the compliance check below answer directly, not something to assume from the general story:</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "68",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "report_pv = VoltageLimits.en_50160().check(pv_voltage_df[\"vmag_pu\"])\n",
+    "print(report_pv.summary())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "69",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "build_expanded_lv_network(include_pv=True)\n",
+    "plot_topology(topology_from_dss(dss), title=\"Expanded LV network with PV (Figure 3)\")\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "70",
+   "metadata": {},
+   "source": [
+    "### Exercise 3: Modeling a new LV network from scratch\n",
+    "\n",
+    "<p style=\"text-align: justify\">This exercise models a new LV network topology from scratch, not an extension of the network above. The configuration: a transformer feeding bus A, two parallel three-phase lines A_B_1/A_B_2 between buses A and B (a real LV design pattern for splitting current across two circuits), a chain B-C-D-J, and five houses E/F/G/H/J hanging off that backbone, with J itself a three-phase load alongside the single-phase ones.</p>\n",
+    "\n",
+    "#### Solution\n",
+    "\n",
+    "<p style=\"text-align: justify\">This is a new topology, so <code>build_new_lv_network</code> starts from an empty circuit rather than reusing <code>build_expanded_lv_network</code>.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "71",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def build_new_lv_network(include_pv: bool = False) -> None:\n",
+    "    dss.Text.Command(\"Clear\")\n",
+    "    dss.Text.Command(\"Set DefaultBaseFrequency=50\")\n",
+    "    dss.Text.Command(\"New Circuit.New_LV_Network\")\n",
+    "    dss.Text.Command(\"Edit vsource.source bus1=sourceBus basekv=11 pu=1.0 phases=3\")\n",
+    "    dss.Text.Command(\n",
+    "        \"New transformer.LVTR Buses=[sourcebus, A.1.2.3] Conns=[delta wye] \"\n",
+    "        \"KVs=[11, 0.4] KVAs=[250 250] %Rs=0.00 xhl=2.5 %loadloss=0\"\n",
+    "    )\n",
+    "    dss.Text.Command(\"new linecode.240sq nphases=3 R1=0.127 X1=0.072 R0=0.342 X0=0.089 units=km\")\n",
+    "    dss.Text.Command(\"new linecode.16sq nphases=1 R1=1.15 X1=0.083 R0=1.2 X0=0.083 units=km\")\n",
+    "    dss.Text.Command(\"new linecode.185sq nphases=3 R1=0.78 X1=0.042 R0=1.08 X0=0.093 units=km\")\n",
+    "\n",
+    "    dss.Text.Command(\"new line.A_B_1 bus1=A.1.2.3 bus2=B.1.2.3 length=1 phases=3 units=km linecode=240sq\")\n",
+    "    dss.Text.Command(\"new line.A_B_2 bus1=A.1.2.3 bus2=B.1.2.3 length=1 phases=3 units=km linecode=240sq\")\n",
+    "    dss.Text.Command(\"new line.B_C bus1=B.1.2.3 bus2=C.1.2.3 length=0.8 phases=3 units=km linecode=240sq\")\n",
+    "    dss.Text.Command(\"new line.C_D bus1=C.1.2.3 bus2=D.1.2.3 length=0.6 phases=3 units=km linecode=240sq\")\n",
+    "    dss.Text.Command(\"new line.D_J bus1=D.1.2.3 bus2=J.1.2.3 length=0.01 phases=3 units=km linecode=185sq\")\n",
+    "    dss.Text.Command(\"new line.B_E bus1=B.1 bus2=E.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "    dss.Text.Command(\"new line.C_F bus1=C.1 bus2=F.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "    dss.Text.Command(\"new line.C_G bus1=C.2 bus2=G.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "    dss.Text.Command(\"new line.D_H bus1=D.1 bus2=H.1 length=0.01 phases=1 units=km linecode=16sq\")\n",
+    "\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_1 bus1=E.1 phases=1 kV=(0.4 3 sqrt /) kW=6 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_2 bus1=F.1 phases=1 kV=(0.4 3 sqrt /) kW=4 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_3 bus1=G.1 phases=1 kV=(0.4 3 sqrt /) kW=6 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_4 bus1=H.1 phases=1 kV=(0.4 3 sqrt /) kW=7 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "    dss.Text.Command(\n",
+    "        \"new load.Load_5 bus1=J.1.2.3 phases=3 kV=0.4 kW=15 pf=0.95 \"\n",
+    "        \"model=1 conn=wye Vminpu=0.85 Vmaxpu=1.20 status=fixed\"\n",
+    "    )\n",
+    "\n",
+    "    if include_pv:\n",
+    "        dss.Text.Command(\"new PVSystem.PV1 bus1=E.1 phases=1 kva=5 pmpp=5 pf=1 kV=(0.4 3 sqrt /) model=1\")\n",
+    "        dss.Text.Command(\"new PVSystem.PV2 bus1=F.1 phases=1 kva=5 pmpp=5 pf=1 kV=(0.4 3 sqrt /) model=1\")\n",
+    "        dss.Text.Command(\"new PVSystem.PV3 bus1=G.1 phases=1 kva=5 pmpp=5 pf=1 kV=(0.4 3 sqrt /) model=1\")\n",
+    "        dss.Text.Command(\"new PVSystem.PV4 bus1=H.1 phases=1 kva=5 pmpp=5 pf=1 kV=(0.4 3 sqrt /) model=1\")\n",
+    "\n",
+    "    dss.Text.Command(\"set controlmode=static\")\n",
+    "    dss.Text.Command(\"set mode=snapshot\")\n",
+    "    dss.Text.Command(\"Set VoltageBases=[11 0.4]\")\n",
+    "    dss.Text.Command(\"calcvoltagebases\")\n",
+    "    dss.Solution.Solve()\n",
+    "\n",
+    "\n",
+    "build_new_lv_network()\n",
+    "plot_topology(topology_from_dss(dss), title=\"New LV network (Figure 4)\")\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "72",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "LEVELS_TABLE_4 = [\n",
+    "    (\"Peak\", 1.0, 1750),\n",
+    "    (\"Medium\", 0.75, 4380),\n",
+    "    (\"Minimum\", 0.25, 2630),\n",
+    "]\n",
+    "new_peak_kw = {\"Load_1\": 6, \"Load_2\": 4, \"Load_3\": 6, \"Load_4\": 7, \"Load_5\": 15}\n",
+    "new_houses = [\"e\", \"f\", \"g\", \"h\", \"j\"]\n",
+    "\n",
+    "new_voltage_df, new_annual_loss_kwh = evaluate_loading_levels(\n",
+    "    lambda: build_new_lv_network(include_pv=False), new_peak_kw, LEVELS_TABLE_4, new_houses\n",
+    ")\n",
+    "print(f\"E3.1: total annual energy losses (Figure 4, no PV) = {new_annual_loss_kwh:.1f} kWh\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "73",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "show(plot_voltage_compliance(new_voltage_df, \"E3.2: house voltages by loading level (Figure 4, no PV)\"))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "74",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">Now add the PV systems from Figure 5 and repeat both checks.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "75",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "new_pv_voltage_df, new_pv_annual_loss_kwh = evaluate_loading_levels(\n",
+    "    lambda: build_new_lv_network(include_pv=True), new_peak_kw, LEVELS_TABLE_4, new_houses\n",
+    ")\n",
+    "\n",
+    "print(f\"E3.3: total annual energy losses (Figure 5, with PV) = {new_pv_annual_loss_kwh:.1f} kWh\")\n",
+    "print(f\"Compare: without PV (E3.1) = {new_annual_loss_kwh:.1f} kWh\")\n",
+    "print(\n",
+    "    \"PV generation offsets part of each house's own demand before it ever reaches \"\n",
+    "    \"the feeder, so less current flows through B_C/C_D/D_J at Peak and Medium \"\n",
+    "    \"loading, and total I^2*R losses drop versus the no-PV case, even though the \"\n",
+    "    \"Minimum-loading case now pushes some power backward instead.\"\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "76",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "show(plot_voltage_compliance(new_pv_voltage_df, \"E3.4: house voltages by loading level (Figure 5, with PV)\"))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "77",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "build_new_lv_network(include_pv=True)\n",
+    "plot_topology(topology_from_dss(dss), title=\"New LV network with PV (Figure 5)\")\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "78",
+   "metadata": {},
+   "source": [
+    "## Summary\n",
+    "\n",
+    "<ul>\n",
+    "<li style=\"text-align: justify\">A circuit is built from plain <code>dss.Text.Command(...)</code> calls: transformer, linecodes, lines, loads, in that order, then <code>controlmode</code>/<code>mode</code>/<code>VoltageBases</code> before solving.</li>\n",
+    "<li style=\"text-align: justify\"><code>popo.network.Circuit</code> reads the compiled circuit back as records, and its transformers as the same <code>Transformer</code> record <code>read_transformers</code> produces from a definition file.</li>\n",
+    "<li style=\"text-align: justify\"><code>popo.powerflow.results</code> reads a solved circuit back as long tables, one row per (element, phase), with each bus labelled by the phase it is actually on.</li>\n",
+    "<li style=\"text-align: justify\"><code>VoltageLimits</code> judges those tables against a named standard: <code>check</code> for the verdict, <code>violations</code> for the readings that break it and by how much.</li>\n",
+    "<li style=\"text-align: justify\">OpenDSS stays one call away throughout, through <code>circuit.command</code> or the <code>dss</code> module itself, for anything <code>popo</code> does not cover.</li>\n",
+    "</ul>"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "popo (3.12.12)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

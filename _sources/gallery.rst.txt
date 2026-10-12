@@ -1,0 +1,71 @@
+:html_theme.sidebar_secondary.remove:
+
+Tutorial gallery
+================
+
+Every tutorial, by topic and level. Click a card to open the notebook.
+
+.. raw:: html
+
+   <div class="po-gallery-filters">
+     <button class="po-filter active" onclick="poFilter('all')">All</button>
+     <button class="po-filter po-filter-beginner" onclick="poFilter('beginner')">
+       <i class="bi bi-circle-fill"></i> Beginner
+     </button>
+     <button class="po-filter po-filter-intermediate" onclick="poFilter('intermediate')">
+       <i class="bi bi-circle-fill"></i> Intermediate
+     </button>
+     <button class="po-filter po-filter-advanced" onclick="poFilter('advanced')">
+       <i class="bi bi-circle-fill"></i> Advanced
+     </button>
+   </div>
+
+   <div class="po-gallery">
+
+     <a class="po-gallery-card" href="tutorials/notebooks/01-opendss-lv-modeling.html" data-level="beginner">
+       <div class="po-gallery-thumb" style="background:linear-gradient(135deg,#107591 0%,#00c0bf 100%)">
+         <span class="po-gallery-num">01</span>
+         <i class="bi bi-diagram-3-fill po-gallery-icon"></i>
+       </div>
+       <div class="po-gallery-info">
+         <span class="po-level po-level-beginner"><i class="bi bi-circle-fill"></i> Beginner</span>
+         <h4>OpenDSS LV modelling</h4>
+         <p>Build a feeder, read it back as records and tables, and check it against EN 50160.</p>
+       </div>
+     </a>
+
+     <a class="po-gallery-card" href="tutorials/notebooks/02-timeseries-der-modeling.html" data-level="intermediate">
+       <div class="po-gallery-thumb" style="background:linear-gradient(135deg,#f69a48 0%,#d9741f 100%)">
+         <span class="po-gallery-num">02</span>
+         <i class="bi bi-sun-fill po-gallery-icon"></i>
+       </div>
+       <div class="po-gallery-info">
+         <span class="po-level po-level-intermediate"><i class="bi bi-circle-fill"></i> Intermediate</span>
+         <h4>Time series and DER</h4>
+         <p>Hosting capacity on a real UK feeder, every customer's voltage, and three ways to fix it.</p>
+       </div>
+     </a>
+
+     <a class="po-gallery-card" href="tutorials/notebooks/03-lv-state-estimation.html" data-level="advanced">
+       <div class="po-gallery-thumb" style="background:linear-gradient(135deg,#1b2329 0%,#107591 100%)">
+         <span class="po-gallery-num">03</span>
+         <i class="bi bi-speedometer2 po-gallery-icon"></i>
+       </div>
+       <div class="po-gallery-info">
+         <span class="po-level po-level-advanced"><i class="bi bi-circle-fill"></i> Advanced</span>
+         <h4>LV state estimation</h4>
+         <p>How much has to be measured to know every customer's voltage.</p>
+       </div>
+     </a>
+
+   </div>
+
+   <script>
+     function poFilter(level) {
+       document.querySelectorAll('.po-filter').forEach(function (b) { b.classList.remove('active'); });
+       event.currentTarget.classList.add('active');
+       document.querySelectorAll('.po-gallery-card').forEach(function (card) {
+         card.style.display = (level === 'all' || card.dataset.level === level) ? '' : 'none';
+       });
+     }
+   </script>

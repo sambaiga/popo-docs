@@ -1,0 +1,39 @@
+# Network
+
+{py:mod}`popo.network` covers the circuit as defined: buses, lines, transformers, loads and the topology
+that connects them. Solving it is {doc}`powerflow`.
+
+## A handle on the compiled circuit
+
+{py:class}`~popo.network.Circuit` is a view of whatever is compiled in the OpenDSS engine. It does not
+replace `opendssdirect`: circuits are still built with OpenDSS commands, through
+{py:meth}`~popo.network.Circuit.command` or the module itself.
+
+```python
+from popo.network import Circuit
+
+circuit = Circuit.load("feeder/Master.dss")    # Clear, Redirect and solve
+lines = pd.DataFrame(circuit.lines)              # one record per line
+transformers = list(circuit.transformers)        # popo.network.Transformer records
+circuit.command("? Line.A_B.length")             # anything not covered by a record
+```
+
+OpenDSS runs one circuit per process, so a `Circuit` always sees the circuit compiled now: compiling
+another changes what every handle sees.
+
+## Transformers and customers
+
+- {py:func}`~popo.network.read_transformers` reads a `Transformers.dss` definition file into a frame,
+  keeping the nameplate and normal thermal ratings distinct. `Circuit.transformers` yields the same
+  records from a live circuit.
+- {py:func}`~popo.network.residential_loads` lists a feeder's low-voltage residential loads as
+  `(load name, bus)` pairs, the form every scenario function takes.
+
+## Choosing a feeder on evidence
+
+- {py:func}`~popo.network.profile_circuit` describes a circuit at its defined loading: customers, buses,
+  rating, single-phase share and voltage range.
+- {py:func}`~popo.network.measure_sensitivity` raises the loading and re-solves, measuring how far the
+  worst bus voltage moves per megawatt: the quantity that decides whether a voltage constraint binds.
+- {py:func}`~popo.network.screen` steps a large feeder briefly to find the transformers that actually
+  bind, and {py:func}`~popo.network.select_by_utilisation` picks the ones worth monitoring.

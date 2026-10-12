@@ -1,0 +1,25 @@
+Tutorials
+=========
+
+Three end-to-end notebooks, each running on real feeders that ship with popo. They are executed every time
+these pages are built, so every number and figure below comes from the current code.
+
+**Modelling** (01)
+   Build a low-voltage circuit in OpenDSS, read it back with ``Circuit`` and the result tables, check it
+   against a statutory limit, and work through three network-expansion exercises.
+
+**Time series and DER** (02)
+   A real 188-customer UK feeder with real household, PV and EV profiles: a two-day time series, a
+   hosting-capacity sweep, every customer's voltage alongside the substation's, and Volt-VAr, Volt-Watt and
+   storage compared.
+
+**State estimation** (03)
+   The same feeder estimated from what is measured: the substation, smart meters and line sensors, and how
+   many of each are enough.
+
+.. toctree::
+   :maxdepth: 1
+
+   notebooks/01-opendss-lv-modeling
+   notebooks/02-timeseries-der-modeling
+   notebooks/03-lv-state-estimation

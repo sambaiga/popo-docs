@@ -1,0 +1,1397 @@
+/* ============================================================
+   popo - PyData theme overrides
+   Ported from twiga-forecast's docs so the two sites read as siblings;
+   palette from popo.plotting.tokens, so the docs match popo's figures.
+   Fonts: Poppins (headings) · Inter (body)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Tokens ──────────────────────────────────────────────────────
+   popo.plotting.tokens:
+     deep teal   #107591  - primary: headings, links (5.2:1 on white)
+     bright cyan #00c0bf  - accents, icons, hover
+     orange      #f69a48  - the thing to notice: primary button, highlights
+     charcoal    #222222  - text
+   ─────────────────────────────────────────────────────────────── */
+:root {
+  --po-teal:         #107591;
+  --po-teal-mid:     #00c0bf;
+  --po-teal-light:   #dff6f6;
+  --po-teal-bg:      #f1fbfb;
+  --po-orange:       #f69a48;
+  --po-orange-deep:  #d9741f;
+  --po-charcoal:     #222222;
+  --po-slate:        #525252;
+  --po-border:       #bfe9e9;
+  --po-surface:      #f6fafb;
+  --po-white:        #ffffff;
+  --po-text:         #222222;
+
+  --pst-color-primary:           var(--po-teal);
+  --pst-color-primary-highlight: var(--po-teal-mid);
+  --pst-color-link:              var(--po-teal);
+  --pst-color-link-hover:        var(--po-teal-mid);
+  --pst-color-inline-code:       var(--po-teal);
+  --pst-font-family-base:        'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --pst-font-family-heading:     'Poppins', 'Segoe UI', sans-serif;
+  --pst-sidebar-primary-width:    195px;
+  --pst-sidebar-secondary-width:  195px;
+}
+
+/* Night: popo sees in the dark, so the dark theme is a first-class one. */
+html[data-theme="dark"] {
+  --po-teal:       #00c0bf;
+  --po-teal-mid:   #00c0bf;
+  --po-teal-light: rgba(0,192,191,0.12);
+  --po-teal-bg:    rgba(0,192,191,0.08);
+  --po-border:     rgba(0,192,191,0.25);
+  --po-surface:    #1b2329;
+  --po-text:       #dbe7ec;
+  --pst-color-primary:           var(--po-teal);
+  --pst-color-primary-highlight: var(--po-teal-mid);
+  --pst-color-link:              var(--po-teal);
+  --pst-color-link-hover:        var(--po-teal-mid);
+  --pst-color-background:        #161d22;
+  --pst-color-on-background:     #1b2329;
+}
+
+/* ── Base ────────────────────────────────────────────────────── */
+body {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--po-slate);
+}
+html[data-theme="dark"] body { color: #8aabb4; }
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: 1.5rem; border-bottom: 3px solid var(--po-teal); padding-bottom: 0.3em; margin-bottom: 0.8em; color: var(--po-teal); }
+h2 { font-size: 1.15rem; border-bottom: 1px solid var(--po-border); padding-bottom: 0.2em; margin-top: 2rem; color: var(--po-teal); }
+h3 { font-size: 0.95rem; color: var(--po-teal-mid); }
+
+a { color: var(--po-teal); }
+a:hover { color: var(--po-teal-mid); }
+
+/* ── Navbar ──────────────────────────────────────────────────── */
+.bd-header {
+  border-bottom: 2px solid var(--po-teal) !important;
+  box-shadow: 0 1px 4px rgba(16,117,145,0.08) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Tighten logo */
+.navbar-brand img { max-height: 36px !important; }
+
+/* Nav links - compact, uppercase, teal on hover */
+.navbar-nav .nav-item { margin: 0 1px; }
+
+.navbar-nav .nav-link {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--po-charcoal) !important;
+  padding: 0.55rem 0.75rem !important;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] .navbar-nav .nav-link { color: #d8eaee !important; }
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:active,
+.navbar-nav .nav-item.active > .nav-link,
+.navbar-nav .current > .nav-link {
+  color: var(--po-teal) !important;
+  background-color: var(--po-teal-light) !important;
+  box-shadow: none !important;
+}
+
+.navbar-nav .nav-link:focus,
+.navbar-nav .nav-link:focus-visible {
+  color: var(--po-teal) !important;
+  background-color: var(--po-teal-light) !important;
+  outline: 2px solid var(--po-teal) !important;
+  outline-offset: 2px !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] .navbar-nav .nav-link:hover,
+html[data-theme="dark"] .navbar-nav .nav-link:active,
+html[data-theme="dark"] .navbar-nav .nav-link:focus,
+html[data-theme="dark"] .navbar-nav .nav-link:focus-visible {
+  background-color: var(--po-teal-bg) !important;
+  color: var(--po-teal) !important;
+  box-shadow: none !important;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  border: 1px solid var(--po-border) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 16px rgba(16,117,145,0.12) !important;
+  padding: 6px !important;
+  min-width: 180px;
+}
+
+.dropdown-item {
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  border-radius: 4px;
+  padding: 6px 12px !important;
+  color: var(--po-text) !important;
+}
+
+.dropdown-item:hover {
+  background-color: var(--po-teal-light) !important;
+  color: var(--po-teal) !important;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.bd-sidebar-primary {
+  background-color: var(--po-surface) !important;
+  border-right: 1px solid var(--po-border);
+  font-size: 0.875rem;
+}
+
+.bd-sidebar-primary .nav-link {
+  font-family: 'Inter', sans-serif;
+  color: var(--po-text);
+  border-radius: 4px;
+  padding: 3px 10px;
+  transition: all 0.12s;
+}
+
+.bd-sidebar-primary .nav-link:hover {
+  color: var(--po-teal);
+  background-color: var(--po-teal-light) !important;
+}
+
+.bd-sidebar-primary .nav-link.active {
+  color: var(--po-teal) !important;
+  background-color: var(--po-teal-bg) !important;
+  font-weight: 700;
+  border-left: 3px solid var(--po-teal);
+}
+
+.bd-sidebar-primary .caption-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--po-teal) !important;
+  margin-top: 1rem;
+  opacity: 0.85;
+}
+
+/* ── Content ─────────────────────────────────────────────────── */
+.bd-content { max-width: 900px; }
+
+/* Hide the RST-generated h1 on the landing page - the hero section serves this role.
+   Sphinx still reads it for the <title> tag and toctree label. */
+.bd-article-container:has(.po-landing) h1:first-of-type,
+section#popo > h1:first-of-type {
+  display: none;
+}
+
+/* Landing page - centered content wrapper */
+.po-landing,
+section#popo {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Override all width constraints on the landing page so the content
+   can center itself with margin: 0 auto in the full viewport.
+   Targets both .po-landing (from raw HTML) and section#popo
+   (always present - generated by RST for the index heading). */
+.bd-main .bd-content:has(.po-landing),
+.bd-main:has(.po-landing) .bd-article-container,
+.bd-content:has(.po-landing),
+.bd-page-width:has(.po-landing),
+.bd-container:has(.po-landing),
+.bd-main .bd-content:has(section#popo),
+.bd-main:has(section#popo) .bd-article-container,
+.bd-content:has(section#popo),
+.bd-page-width:has(section#popo),
+.bd-container:has(section#popo) {
+  max-width: none !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+.bd-article-container:has(.po-landing) .bd-article,
+.bd-article:has(.po-landing),
+.bd-article-container:has(section#popo) .bd-article,
+.bd-article:has(section#popo) {
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100% !important;
+}
+
+/* ── Code blocks - clean card ────────────────────────────────── */
+/* Style the outer notranslate wrapper so there's one visual layer */
+[class*="highlight-"].notranslate {
+  background-color: var(--po-surface) !important;
+  border: 1px solid var(--po-border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1rem 0;
+  box-shadow: 0 1px 4px rgba(16,117,145,0.06);
+}
+
+html[data-theme="dark"] [class*="highlight-"].notranslate {
+  background-color: #161d22 !important;
+  border-color: rgba(0,191,165,0.18);
+  box-shadow: none;
+}
+
+/* Inner div.highlight - transparent, no border of its own */
+div.highlight {
+  background-color: transparent !important;
+  border: none;
+  border-radius: 0;
+}
+
+/* pre - transparent, inherits everything from the outer card */
+pre,
+div.highlight pre {
+  background-color: transparent !important;
+  border: none;
+  border-radius: 0;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Inline code - covers .literal, .docutils, and plain <code> in HTML sections */
+code:not(pre code) {
+  background-color: var(--po-teal-bg);
+  border: 1px solid var(--po-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.87em;
+  color: var(--po-teal);
+  font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+}
+
+/* ── Admonitions ─────────────────────────────────────────────── */
+.admonition { border-radius: 6px; border-left-width: 4px; }
+.admonition.note    { border-color: var(--po-teal);   background: var(--po-teal-bg); }
+.admonition.tip     { border-color: #2e9e6b;           background: #f0faf4; }
+.admonition.warning { border-color: #e07b39;           background: #fdf4ee; }
+html[data-theme="dark"] .admonition.note    { background: var(--po-teal-bg); }
+html[data-theme="dark"] .admonition.tip     { background: rgba(46,158,107,0.1); }
+html[data-theme="dark"] .admonition.warning { background: rgba(224,123,57,0.1); }
+
+.admonition .admonition-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; font-size: 0.82rem;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* ── Tables (aligned with themed_gt / Great Tables style) ─────── */
+table.docutils {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  color: #2d3748;
+  border-top: 2px solid #107591;
+  border-bottom: 1px solid #107591;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+  overflow: visible;
+}
+html[data-theme="dark"] table.docutils { color: var(--po-text); border-color: var(--po-teal); }
+
+table.docutils th {
+  background: transparent;
+  color: var(--po-charcoal);
+  padding: 9px 14px;
+  text-align: left;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+  border-bottom: 1px solid #069fac;
+}
+table.docutils td {
+  padding: 7px 14px;
+  border-bottom: 1px solid #e8e8e8;
+  font-size: 13px;
+}
+table.docutils tr:last-child td { border-bottom: none; }
+table.docutils tr:nth-child(even) td { background: #f7fbfc; }
+html[data-theme="dark"] table.docutils tr:nth-child(even) td { background: rgba(255,255,255,0.04); }
+
+/* ── sphinx-design cards ─────────────────────────────────────── */
+.sd-card {
+  background: var(--po-white) !important;
+  border: 1px solid var(--po-border) !important;
+  border-radius: 8px;
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+}
+html[data-theme="dark"] .sd-card { background: var(--po-surface) !important; }
+.sd-card:hover {
+  box-shadow: 0 4px 18px rgba(16,117,145,0.15);
+  transform: translateY(-2px);
+  border-color: var(--po-teal) !important;
+}
+.sd-card-header {
+  background: var(--po-teal) !important;
+  color: #fff !important;
+  font-family: 'Poppins', sans-serif; font-weight: 600;
+  border-radius: 7px 7px 0 0; padding: 10px 16px;
+  border-bottom: none !important;
+}
+.sd-card-footer a {
+  color: var(--po-teal) !important; font-weight: 700;
+  font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.sd-badge {
+  font-size: 0.72rem; font-weight: 700; padding: 2px 9px; border-radius: 12px;
+  background: var(--po-teal-bg) !important; color: var(--po-teal) !important;
+  border: 1px solid var(--po-border);
+}
+
+/* ── API reference ───────────────────────────────────────────── */
+dl.py.class > dt, dl.py.function > dt, dl.py.method > dt {
+  background: var(--po-teal-bg) !important;
+  border-left: 4px solid var(--po-teal);
+  border-radius: 0 4px 4px 0;
+  padding: 7px 14px; font-size: 0.92rem;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.bd-footer { border-top: 2px solid var(--po-teal); font-size: 0.82rem; }
+
+/* ════════════════════════════════════════════════════════════════
+   LANDING PAGE
+   ════════════════════════════════════════════════════════════════ */
+
+/* Hero - two-column layout */
+.po-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  padding: 3rem 0 2.5rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--po-border);
+}
+
+@media (max-width: 900px) {
+  .po-hero { grid-template-columns: 1fr; }
+  .po-hero-right { display: none; }
+}
+
+.po-hero-logo { height: 52px; margin-bottom: 1.2rem; display: block; }
+
+.po-hero-tagline {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--po-text);
+  margin: 0 0 1.2rem;
+}
+
+.po-hero-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+
+.po-badge {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 12px;
+  background: var(--po-teal-bg);
+  color: var(--po-teal);
+  border: 1px solid var(--po-border);
+  letter-spacing: 0.04em;
+}
+
+.po-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.po-btn-primary {
+  display: inline-block;
+  font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.88rem;
+  padding: 9px 22px; border-radius: 6px;
+  background: var(--po-teal); color: #fff !important;
+  text-decoration: none !important;
+  transition: background 0.15s, transform 0.1s;
+  letter-spacing: 0.02em;
+}
+.po-btn-primary:hover { background: var(--po-teal-mid); transform: translateY(-1px); }
+
+.po-btn-secondary {
+  display: inline-block;
+  font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.88rem;
+  padding: 8px 22px; border-radius: 6px;
+  background: transparent; color: var(--po-teal) !important;
+  border: 2px solid var(--po-teal);
+  text-decoration: none !important;
+  transition: all 0.15s;
+}
+.po-btn-secondary:hover {
+  background: var(--po-teal-light);
+  transform: translateY(-1px);
+}
+
+/* Install + code snippet on the right */
+.po-hero-right { display: flex; flex-direction: column; gap: 12px; }
+
+.po-install-box {
+  background: var(--po-charcoal);
+  border-radius: 8px;
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 14px;
+}
+
+.po-install-label {
+  font-family: 'Poppins', sans-serif; font-weight: 700;
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--po-teal-mid); white-space: nowrap;
+}
+
+.po-install-code {
+  margin: 0; padding: 0; background: transparent;
+  border: none; border-left: none;
+  font-size: 0.88rem; color: #a8d8e0;
+  font-family: 'SFMono-Regular', 'Consolas', monospace;
+}
+
+.po-code-snippet {
+  background: var(--po-charcoal);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+
+.po-code-snippet pre {
+  margin: 0; padding: 0;
+  background: transparent !important; border: none;
+  font-size: 0.83rem; color: #cfe8ec;
+  line-height: 1.65;
+  font-family: 'SFMono-Regular', 'Consolas', monospace;
+}
+
+.po-code-snippet .kw { color: var(--po-teal-mid); }
+.po-code-snippet .st { color: #a8d8e0; }
+
+/* ════════════════════════════════════════════════════════════════
+   FEATURE CARD GRID  (2-col static cards on landing page)
+   ════════════════════════════════════════════════════════════════ */
+
+.po-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+  .po-feature-grid { grid-template-columns: 1fr; }
+}
+
+.po-fcard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.4rem 1.4rem 1.1rem;
+  background: var(--po-white);
+  border: 1px solid var(--po-border);
+  border-radius: 10px;
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+}
+
+html[data-theme="dark"] .po-fcard { background: var(--po-surface); }
+
+.po-fcard:hover {
+  box-shadow: 0 4px 20px rgba(16,117,145,0.12);
+  transform: translateY(-2px);
+  border-color: var(--po-teal-mid);
+}
+
+.po-fcard-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.po-fcard-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--po-teal);
+  margin: 0;
+  border: none !important;
+  padding: 0 !important;
+  line-height: 1.3;
+}
+
+.po-fcard-body {
+  font-size: 0.875rem;
+  color: var(--po-slate);
+  line-height: 1.7;
+  margin: 0;
+  flex: 1;
+}
+
+html[data-theme="dark"] .po-fcard-body { color: #8aabb4; }
+
+.po-fcard-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--po-teal) !important;
+  text-decoration: none !important;
+  margin-top: 0.25rem;
+  transition: gap 0.15s, color 0.15s;
+}
+
+.po-fcard-link:hover {
+  color: var(--po-teal-mid) !important;
+  gap: 8px;
+  text-decoration: none !important;
+}
+
+/* ── Accordion feature list (Why popo section) ── */
+.po-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Strip browser default <details> marker */
+.po-feature { list-style: none; }
+.po-feature summary { list-style: none; }
+.po-feature summary::-webkit-details-marker { display: none; }
+
+.po-feature {
+  border: 1px solid var(--po-border);
+  border-radius: 10px;
+  background: var(--po-white);
+  overflow: hidden;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+html[data-theme="dark"] .po-feature { background: var(--po-surface); }
+
+.po-feature[open] {
+  border-color: var(--po-teal-mid);
+  box-shadow: 0 4px 18px rgba(6,159,172,0.10);
+}
+
+.po-feature-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  outline: none;
+}
+
+.po-feature-summary:hover { background: rgba(6,159,172,0.04); }
+html[data-theme="dark"] .po-feature-summary:hover { background: rgba(6,159,172,0.08); }
+
+/* Coloured icon dot */
+.po-feature-dot {
+  flex-shrink: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: #fff;
+}
+
+/* Bold title */
+.po-feature-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.93rem;
+  color: var(--po-charcoal);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+html[data-theme="dark"] .po-feature-title { color: var(--po-text); }
+
+/* Muted one-line teaser - grows to fill space */
+.po-feature-teaser {
+  flex: 1;
+  font-size: 0.84rem;
+  color: var(--po-slate);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+html[data-theme="dark"] .po-feature-teaser { color: #8aabb4; }
+
+/* Chevron icon - rotates when open */
+.po-feature-chevron {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--po-slate);
+  transition: transform 0.22s ease;
+}
+.po-feature[open] .po-feature-chevron { transform: rotate(180deg); }
+
+/* Expanded body */
+.po-feature-body {
+  padding: 0 1.1rem 1rem 4.2rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--po-slate);
+  border-top: 1px solid var(--po-border);
+}
+html[data-theme="dark"] .po-feature-body { color: #8aabb4; }
+
+.po-feature-body p { margin: 0.75rem 0 0; }
+.po-feature-body code {
+  font-size: 0.8rem;
+  background: var(--po-teal-light);
+  color: var(--po-teal);
+  padding: 0.05em 0.35em;
+  border-radius: 3px;
+}
+
+@media (max-width: 600px) {
+  .po-feature-teaser { display: none; }
+  .po-feature-body { padding-left: 1.1rem; }
+}
+
+/* Edit on GitHub button */
+.bd-header-article a.btn { border-color: var(--po-teal); color: var(--po-teal); font-size: 0.82rem; }
+.bd-header-article a.btn:hover { background: var(--po-teal); color: #fff; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .po-hero { padding: 2rem 0; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   WHY TWIGA  (core strengths strip on landing page)
+   ════════════════════════════════════════════════════════════════ */
+
+.po-why {
+  margin: 2.5rem 0 0.5rem;
+}
+
+.po-why-lead {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--po-slate);
+  max-width: 780px;
+  margin: 0 0 2rem;
+  border-left: 3px solid var(--po-teal);
+  padding-left: 1rem;
+}
+
+html[data-theme="dark"] .po-why-lead { color: #8aabb4; }
+
+
+/* ════════════════════════════════════════════════════════════════
+   NAV CARDS  (Bokeh-style section grid on landing page)
+   ════════════════════════════════════════════════════════════════ */
+
+.po-nav-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin: 2.5rem 0;
+}
+
+@media (max-width: 960px) { .po-nav-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .po-nav-cards { grid-template-columns: 1fr; } }
+
+.po-nav-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.25rem 1.1rem;
+  background: var(--po-white);
+  border: 1px solid var(--po-border);
+  border-radius: 10px;
+  text-decoration: none !important;
+  color: var(--po-text) !important;
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+}
+
+html[data-theme="dark"] .po-nav-card { background: var(--po-surface); }
+
+.po-nav-card:hover {
+  box-shadow: 0 4px 20px rgba(16,117,145,0.14);
+  transform: translateY(-2px);
+  border-color: var(--po-teal);
+  text-decoration: none !important;
+}
+
+.po-nav-card-icon {
+  flex-shrink: 0;
+  width: 48px; height: 48px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #fff;
+}
+
+.po-nav-card-icon i {
+  font-size: 1.45rem;
+  line-height: 1;
+  color: #fff;
+}
+
+.po-nav-card-body { flex: 1; }
+
+.po-nav-card-body h3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; font-size: 0.97rem;
+  margin: 0 0 0.35rem;
+  color: var(--po-teal);
+}
+
+.po-nav-card-body p {
+  font-size: 0.85rem;
+  color: var(--po-slate);
+  line-height: 1.55; margin: 0;
+}
+
+html[data-theme="dark"] .po-nav-card-body p { color: #8aabb4; }
+
+/* ════════════════════════════════════════════════════════════════
+   GALLERY PAGE
+   ════════════════════════════════════════════════════════════════ */
+
+/* Filter bar */
+.po-gallery-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.po-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem; font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--po-border);
+  background: var(--po-white);
+  color: var(--po-slate);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+html[data-theme="dark"] .po-filter { background: var(--po-surface); color: #8aabb4; }
+
+.po-filter:hover {
+  border-color: var(--po-teal);
+  color: var(--po-teal);
+  background: var(--po-teal-light);
+}
+
+.po-filter.active {
+  background: var(--po-teal);
+  border-color: var(--po-teal);
+  color: #fff;
+}
+
+/* Colored dots on filter buttons */
+.po-filter-beginner     .bi-circle-fill { color: #2e7d32; font-size: 0.6rem; }
+.po-filter-intermediate .bi-circle-fill { color: #f57f17; font-size: 0.6rem; }
+.po-filter-advanced     .bi-circle-fill { color: #c62828; font-size: 0.6rem; }
+.po-filter.active .bi-circle-fill       { color: rgba(255,255,255,0.85); }
+
+/* Gallery grid */
+.po-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.35rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 960px) { .po-gallery { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .po-gallery { grid-template-columns: 1fr; } }
+
+/* Card */
+.po-gallery-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--po-border);
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none !important;
+  color: var(--po-text) !important;
+  background: var(--po-white);
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+}
+
+html[data-theme="dark"] .po-gallery-card { background: var(--po-surface); }
+
+.po-gallery-card:hover {
+  box-shadow: 0 6px 24px rgba(16,117,145,0.16);
+  transform: translateY(-3px);
+  border-color: var(--po-teal);
+  text-decoration: none !important;
+}
+
+/* Thumbnail gradient area */
+.po-gallery-thumb {
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  position: relative;
+}
+
+.po-gallery-num {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; font-size: 2rem;
+  color: rgba(255,255,255,0.35);
+  line-height: 1;
+}
+
+.po-gallery-icon {
+  font-size: 2rem;
+  line-height: 1;
+  color: rgba(255,255,255,0.9);
+}
+
+/* Card info section */
+.po-gallery-info {
+  padding: 1rem 1rem 0.9rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.po-gallery-info h4 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; font-size: 0.92rem;
+  margin: 0.2rem 0 0.25rem;
+  color: var(--po-teal);
+  border: none; padding: 0;
+}
+
+.po-gallery-info p {
+  font-size: 0.82rem;
+  color: var(--po-slate);
+  line-height: 1.5; margin: 0;
+}
+
+html[data-theme="dark"] .po-gallery-info p { color: #8aabb4; }
+
+/* Difficulty badges */
+.po-level {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.po-level .bi-circle-fill { font-size: 0.5rem; }
+
+.po-level-beginner     { background: #e8f5e9; color: #2e7d32; }
+.po-level-intermediate { background: #fffde7; color: #f57f17; }
+.po-level-advanced     { background: #fce4ec; color: #c62828; }
+
+html[data-theme="dark"] .po-level-beginner     { background: rgba(46,125,50,0.2);  color: #81c784; }
+html[data-theme="dark"] .po-level-intermediate { background: rgba(245,127,23,0.2); color: #ffcc02; }
+html[data-theme="dark"] .po-level-advanced     { background: rgba(198,40,40,0.2);  color: #ef9a9a; }
+
+/* ════════════════════════════════════════════════════════════════
+   SUBSYSTEM GRADIENT HEADERS  (new - MLOps & overview cards)
+   ════════════════════════════════════════════════════════════════ */
+
+.po-ovr-pipe  { background: linear-gradient(135deg, #107591, #069fac) !important; color: white !important; }
+.po-ovr-model { background: linear-gradient(135deg, #0a6480, #107591) !important; color: white !important; }
+.po-ovr-cv    { background: linear-gradient(135deg, #bf5500, #e07b39) !important; color: white !important; }
+.po-ovr-met   { background: linear-gradient(135deg, #3949ab, #5c6bc0) !important; color: white !important; }
+.po-ovr-conf  { background: linear-gradient(135deg, #1b5e20, #2e9e6b) !important; color: white !important; }
+.po-ovr-mlops { background: linear-gradient(135deg, #880e4f, #c2185b) !important; color: white !important; }
+
+/* ════════════════════════════════════════════════════════════════
+   OVERVIEW SUBSYSTEM CARDS  - responsive grid polish
+   ════════════════════════════════════════════════════════════════ */
+
+/* Equal-height cards in every row */
+.sd-row .sd-card { height: 100%; display: flex; flex-direction: column; }
+.sd-row .sd-card .sd-card-body { flex: 1; }
+
+/* Tighten card body padding on narrow columns */
+@media (max-width: 768px) {
+  .sd-card-body { padding: 0.9rem 1rem !important; }
+  .sd-card-header { padding: 8px 12px !important; }
+  .sd-card-footer { padding: 8px 12px !important; }
+}
+
+/* Ensure bullet lists inside cards don't overflow */
+.sd-card-body ul {
+  padding-left: 1.2rem;
+  margin: 0.4rem 0 0;
+}
+.sd-card-body li { font-size: 0.875rem; line-height: 1.6; }
+
+/* Footer link - always visible at the bottom */
+.sd-card-footer { margin-top: auto; border-top: 1px solid var(--po-border) !important; }
+
+/* ════════════════════════════════════════════════════════════════
+   NAVBAR VERSION DROPDOWN  (Bokeh-style version indicator)
+   ════════════════════════════════════════════════════════════════ */
+
+.po-version-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.po-version-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--po-border);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--po-charcoal) !important;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.po-version-btn:hover,
+.po-version-btn:focus,
+.po-version-btn.show {
+  border-color: var(--po-teal) !important;
+  background: var(--po-teal-light) !important;
+  color: var(--po-teal) !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] .po-version-btn {
+  color: var(--po-text) !important;
+  border-color: var(--po-border);
+}
+
+html[data-theme="dark"] .po-version-btn:hover,
+html[data-theme="dark"] .po-version-btn.show {
+  background: var(--po-teal-bg) !important;
+  color: var(--po-teal) !important;
+}
+
+.po-version-label {
+  font-size: 0.78rem;
+}
+
+.po-alpha-pill {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--po-teal-bg);
+  color: var(--po-teal);
+  border: 1px solid var(--po-border);
+  border-radius: 10px;
+  padding: 1px 6px;
+  line-height: 1.4;
+}
+
+.po-version-btn.show .po-alpha-pill,
+.po-version-btn:hover .po-alpha-pill {
+  background: rgba(16,117,145,0.15);
+  border-color: var(--po-teal);
+}
+
+.po-version-menu {
+  min-width: 270px;
+  padding: 14px 16px !important;
+  border: 1px solid var(--po-border) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 24px rgba(16,117,145,0.13) !important;
+  margin-top: 6px !important;
+}
+
+html[data-theme="dark"] .po-version-menu {
+  background: var(--po-surface) !important;
+  border-color: var(--po-border) !important;
+}
+
+.po-version-info p {
+  font-size: 0.85rem;
+  color: var(--po-text);
+  margin: 0 0 10px;
+  line-height: 1.55;
+}
+
+.po-version-changelog-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--po-teal) !important;
+  text-decoration: none !important;
+  letter-spacing: 0.02em;
+}
+
+.po-version-changelog-link:hover {
+  color: var(--po-teal-mid) !important;
+  text-decoration: underline !important;
+}
+
+/* ── Mermaid ─────────────────────────────────────────────────── */
+.mermaid { text-align: center; margin: 1.5rem 0; }
+.mermaid svg { max-width: 100% !important; height: auto !important; }
+
+/* ════════════════════════════════════════════════════════════════
+   NOTEBOOK PAGES  (myst-nb cell typography normalisation)
+   Align font sizes and line-height with the rest of the site so
+   tutorial pages look identical to regular Sphinx pages.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Markdown prose inside notebook cells */
+.cell .cell_input,
+.cell_input .highlight,
+div.cell p,
+div.cell li,
+div.cell blockquote {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--po-slate);
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Headings inside notebook markdown cells - match site heading scale */
+div.cell h1 { font-size: 1.5rem; }
+div.cell h2 { font-size: 1.15rem; }
+div.cell h3 { font-size: 0.95rem; }
+div.cell h4 { font-size: 0.9rem; }
+
+/* Plain-text stdout / stderr output - keep slightly smaller (data output) */
+.cell_output .output_area pre,
+.cell_output .output_text pre,
+.cell_output .output_stream pre {
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* Rich text output (e.g. printed DataFrames, HTML repr) */
+.cell_output .output_html,
+.cell_output .jp-RenderedHTMLCommon {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Author line and any inline bold/italic in notebook prose */
+div.cell p strong,
+div.cell p em {
+  font-size: inherit;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   BORROWED FROM BOKEH - brand-neutral polish
+   ════════════════════════════════════════════════════════════════ */
+
+/* Ligatures cause bad kerning in technical names - disable globally */
+* { font-variant-ligatures: none; }
+
+/* Hide the auto-generated sidebar section title - popo caption-text already
+   handles section labels via .bd-sidebar-primary .caption-text */
+.bd-links__title { display: none; }
+
+/* sphinx-design card rows - add vertical breathing room between rows */
+.sd-row { --sd-gutter-y: 1.5em; }
+
+/* API reference - lighter weight signatures are easier to scan */
+.class .sig,
+.function .sig,
+.sig .property { font-weight: 400; }
+
+/* Optional image border class for screenshots in notebooks/guides.
+   Shadow uses popo teal tint instead of Bokeh's neutral grey. */
+img.image-border {
+  border: 1px solid var(--po-border);
+  margin-bottom: 1.15rem;
+  border-radius: 4px;
+  box-shadow: 1px 2px 6px rgba(16,117,145,0.12);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PANDAS DATAFRAME  (notebook output tables)
+   Adapted from Bokeh/nbsphinx - colors remapped to popo tokens.
+   ════════════════════════════════════════════════════════════════ */
+
+.dataframe {
+  max-width: 100%;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+table.dataframe {
+  border: none !important;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-top: 2px solid #107591 !important;
+  border-bottom: 1px solid #107591 !important;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  color: #2d3748;
+  width: 100%;
+}
+
+table.dataframe thead {
+  border-bottom: 1px solid #069fac;
+  vertical-align: bottom;
+}
+
+table.dataframe tr,
+table.dataframe th,
+table.dataframe td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 7px 14px;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+
+table.dataframe th {
+  background: transparent;
+  color: var(--po-charcoal);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+table.dataframe tbody tr:nth-child(even) {
+  background: #f7fbfc;
+}
+
+table.dataframe tbody tr:nth-child(odd) {
+  background: #ffffff;
+}
+
+table.dataframe tbody tr:hover {
+  background: #e8f5f8;
+}
+
+table.dataframe tbody td {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+table.dataframe tbody tr:last-child td {
+  border-bottom: none;
+}
+
+html[data-theme="dark"] table.dataframe {
+  color: var(--po-text);
+  border-top-color: var(--po-teal) !important;
+  border-bottom-color: var(--po-teal) !important;
+}
+
+html[data-theme="dark"] table.dataframe th {
+  background: #0a5f75;
+}
+
+html[data-theme="dark"] table.dataframe tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.04);
+}
+
+html[data-theme="dark"] table.dataframe tbody tr:nth-child(odd) {
+  background: transparent;
+}
+
+html[data-theme="dark"] table.dataframe tbody tr:hover {
+  background: var(--po-teal-bg);
+}
+
+/* ── Contributors section ────────────────────────────────────────── */
+.po-contributors {
+  margin: 3rem 0 1rem;
+  text-align: center;
+}
+
+.po-section-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--po-teal);
+  margin: 0 0 0.4rem;
+}
+
+.po-contributors-lead {
+  font-size: 0.95rem;
+  color: var(--po-slate);
+  margin: 0 0 1.5rem;
+}
+
+html[data-theme="dark"] .po-contributors-lead { color: #8aabb4; }
+
+.po-contributor-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.po-contributor-card a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  width: 130px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+@media (max-width: 480px) {
+  .po-contributor-cards {
+    gap: 1.5rem;
+  }
+  .po-contributor-card a {
+    width: min(42vw, 130px);
+    padding: 0.5rem;
+  }
+  .po-contributor-card img {
+    width: 56px;
+    height: 56px;
+  }
+  .po-contributor-role {
+    font-size: 0.65rem;
+  }
+}
+
+.po-contributor-card a:hover {
+  transform: translateY(-3px);
+  opacity: 0.85;
+}
+
+html[data-theme="dark"] .po-contributor-card a {
+  background: transparent;
+}
+
+.po-contributor-card img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--po-teal);
+}
+
+.po-contributor-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--po-dark);
+  text-align: center;
+}
+
+html[data-theme="dark"] .po-contributor-name { color: var(--po-text); }
+
+.po-contributor-role {
+  font-size: 0.72rem;
+  color: var(--po-slate);
+  text-align: center;
+  line-height: 1.4;
+}
+
+html[data-theme="dark"] .po-contributor-role { color: #8aabb4; }
+
+/* Header rows follow popo.plotting.tables.themed_gt: dark text on white under a teal rule. */
+html[data-theme="dark"] table.docutils th,
+html[data-theme="dark"] .output_area table.dataframe th,
+html[data-theme="dark"] div.cell_output table th { color: var(--po-text); }
+
+/* ════════════════════════════════════════════════════════════════
+   popo additions
+   ════════════════════════════════════════════════════════════════ */
+
+/* The hero logo is a mark-and-wordmark lockup, wider than twiga's. */
+.po-hero-logo { height: 64px; width: auto; }
+
+/* The primary action is popo's orange: the thing to notice. */
+.po-btn-primary { background: var(--po-orange); }
+.po-btn-primary:hover { background: var(--po-orange-deep); }
+
+/* Hero code snippet: keywords, strings and comments. */
+.po-code-snippet .k { color: var(--po-teal-mid); font-weight: 600; }
+.po-code-snippet .s { color: #ffc98f; }
+.po-code-snippet .c { color: #8a9ba3; font-style: italic; }
+
+/* Overview figure: full width, framed like a card. */
+.po-overview {
+  margin: 2.2rem 0 1.6rem;
+  border: 1px solid var(--po-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(16,117,145,0.08);
+}
+.po-overview img { display: block; width: 100%; height: auto; }
+
+/* Companion strip: a quiet band linking to twiga. */
+.po-companion {
+  margin: 2.4rem 0 1rem;
+  padding: 1rem 1.3rem;
+  border-left: 4px solid var(--po-orange);
+  background: var(--po-surface);
+  border-radius: 6px;
+  color: var(--po-slate);
+}
+.po-companion p { margin: 0; }
+html[data-theme="dark"] .po-companion { color: var(--po-text); }
+
+/* Narrow screens: let the hero's columns shrink and scroll long code inside its card,
+   instead of widening the whole page. */
+.po-hero > * { min-width: 0; }
+.po-code-snippet pre { overflow-x: auto; }
+.po-install-box { overflow-x: auto; }
+.po-install-code { white-space: nowrap; }
+
+/* The overview figure carries its own day and night halves; keep it undimmed in dark mode. */
+html[data-theme="dark"] .po-overview img { filter: none; }

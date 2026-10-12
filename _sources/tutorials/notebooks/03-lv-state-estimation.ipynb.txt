@@ -1,0 +1,459 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "0",
+   "metadata": {},
+   "source": [
+    "# LV State Estimation\n",
+    "\n",
+    "## Objectives\n",
+    "\n",
+    "<p style=\"text-align: justify\">Below the secondary substation, most low-voltage networks are not measured in real time: an operator knows the voltage and power at the busbar and little else, and cannot say what a given customer's voltage is right now without sending someone to measure it. State estimation infers the voltage at every bus from whatever is measured, plus a model of the network. This notebook asks how much has to be measured for that to work, on the same UK feeder as the time-series notebook:</p>\n",
+    "\n",
+    "<ul>\n",
+    "<li style=\"text-align: justify\">Convert the OpenDSS feeder to pandapower with <code>popo.estimation.to_pandapower</code>, and check the conversion against OpenDSS with <code>check_conversion</code> before trusting it.</li>\n",
+    "<li style=\"text-align: justify\">Count whether a measurement set can determine the state at all, with <code>observability</code>.</li>\n",
+    "<li style=\"text-align: justify\">Estimate every bus voltage from the substation plus smart-meter readings with <code>estimate_voltages</code>, and score it against the true state with <code>voltage_error</code>.</li>\n",
+    "<li style=\"text-align: justify\">Find out how many meters are enough, and whether line sensors can stand in for missing ones.</li>\n",
+    "<li style=\"text-align: justify\">See how the quality of a substation forecast carries through to the estimate, with <code>run_comparison</code>.</li>\n",
+    "</ul>\n",
+    "\n",
+    "<p style=\"text-align: justify\">State estimation needs pandapower: <code>uv add pop-flow[estimation]</code>.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import copy\n",
+    "import logging\n",
+    "from pathlib import Path\n",
+    "import warnings\n",
+    "\n",
+    "import matplotlib.pyplot as plt\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import style\n",
+    "\n",
+    "from popo.estimation import (\n",
+    "    MeasurementNoise,\n",
+    "    check_conversion,\n",
+    "    estimate_voltages,\n",
+    "    observability,\n",
+    "    run_comparison,\n",
+    "    set_loading,\n",
+    "    to_pandapower,\n",
+    "    true_state,\n",
+    "    voltage_error,\n",
+    ")\n",
+    "from popo.plotting.tables import record_table, themed_gt\n",
+    "\n",
+    "warnings.filterwarnings(\"ignore\")\n",
+    "logging.getLogger(\"pandapower\").setLevel(logging.CRITICAL)  # an unobservable set is a result here, not an error\n",
+    "style.configure()\n",
+    "\n",
+    "DATA = Path(\"../tests/data\")\n",
+    "FEEDER = DATA / \"dss_uk_network_17_1_1149\" / \"master_network_17_1_1149.dss\"\n",
+    "household_pool = pd.read_parquet(DATA / \"uk_household_pu_96.parquet\").to_numpy()\n",
+    "SEED = 20260904\n",
+    "STEP = 36  # 18:00 on the first day, the evening peak\n",
+    "BASE_KW = 1.3  # mean household demand the per-unit profiles are scaled to\n",
+    "POWER_FACTOR = 0.95\n",
+    "TRIALS = 8  # random draws per configuration below"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2",
+   "metadata": {},
+   "source": [
+    "## 1. Converting the network, and checking it first\n",
+    "\n",
+    "<p style=\"text-align: justify\">OpenDSS has no state estimator; pandapower does. <code>to_pandapower</code> converts the feeder with pandapower's own OpenDSS converter, and <code>check_conversion</code> then solves both engines at the same loading and compares every bus. A converted model is only worth estimating on if it reproduces the circuit it came from.</p>\n",
+    "\n",
+    "<p style=\"text-align: justify\">The converter rates each transformer winding at its bus's voltage base. That equals the transformer's turns ratio only when the winding's rated voltage equals the base, and here it does not: the secondary is rated 0.416 kV on a 0.4 kV system, a 4% boost that a model built on bus bases loses. <code>to_pandapower</code> restores the nameplate ratio. The comparison below shows both.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "net, lv_bus = to_pandapower(FEEDER)\n",
+    "corrected = check_conversion(net)\n",
+    "\n",
+    "as_converted = copy.deepcopy(net)\n",
+    "as_converted.trafo[\"vn_lv_kv\"] = as_converted.bus.vn_kv.loc[as_converted.trafo.lv_bus].to_numpy()\n",
+    "uncorrected = check_conversion(as_converted)\n",
+    "\n",
+    "conversion = pd.DataFrame(\n",
+    "    {\n",
+    "        \"transformer ratio\": [\"bus voltage bases\", \"nameplate\"],\n",
+    "        \"buses compared\": [len(uncorrected), len(corrected)],\n",
+    "        \"mean difference (pu)\": [uncorrected.difference_pu.mean(), corrected.difference_pu.mean()],\n",
+    "        \"largest difference (pu)\": [uncorrected.difference_pu.abs().max(), corrected.difference_pu.abs().max()],\n",
+    "    }\n",
+    ")\n",
+    "themed_gt(conversion, decimals=4)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fig, ax = plt.subplots(figsize=style.panel_size(width=0.6 * style.PANEL_WIDTH_IN, aspect=0.74))\n",
+    "for frame, label, color in (\n",
+    "    (uncorrected, \"Bus voltage bases\", style.HIGHLIGHT),\n",
+    "    (corrected, \"Nameplate ratio\", style.PRIMARY),\n",
+    "):\n",
+    "    ordered = frame.sort_values(\"vm_opendss_pu\")\n",
+    "    ax.plot(np.arange(len(ordered)), ordered[\"difference_pu\"], color=color, lw=style.LINE_WIDTH, label=label)\n",
+    "style.reference_line(ax, 0.0)\n",
+    "ax.set_xlabel(\"Bus, ordered by OpenDSS voltage\")\n",
+    "ax.set_ylabel(\"pandapower - OpenDSS (pu)\")\n",
+    "ax.set_title(\"Converted model against the circuit it came from\")\n",
+    "style.format_axes(ax)\n",
+    "style.legend_below(ax, ncol=2)\n",
+    "style.show(fig)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">Built on its buses' voltage bases, the converted network sits 0.044 pu below OpenDSS at every LV bus: more than the whole voltage drop along many feeders, and enough to turn a compliant customer into a violation on paper. With the nameplate ratio, the two engines agree to within 0.0018 pu at every bus. The two spikes to zero are the 11 kV buses, which the ratio does not affect.</p>\n",
+    "\n",
+    "<p style=\"text-align: justify\">The 0.0018 pu that remains is not a conversion error to fix but a property of the model: pandapower's converted network is balanced, one voltage per bus, while the feeder's single-phase customers load its three phases unevenly. No estimate built on this model can be judged more finely than that.</p>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6",
+   "metadata": {},
+   "source": [
+    "## 2. The true state at the evening peak\n",
+    "\n",
+    "<p style=\"text-align: justify\">Each customer gets a real household profile from the pool, scaled to a mean demand of 1.3 kW at a 0.95 power factor, and the network is solved at 18:00, the evening peak. The result is the one thing an operator never has: the true voltage at every bus. It is used below only to score each estimate, never fed to the estimator.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "rng = np.random.default_rng(SEED)\n",
+    "customers = len(net.load)\n",
+    "profile = household_pool[STEP, rng.integers(0, household_pool.shape[1], customers)]\n",
+    "active_mw = profile * BASE_KW / 1000\n",
+    "reactive_mvar = active_mw * np.tan(np.arccos(POWER_FACTOR))\n",
+    "set_loading(net, active_mw, reactive_mvar)\n",
+    "v_true, substation_mw, substation_mvar = true_state(net)\n",
+    "line_flows_true = net.res_line[[\"p_from_mw\", \"q_from_mvar\"]].copy()\n",
+    "\n",
+    "record_table(\n",
+    "    {\n",
+    "        \"customers\": customers,\n",
+    "        \"buses\": len(net.bus),\n",
+    "        \"substation active power (kW)\": 1000 * substation_mw,\n",
+    "        \"lowest voltage (pu)\": v_true.min(),\n",
+    "        \"highest voltage (pu)\": v_true.max(),\n",
+    "    },\n",
+    "    title=\"The true state at 18:00\",\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8",
+   "metadata": {},
+   "source": [
+    "## 3. The substation alone\n",
+    "\n",
+    "<p style=\"text-align: justify\">An estimator solves for two unknowns at every bus, voltage magnitude and angle, less one reference angle: $2N - 1$ unknowns for $N$ buses. Every measurement supplies one equation, and so does each bus known to inject nothing, twice over (zero active and zero reactive power). <code>observability</code> counts the two before the estimator is run:</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "noise = MeasurementNoise()\n",
+    "\n",
+    "\n",
+    "def read(metered=(), sensors=(), seed=0):\n",
+    "    \"\"\"Substation, meter and line-sensor readings with their instruments' noise, then an estimate.\"\"\"\n",
+    "    r = np.random.default_rng(seed)\n",
+    "    meter_p = active_mw * (1 + r.normal(0, noise.smart_meter_pq_fraction, customers))\n",
+    "    meter_q = reactive_mvar * (1 + r.normal(0, noise.smart_meter_pq_fraction, customers))\n",
+    "    flows = {\n",
+    "        int(line): tuple(line_flows_true.loc[line].to_numpy() * (1 + r.normal(0, noise.line_pq_fraction, 2)))\n",
+    "        for line in sensors\n",
+    "    }\n",
+    "    return estimate_voltages(\n",
+    "        net,\n",
+    "        lv_bus,\n",
+    "        voltage_pu=v_true[lv_bus] + r.normal(0, noise.voltage_pu),\n",
+    "        active_mw=substation_mw * (1 + r.normal(0, noise.substation_pq_fraction)),\n",
+    "        reactive_mvar=substation_mvar * (1 + r.normal(0, noise.substation_pq_fraction)),\n",
+    "        customer_active_mw=meter_p,\n",
+    "        customer_reactive_mvar=meter_q,\n",
+    "        metered=list(metered),\n",
+    "        line_flows=flows,\n",
+    "    )\n",
+    "\n",
+    "\n",
+    "count = observability(net, lv_bus, metered=0)\n",
+    "print(\n",
+    "    f\"Unknowns: {count.required}. Equations from the substation alone: {count.available} (short by {count.shortfall}).\"\n",
+    ")\n",
+    "print(f\"Estimate from the substation alone: {'none' if read() is None else 'found'}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "10",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">The substation supplies three equations: the busbar voltage and the active and reactive power through the transformer. The 191 buses known to inject nothing (junctions, the busbar itself and the 11 kV bus) supply two each. That is 385 equations for 759 unknowns. The estimator has nothing to solve: this is not an inaccurate estimate, it is no estimate at all, and <code>estimate_voltages</code> returns <code>None</code> rather than an answer.</p>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "11",
+   "metadata": {},
+   "source": [
+    "## 4. Smart meters as pseudo-measurements\n",
+    "\n",
+    "<p style=\"text-align: justify\">A smart meter does not report its customer's voltage in real time; it reports consumption, periodically. Each meter therefore enters the estimator as a pseudo-measurement of active and reactive power at its customer's bus, with a 10% uncertainty, against the 2% of the substation's own instruments.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "12",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "all_customers = range(customers)\n",
+    "full = [read(all_customers, seed=s) for s in range(TRIALS)]\n",
+    "errors = pd.DataFrame([voltage_error(e, v_true) for e in full if e is not None])\n",
+    "print(f\"Every customer metered: {len(errors)} of {TRIALS} draws solved.\")\n",
+    "themed_gt(errors.agg([\"mean\", \"max\"]).rename_axis(\"over draws\").reset_index(), decimals=4)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "13",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "estimate = full[0]\n",
+    "order = np.argsort(v_true)\n",
+    "fig, ax = plt.subplots(figsize=style.panel_size(width=0.6 * style.PANEL_WIDTH_IN, aspect=0.74))\n",
+    "ax.plot(np.arange(len(order)), v_true[order], color=style.PRIMARY, lw=style.LINE_WIDTH, label=\"True\")\n",
+    "ax.plot(\n",
+    "    np.arange(len(order)), estimate[order], \"o\", mec=style.HIGHLIGHT, mfc=\"white\", label=\"Estimated\", **style.MARKER\n",
+    ")\n",
+    "ax.set_xlabel(\"Bus, ordered by true voltage\")\n",
+    "ax.set_ylabel(\"Voltage (pu)\")\n",
+    "ax.set_title(\"Every customer metered: estimate against truth\")\n",
+    "style.format_axes(ax)\n",
+    "style.legend_below(ax, ncol=2)\n",
+    "style.show(fig)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "14",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">With every customer metered, every draw solves, and the estimate is within 0.0017 pu of the true voltage on average and 0.0025 pu at the worst bus, close to the 0.0018 pu floor the balanced model sets. Over the eight draws of meter noise, the largest error anywhere is 0.0055 pu, a small fraction of the 0.10 pu between nominal and a statutory limit.</p>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "15",
+   "metadata": {},
+   "source": [
+    "## 5. How many meters are enough?\n",
+    "\n",
+    "<p style=\"text-align: justify\">The substation meters the flow through the transformer, so the total demand behind it is known. With every customer but one metered, that one is the total less the rest. With two unmetered, only their sum is known, and nothing in the measurements separates them. The count says the same:</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "16",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "rows = []\n",
+    "for missing in range(0, 6):\n",
+    "    solved = 0\n",
+    "    for s in range(TRIALS):\n",
+    "        metered = np.random.default_rng(100 + s).choice(customers, customers - missing, replace=False)\n",
+    "        solved += read(metered, seed=s) is not None\n",
+    "    count = observability(net, lv_bus, metered=customers - missing)\n",
+    "    rows.append(\n",
+    "        {\n",
+    "            \"unmetered customers\": missing,\n",
+    "            \"equations\": count.available,\n",
+    "            \"unknowns\": count.required,\n",
+    "            \"solved\": f\"{solved}/{TRIALS}\",\n",
+    "        }\n",
+    "    )\n",
+    "themed_gt(pd.DataFrame(rows))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "17",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">One unmetered customer is recovered: 759 equations for 759 unknowns, and every draw solves. Two are not, in any draw. Coverage is not a dial that trades accuracy for cost on this feeder; below all customers but one, there is no estimate.</p>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "18",
+   "metadata": {},
+   "source": [
+    "## 6. Line sensors instead of meters\n",
+    "\n",
+    "<p style=\"text-align: justify\">An operator short of full smart-meter coverage can add power-flow sensors on a few lines instead. A sensor adds two equations, the same as a meter, so the count improves with every one. Whether the estimate does depends on where it goes: a sensor resolves an unmetered customer only if the flow it measures separates that customer from the others. The comparison below starts from 90% coverage (19 customers unmetered) and adds sensors either on randomly chosen lines or on the service line of each unmetered customer.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "19",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def service_line(bus):\n",
+    "    \"\"\"The line whose far end is a customer's bus.\"\"\"\n",
+    "    return int(net.line.index[(net.line.to_bus == bus) | (net.line.from_bus == bus)][0])\n",
+    "\n",
+    "\n",
+    "rows = []\n",
+    "for s in range(TRIALS):\n",
+    "    r = np.random.default_rng(1000 + s)\n",
+    "    metered = r.choice(customers, round(0.9 * customers), replace=False)\n",
+    "    unmetered = sorted(set(range(customers)) - set(metered))\n",
+    "    placements = {f\"random, {k}\": r.choice(len(net.line), k, replace=False) for k in (25, 50, 100, 200)}\n",
+    "    placements[f\"targeted, {len(unmetered)}\"] = [service_line(int(net.load.bus.iloc[i])) for i in unmetered]\n",
+    "    placements[\"none\"] = []\n",
+    "    for placement, sensors in placements.items():\n",
+    "        estimate = read(metered, sensors, seed=s)\n",
+    "        error = voltage_error(estimate, v_true)[\"max_abs_pu\"] if estimate is not None else np.nan\n",
+    "        rows.append({\"placement\": placement, \"draw\": s, \"solved\": estimate is not None, \"max_error_pu\": error})\n",
+    "\n",
+    "sensors = pd.DataFrame(rows)\n",
+    "sensor_summary = (\n",
+    "    sensors.groupby(\"placement\", sort=False)\n",
+    "    .agg(\n",
+    "        solved=(\"solved\", \"sum\"),\n",
+    "        median_max_error_pu=(\"max_error_pu\", \"median\"),\n",
+    "        worst_max_error_pu=(\"max_error_pu\", \"max\"),\n",
+    "    )\n",
+    "    .reset_index()\n",
+    ")\n",
+    "sensor_summary[\"solved\"] = sensor_summary[\"solved\"].map(lambda n: f\"{n}/{TRIALS}\")\n",
+    "themed_gt(sensor_summary, decimals=4)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "20",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">Where a sensor goes matters more than how many there are. Sensors on randomly chosen lines rarely help: most of the 377 lines are the service cables of customers who are already metered, so a sensor there adds equations without adding information. Fifty random sensors never solve; a hundred solve once in eight draws, and that one estimate is wrong by 0.35 pu, a reminder that a solved estimate is not a correct one and that its error has to be checked. Two hundred random sensors, more than half the lines, solve six times in eight.</p>\n",
+    "\n",
+    "<p style=\"text-align: justify\">Nineteen sensors placed on the service lines of the nineteen unmetered customers solve every draw, within 0.0036 pu at the median. That is the same information a meter would have given, measured on the line instead, and it is the lesson: a measurement helps when it separates an unknown injection from the rest, and the count of equations cannot tell whether it does.</p>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "21",
+   "metadata": {},
+   "source": [
+    "## 7. When the substation reading is a forecast\n",
+    "\n",
+    "<p style=\"text-align: justify\">Everything above used the substation's measured state. An operator planning ahead has a forecast of it instead, and <code>run_comparison</code> asks whether the <em>kind</em> of forecast matters, at full meter coverage over a day of half-hours. Three substation inputs are fed to the same estimator: the true readings; a <em>coherent</em> forecast, one error applied to the demand and carried through a power flow, so its active power, reactive power and voltage describe a state the network can be in; and an <em>incoherent</em> one, each of the three perturbed on its own, as three separately calibrated forecasts would be. Both forecasts carry a 10% error.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "22",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "comparison = run_comparison(FEEDER, household_pool, steps=48, smartmeter_frac=1.0, forecast_error=0.1, seed=SEED)\n",
+    "summary = comparison.summary()\n",
+    "summary.columns = [\" \".join(column) for column in summary.columns]\n",
+    "print(f\"Estimates that solved: {comparison.converged_fraction:.0%}\")\n",
+    "themed_gt(summary.reset_index(), decimals=4)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "23",
+   "metadata": {},
+   "source": [
+    "<p style=\"text-align: justify\">Every estimate solved, so the difference between the rows is the quality of the state, not whether there is one. With the true substation readings the estimate is exact, since the meters here carry no noise. With a forecast, the coherent one gives a mean RMS error of 0.0061 pu; the incoherent one, with the same 10% error on each quantity, gives 0.0096 pu, about 57% worse. Three forecasts that are each well calibrated, but that together describe no state the network can be in, give the estimator a worse starting point than one consistent error.</p>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "24",
+   "metadata": {},
+   "source": [
+    "## Summary\n",
+    "\n",
+    "<ul>\n",
+    "<li style=\"text-align: justify\"><code>to_pandapower</code> converts an OpenDSS feeder and restores each transformer's nameplate ratio; <code>check_conversion</code> compares the converted model with OpenDSS bus by bus. On this feeder the bus-base ratio puts every LV bus 0.044 pu low, and the corrected model agrees within 0.0018 pu, the limit a balanced model of an unbalanced feeder sets.</li>\n",
+    "<li style=\"text-align: justify\"><code>observability</code> counts equations against unknowns before an estimate is attempted. The substation alone is far short: no estimate exists.</li>\n",
+    "<li style=\"text-align: justify\"><code>estimate_voltages</code> with every customer's meter as a pseudo-measurement recovers every bus within a few thousandths of a per unit. One customer can be left unmetered, since the transformer flow fixes the total; two cannot.</li>\n",
+    "<li style=\"text-align: justify\">Line sensors help only where they separate an unmetered customer from the rest. Placed at random, even hundreds of them rarely give an estimate, and a solved estimate can still be badly wrong; placed on the unmetered customers' own lines, as many sensors as unmetered customers do.</li>\n",
+    "<li style=\"text-align: justify\"><code>run_comparison</code> shows that a coherent substation forecast gives a better state estimate than three separately calibrated ones of the same accuracy.</li>\n",
+    "</ul>"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

@@ -1,0 +1,79 @@
+# Quickstart
+
+This page builds a small low-voltage network, solves it, reads the results back as tables and checks
+the voltages against a statutory limit. It needs the `opendss` and `plot` extras.
+
+## Build a network
+
+A circuit is built with OpenDSS's own commands. popo does its work on the way back out.
+
+```python
+import opendssdirect as dss
+
+for command in [
+    "Clear",
+    "Set DefaultBaseFrequency=50",
+    "New Circuit.Quickstart",
+    "Edit vsource.source bus1=sourceBus basekv=11 pu=1.0 phases=3",
+    "New Transformer.LVTR Buses=[sourcebus, A.1.2.3] Conns=[delta wye] KVs=[11, 0.4] KVAs=[250 250] xhl=2.5",
+    "New Linecode.240sq nphases=3 R1=0.127 X1=0.072 units=km",
+    "New Linecode.16sq nphases=1 R1=1.15 X1=0.083 units=km",
+    "New Line.A_B bus1=A.1.2.3 bus2=B.1.2.3 length=1 units=km linecode=240sq",
+    "New Line.B_C bus1=B.1 bus2=C.1 length=0.02 units=km linecode=16sq",
+    "New Line.B_D bus1=B.2 bus2=D.2 length=0.02 units=km linecode=16sq",
+    "New Line.B_E bus1=B.3 bus2=E.3 length=0.02 units=km linecode=16sq",
+    "New Load.House_C bus1=C.1 phases=1 kV=0.23 kW=7 pf=0.95",
+    "New Load.House_D bus1=D.2 phases=1 kV=0.23 kW=6 pf=0.95",
+    "New Load.House_E bus1=E.3 phases=1 kV=0.23 kW=8 pf=0.95",
+    "Set VoltageBases=[11 0.4]",
+    "CalcVoltageBases",
+]:
+    dss.Text.Command(command)
+dss.Solution.Solve()
+```
+
+## Read it back
+
+{py:class}`~popo.network.Circuit` is a view of the compiled circuit that yields its elements as records,
+and {py:mod}`popo.powerflow` reads a solved circuit's results back as long tables.
+
+```python
+import pandas as pd
+
+from popo.network import Circuit
+from popo.powerflow import bus_voltages, circuit_summary
+
+circuit = Circuit(dss)
+loads = pd.DataFrame(circuit.loads)
+voltages = bus_voltages(dss)
+print(circuit_summary(dss))
+```
+
+Each house is reported on the phase it is actually connected to: `D` on phase 2, `E` on phase 3.
+
+## Check the voltages
+
+A statutory limit is a named standard, not a pair of numbers. The source bus is held at its setpoint by
+construction, so it is excluded before judging what customers see.
+
+```python
+from popo.standards import VoltageLimits
+
+limits = VoltageLimits.en_50160()
+customers = voltages.query("bus != @circuit.source_bus")
+print(limits.check(customers["vmag_pu"]).summary())
+print(limits.violations(customers))
+```
+
+## Draw it
+
+```python
+from popo.plotting.network import plot_topology, topology_from_dss
+
+plot_topology(topology_from_dss(dss), title="Quickstart network")
+```
+
+## Next
+
+- [Key concepts](key-concepts.md): phases, per unit, statutory bands and observability.
+- [Tutorials](../tutorials/index.rst): three end-to-end notebooks on real feeders.

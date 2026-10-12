@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>LV State Estimation &#8212; popo</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/popo.css?v=e707a3fc" />
+    <link crossorigin="anonymous" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=22840dfd"></script>
+    <script>let toggleHintShow = 'Show';</script>
+    <script>let toggleHintHide = 'Hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/notebooks/03-lv-state-estimation';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="../../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tutorial gallery" href="../../gallery.html" />
+    <link rel="prev" title="Time-Series Simulation and DER Modeling" href="02-timeseries-der-modeling.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.0" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="popo"/>
+    <img src="../../_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="popo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Get started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide/index.html">
+    User guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../gallery.html">
+    Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="dropdown po-version-wrapper">
+  <button
+    class="btn dropdown-toggle po-version-btn"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+    aria-label="popo version 0.1.0"
+  >
+    <span class="po-version-label">v0.1.0</span>
+    <span class="po-alpha-pill">alpha</span>
+  </button>
+  <div class="dropdown-menu dropdown-menu-end po-version-menu">
+    <div class="po-version-info">
+      <p>
+        <strong>popo 0.1.0</strong> is in alpha.
+        The API may change before 1.0.
+      </p>
+      <a
+        href="../../changelog.html"
+        class="po-version-changelog-link"
+      >
+        View changelog <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pop-flow/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/box-seam-fill.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://sambaiga.github.io/twiga-docs/" title="twiga, popo's forecasting companion" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/graph-up-arrow.svg" class="icon-link-image" alt="twiga, popo's forecasting companion"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Get started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide/index.html">
+    User guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../gallery.html">
+    Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="dropdown po-version-wrapper">
+  <button
+    class="btn dropdown-toggle po-version-btn"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+    aria-label="popo version 0.1.0"
+  >
+    <span class="po-version-label">v0.1.0</span>
+    <span class="po-alpha-pill">alpha</span>
+  </button>
+  <div class="dropdown-menu dropdown-menu-end po-version-menu">
+    <div class="po-version-info">
+      <p>
+        <strong>popo 0.1.0</strong> is in alpha.
+        The API may change before 1.0.
+      </p>
+      <a
+        href="../../changelog.html"
+        class="po-version-changelog-link"
+      >
+        View changelog <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/pop-flow/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/box-seam-fill.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://sambaiga.github.io/twiga-docs/" title="twiga, popo's forecasting companion" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/graph-up-arrow.svg" class="icon-link-image" alt="twiga, popo's forecasting companion"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-opendss-lv-modeling.html">OpenDSS LV Modeling with popo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-timeseries-der-modeling.html">Time-Series Simulation and DER Modeling</a></li>
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">LV State Estimation</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Tutorials</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">LV State Estimation</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="lv-state-estimation">
+<h1>LV State Estimation<a class="headerlink" href="#lv-state-estimation" title="Link to this heading">#</a></h1>
+<section id="objectives">
+<h2>Objectives<a class="headerlink" href="#objectives" title="Link to this heading">#</a></h2>
+<p style="text-align: justify">Below the secondary substation, most low-voltage networks are not measured in real time: an operator knows the voltage and power at the busbar and little else, and cannot say what a given customer's voltage is right now without sending someone to measure it. State estimation infers the voltage at every bus from whatever is measured, plus a model of the network. This notebook asks how much has to be measured for that to work, on the same UK feeder as the time-series notebook:</p>
+<ul>
+<li style="text-align: justify">Convert the OpenDSS feeder to pandapower with <code>popo.estimation.to_pandapower</code>, and check the conversion against OpenDSS with <code>check_conversion</code> before trusting it.</li>
+<li style="text-align: justify">Count whether a measurement set can determine the state at all, with <code>observability</code>.</li>
+<li style="text-align: justify">Estimate every bus voltage from the substation plus smart-meter readings with <code>estimate_voltages</code>, and score it against the true state with <code>voltage_error</code>.</li>
+<li style="text-align: justify">Find out how many meters are enough, and whether line sensors can stand in for missing ones.</li>
+<li style="text-align: justify">See how the quality of a substation forecast carries through to the estimate, with <code>run_comparison</code>.</li>
+</ul>
+<p style="text-align: justify">State estimation needs pandapower: <code>uv add pop-flow[estimation]</code>.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">style</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MeasurementNoise</span><span class="p">,</span>
+    <span class="n">check_conversion</span><span class="p">,</span>
+    <span class="n">estimate_voltages</span><span class="p">,</span>
+    <span class="n">observability</span><span class="p">,</span>
+    <span class="n">run_comparison</span><span class="p">,</span>
+    <span class="n">set_loading</span><span class="p">,</span>
+    <span class="n">to_pandapower</span><span class="p">,</span>
+    <span class="n">true_state</span><span class="p">,</span>
+    <span class="n">voltage_error</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">record_table</span><span class="p">,</span> <span class="n">themed_gt</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"pandapower"</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>  <span class="c1"># an unobservable set is a result here, not an error</span>
+<span class="n">style</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
+
+<span class="n">DATA</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"../tests/data"</span><span class="p">)</span>
+<span class="n">FEEDER</span> <span class="o">=</span> <span class="n">DATA</span> <span class="o">/</span> <span class="s2">"dss_uk_network_17_1_1149"</span> <span class="o">/</span> <span class="s2">"master_network_17_1_1149.dss"</span>
+<span class="n">household_pool</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">DATA</span> <span class="o">/</span> <span class="s2">"uk_household_pu_96.parquet"</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">20260904</span>
+<span class="n">STEP</span> <span class="o">=</span> <span class="mi">36</span>  <span class="c1"># 18:00 on the first day, the evening peak</span>
+<span class="n">BASE_KW</span> <span class="o">=</span> <span class="mf">1.3</span>  <span class="c1"># mean household demand the per-unit profiles are scaled to</span>
+<span class="n">POWER_FACTOR</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">TRIALS</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># random draws per configuration below</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="converting-the-network-and-checking-it-first">
+<h2>1. Converting the network, and checking it first<a class="headerlink" href="#converting-the-network-and-checking-it-first" title="Link to this heading">#</a></h2>
+<p style="text-align: justify">OpenDSS has no state estimator; pandapower does. <code>to_pandapower</code> converts the feeder with pandapower's own OpenDSS converter, and <code>check_conversion</code> then solves both engines at the same loading and compares every bus. A converted model is only worth estimating on if it reproduces the circuit it came from.</p>
+<p style="text-align: justify">The converter rates each transformer winding at its bus's voltage base. That equals the transformer's turns ratio only when the winding's rated voltage equals the base, and here it does not: the secondary is rated 0.416 kV on a 0.4 kV system, a 4% boost that a model built on bus bases loses. <code>to_pandapower</code> restores the nameplate ratio. The comparison below shows both.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="p">,</span> <span class="n">lv_bus</span> <span class="o">=</span> <span class="n">to_pandapower</span><span class="p">(</span><span class="n">FEEDER</span><span class="p">)</span>
+<span class="n">corrected</span> <span class="o">=</span> <span class="n">check_conversion</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+
+<span class="n">as_converted</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+<span class="n">as_converted</span><span class="o">.</span><span class="n">trafo</span><span class="p">[</span><span class="s2">"vn_lv_kv"</span><span class="p">]</span> <span class="o">=</span> <span class="n">as_converted</span><span class="o">.</span><span class="n">bus</span><span class="o">.</span><span class="n">vn_kv</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">as_converted</span><span class="o">.</span><span class="n">trafo</span><span class="o">.</span><span class="n">lv_bus</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">uncorrected</span> <span class="o">=</span> <span class="n">check_conversion</span><span class="p">(</span><span class="n">as_converted</span><span class="p">)</span>
+
+<span class="n">conversion</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">"transformer ratio"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"bus voltage bases"</span><span class="p">,</span> <span class="s2">"nameplate"</span><span class="p">],</span>
+        <span class="s2">"buses compared"</span><span class="p">:</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">uncorrected</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">corrected</span><span class="p">)],</span>
+        <span class="s2">"mean difference (pu)"</span><span class="p">:</span> <span class="p">[</span><span class="n">uncorrected</span><span class="o">.</span><span class="n">difference_pu</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">corrected</span><span class="o">.</span><span class="n">difference_pu</span><span class="o">.</span><span class="n">mean</span><span class="p">()],</span>
+        <span class="s2">"largest difference (pu)"</span><span class="p">:</span> <span class="p">[</span><span class="n">uncorrected</span><span class="o">.</span><span class="n">difference_pu</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">corrected</span><span class="o">.</span><span class="n">difference_pu</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+<span class="n">themed_gt</span><span class="p">(</span><span class="n">conversion</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="zqxezcfjhj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
+<style>
+#zqxezcfjhj table {
+          font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#zqxezcfjhj thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#zqxezcfjhj p { margin: 0; padding: 0; }
+ #zqxezcfjhj .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #zqxezcfjhj .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #zqxezcfjhj .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #zqxezcfjhj .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #zqxezcfjhj .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #zqxezcfjhj .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #zqxezcfjhj .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #zqxezcfjhj .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #zqxezcfjhj .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #zqxezcfjhj .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #zqxezcfjhj .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #zqxezcfjhj .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #zqxezcfjhj .gt_spanner_row { border-bottom-style: hidden; }
+ #zqxezcfjhj .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #zqxezcfjhj .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #zqxezcfjhj .gt_from_md> :first-child { margin-top: 0; }
+ #zqxezcfjhj .gt_from_md> :last-child { margin-bottom: 0; }
+ #zqxezcfjhj .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #zqxezcfjhj .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #zqxezcfjhj .gt_indent_1 { text-indent: 5px; }
+ #zqxezcfjhj .gt_indent_2 { text-indent: calc(5px * 2); }
+ #zqxezcfjhj .gt_indent_3 { text-indent: calc(5px * 3); }
+ #zqxezcfjhj .gt_indent_4 { text-indent: calc(5px * 4); }
+ #zqxezcfjhj .gt_indent_5 { text-indent: calc(5px * 5); }
+ #zqxezcfjhj .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #zqxezcfjhj .gt_row_group_first td { border-top-width: 2px; }
+ #zqxezcfjhj .gt_row_group_first th { border-top-width: 2px; }
+ #zqxezcfjhj .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #zqxezcfjhj .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #zqxezcfjhj .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #zqxezcfjhj .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #zqxezcfjhj .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #zqxezcfjhj .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #zqxezcfjhj .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #zqxezcfjhj .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #zqxezcfjhj .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #zqxezcfjhj .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #zqxezcfjhj .gt_left { text-align: left; }
+ #zqxezcfjhj .gt_center { text-align: center; }
+ #zqxezcfjhj .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #zqxezcfjhj .gt_font_normal { font-weight: normal; }
+ #zqxezcfjhj .gt_font_bold { font-weight: bold; }
+ #zqxezcfjhj .gt_font_italic { font-style: italic; }
+ #zqxezcfjhj .gt_super { font-size: 65%; }
+ #zqxezcfjhj .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #zqxezcfjhj .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #zqxezcfjhj .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #zqxezcfjhj .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #zqxezcfjhj .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #zqxezcfjhj .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+
+<tr class="gt_col_headings">
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="transformer-ratio">transformer ratio</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="buses-compared">buses compared</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="mean-difference-(pu)">mean difference (pu)</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="largest-difference-(pu)">largest difference (pu)</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+  <tr>
+    <td class="gt_row gt_left">bus voltage bases</td>
+    <td class="gt_row gt_right">380</td>
+    <td class="gt_row gt_right">−0.0439</td>
+    <td class="gt_row gt_right">0.0449</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">nameplate</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">380</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0018</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0018</td>
+  </tr>
+</tbody>
+
+</table>
+
+</div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">panel_size</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">0.6</span> <span class="o">*</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mf">0.74</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">frame</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="p">(</span>
+    <span class="p">(</span><span class="n">uncorrected</span><span class="p">,</span> <span class="s2">"Bus voltage bases"</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">HIGHLIGHT</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">corrected</span><span class="p">,</span> <span class="s2">"Nameplate ratio"</span><span class="p">,</span> <span class="n">style</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">),</span>
+<span class="p">):</span>
+    <span class="n">ordered</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"vm_opendss_pu"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ordered</span><span class="p">)),</span> <span class="n">ordered</span><span class="p">[</span><span class="s2">"difference_pu"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">reference_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Bus, ordered by OpenDSS voltage"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"pandapower - OpenDSS (pu)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Converted model against the circuit it came from"</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">format_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/fa728936e02bb625c4c1b92d69743001a45fc7edc9ddf61de49a10c865d7a481.png" src="../../_images/fa728936e02bb625c4c1b92d69743001a45fc7edc9ddf61de49a10c865d7a481.png" />
+</div>
+</div>
+<p style="text-align: justify">Built on its buses' voltage bases, the converted network sits 0.044 pu below OpenDSS at every LV bus: more than the whole voltage drop along many feeders, and enough to turn a compliant customer into a violation on paper. With the nameplate ratio, the two engines agree to within 0.0018 pu at every bus. The two spikes to zero are the 11 kV buses, which the ratio does not affect.</p>
+<p style="text-align: justify">The 0.0018 pu that remains is not a conversion error to fix but a property of the model: pandapower's converted network is balanced, one voltage per bus, while the feeder's single-phase customers load its three phases unevenly. No estimate built on this model can be judged more finely than that.</p></section>
+<section id="the-true-state-at-the-evening-peak">
+<h2>2. The true state at the evening peak<a class="headerlink" href="#the-true-state-at-the-evening-peak" title="Link to this heading">#</a></h2>
+<p style="text-align: justify">Each customer gets a real household profile from the pool, scaled to a mean demand of 1.3 kW at a 0.95 power factor, and the network is solved at 18:00, the evening peak. The result is the one thing an operator never has: the true voltage at every bus. It is used below only to score each estimate, never fed to the estimator.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+<span class="n">customers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">load</span><span class="p">)</span>
+<span class="n">profile</span> <span class="o">=</span> <span class="n">household_pool</span><span class="p">[</span><span class="n">STEP</span><span class="p">,</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">household_pool</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">customers</span><span class="p">)]</span>
+<span class="n">active_mw</span> <span class="o">=</span> <span class="n">profile</span> <span class="o">*</span> <span class="n">BASE_KW</span> <span class="o">/</span> <span class="mi">1000</span>
+<span class="n">reactive_mvar</span> <span class="o">=</span> <span class="n">active_mw</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">POWER_FACTOR</span><span class="p">))</span>
+<span class="n">set_loading</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">active_mw</span><span class="p">,</span> <span class="n">reactive_mvar</span><span class="p">)</span>
+<span class="n">v_true</span><span class="p">,</span> <span class="n">substation_mw</span><span class="p">,</span> <span class="n">substation_mvar</span> <span class="o">=</span> <span class="n">true_state</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+<span class="n">line_flows_true</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">res_line</span><span class="p">[[</span><span class="s2">"p_from_mw"</span><span class="p">,</span> <span class="s2">"q_from_mvar"</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">record_table</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">"customers"</span><span class="p">:</span> <span class="n">customers</span><span class="p">,</span>
+        <span class="s2">"buses"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">bus</span><span class="p">),</span>
+        <span class="s2">"substation active power (kW)"</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">substation_mw</span><span class="p">,</span>
+        <span class="s2">"lowest voltage (pu)"</span><span class="p">:</span> <span class="n">v_true</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+        <span class="s2">"highest voltage (pu)"</span><span class="p">:</span> <span class="n">v_true</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+    <span class="p">},</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"The true state at 18:00"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="qecjssblsh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:60%;height:auto;">
+<style>
+#qecjssblsh table {
+          font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#qecjssblsh thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#qecjssblsh p { margin: 0; padding: 0; }
+ #qecjssblsh .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 60%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #qecjssblsh .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #qecjssblsh .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #qecjssblsh .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #qecjssblsh .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #qecjssblsh .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #qecjssblsh .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #qecjssblsh .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #qecjssblsh .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #qecjssblsh .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #qecjssblsh .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #qecjssblsh .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #qecjssblsh .gt_spanner_row { border-bottom-style: hidden; }
+ #qecjssblsh .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #qecjssblsh .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #qecjssblsh .gt_from_md> :first-child { margin-top: 0; }
+ #qecjssblsh .gt_from_md> :last-child { margin-bottom: 0; }
+ #qecjssblsh .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #qecjssblsh .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #qecjssblsh .gt_indent_1 { text-indent: 5px; }
+ #qecjssblsh .gt_indent_2 { text-indent: calc(5px * 2); }
+ #qecjssblsh .gt_indent_3 { text-indent: calc(5px * 3); }
+ #qecjssblsh .gt_indent_4 { text-indent: calc(5px * 4); }
+ #qecjssblsh .gt_indent_5 { text-indent: calc(5px * 5); }
+ #qecjssblsh .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #qecjssblsh .gt_row_group_first td { border-top-width: 2px; }
+ #qecjssblsh .gt_row_group_first th { border-top-width: 2px; }
+ #qecjssblsh .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #qecjssblsh .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #qecjssblsh .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #qecjssblsh .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #qecjssblsh .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #qecjssblsh .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #qecjssblsh .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #qecjssblsh .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #qecjssblsh .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #qecjssblsh .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #qecjssblsh .gt_left { text-align: left; }
+ #qecjssblsh .gt_center { text-align: center; }
+ #qecjssblsh .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #qecjssblsh .gt_font_normal { font-weight: normal; }
+ #qecjssblsh .gt_font_bold { font-weight: bold; }
+ #qecjssblsh .gt_font_italic { font-style: italic; }
+ #qecjssblsh .gt_super { font-size: 65%; }
+ #qecjssblsh .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #qecjssblsh .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #qecjssblsh .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #qecjssblsh .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #qecjssblsh .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #qecjssblsh .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+
+  <tr class="gt_heading">
+    <td colspan="2" class="gt_heading gt_title gt_font_normal" style="color: #333333;font-weight: bold;">The true state at 18:00</td>
+  </tr>
+<tr class="gt_col_headings">
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="statistic">statistic</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="value">value</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+  <tr>
+    <td class="gt_row gt_left">customers</td>
+    <td class="gt_row gt_right">188</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">buses</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">380</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_left">substation active power (kW)</td>
+    <td class="gt_row gt_right">381.388</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">lowest voltage (pu)</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.897</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_left">highest voltage (pu)</td>
+    <td class="gt_row gt_right">1.017</td>
+  </tr>
+</tbody>
+
+</table>
+
+</div>
+</div></div>
+</div>
+</section>
+<section id="the-substation-alone">
+<h2>3. The substation alone<a class="headerlink" href="#the-substation-alone" title="Link to this heading">#</a></h2>
+<p style="text-align: justify">An estimator solves for two unknowns at every bus, voltage magnitude and angle, less one reference angle: $2N - 1$ unknowns for $N$ buses. Every measurement supplies one equation, and so does each bus known to inject nothing, twice over (zero active and zero reactive power). <code>observability</code> counts the two before the estimator is run:</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">noise</span> <span class="o">=</span> <span class="n">MeasurementNoise</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="n">metered</span><span class="o">=</span><span class="p">(),</span> <span class="n">sensors</span><span class="o">=</span><span class="p">(),</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Substation, meter and line-sensor readings with their instruments' noise, then an estimate."""</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">meter_p</span> <span class="o">=</span> <span class="n">active_mw</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">smart_meter_pq_fraction</span><span class="p">,</span> <span class="n">customers</span><span class="p">))</span>
+    <span class="n">meter_q</span> <span class="o">=</span> <span class="n">reactive_mvar</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">smart_meter_pq_fraction</span><span class="p">,</span> <span class="n">customers</span><span class="p">))</span>
+    <span class="n">flows</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">):</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">line_flows_true</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">line</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">line_pq_fraction</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sensors</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">estimate_voltages</span><span class="p">(</span>
+        <span class="n">net</span><span class="p">,</span>
+        <span class="n">lv_bus</span><span class="p">,</span>
+        <span class="n">voltage_pu</span><span class="o">=</span><span class="n">v_true</span><span class="p">[</span><span class="n">lv_bus</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">voltage_pu</span><span class="p">),</span>
+        <span class="n">active_mw</span><span class="o">=</span><span class="n">substation_mw</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">substation_pq_fraction</span><span class="p">)),</span>
+        <span class="n">reactive_mvar</span><span class="o">=</span><span class="n">substation_mvar</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">.</span><span class="n">substation_pq_fraction</span><span class="p">)),</span>
+        <span class="n">customer_active_mw</span><span class="o">=</span><span class="n">meter_p</span><span class="p">,</span>
+        <span class="n">customer_reactive_mvar</span><span class="o">=</span><span class="n">meter_q</span><span class="p">,</span>
+        <span class="n">metered</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">metered</span><span class="p">),</span>
+        <span class="n">line_flows</span><span class="o">=</span><span class="n">flows</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="n">count</span> <span class="o">=</span> <span class="n">observability</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">lv_bus</span><span class="p">,</span> <span class="n">metered</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"Unknowns: </span><span class="si">{</span><span class="n">count</span><span class="o">.</span><span class="n">required</span><span class="si">}</span><span class="s2">. Equations from the substation alone: </span><span class="si">{</span><span class="n">count</span><span class="o">.</span><span class="n">available</span><span class="si">}</span><span class="s2"> (short by </span><span class="si">{</span><span class="n">count</span><span class="o">.</span><span class="n">shortfall</span><span class="si">}</span><span class="s2">)."</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Estimate from the substation alone: </span><span class="si">{</span><span class="s1">'none'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">read</span><span class="p">()</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="kc">None</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'found'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Unknowns: 759. Equations from the substation alone: 385 (short by 374).
+Estimate from the substation alone: none
+</pre></div>
+</div>
+</div>
+</div>
+<p style="text-align: justify">The substation supplies three equations: the busbar voltage and the active and reactive power through the transformer. The 191 buses known to inject nothing (junctions, the busbar itself and the 11 kV bus) supply two each. That is 385 equations for 759 unknowns. The estimator has nothing to solve: this is not an inaccurate estimate, it is no estimate at all, and <code>estimate_voltages</code> returns <code>None</code> rather than an answer.</p></section>
+<section id="smart-meters-as-pseudo-measurements">
+<h2>4. Smart meters as pseudo-measurements<a class="headerlink" href="#smart-meters-as-pseudo-measurements" title="Link to this heading">#</a></h2>
+<p style="text-align: justify">A smart meter does not report its customer's voltage in real time; it reports consumption, periodically. Each meter therefore enters the estimator as a pseudo-measurement of active and reactive power at its customer's bus, with a 10% uncertainty, against the 2% of the substation's own instruments.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_customers</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">customers</span><span class="p">)</span>
+<span class="n">full</span> <span class="o">=</span> <span class="p">[</span><span class="n">read</span><span class="p">(</span><span class="n">all_customers</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">TRIALS</span><span class="p">)]</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">voltage_error</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">v_true</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">full</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Every customer metered: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">TRIALS</span><span class="si">}</span><span class="s2"> draws solved."</span><span class="p">)</span>
+<span class="n">themed_gt</span><span class="p">(</span><span class="n">errors</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">"mean"</span><span class="p">,</span> <span class="s2">"max"</span><span class="p">])</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">"over draws"</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Every customer metered: 8 of 8 draws solved.
+</pre></div>
+</div>
+<div class="output text_html"><div id="zqsywapyaf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
+<style>
+#zqsywapyaf table {
+          font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#zqsywapyaf thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#zqsywapyaf p { margin: 0; padding: 0; }
+ #zqsywapyaf .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #zqsywapyaf .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #zqsywapyaf .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #zqsywapyaf .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #zqsywapyaf .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #zqsywapyaf .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #zqsywapyaf .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #zqsywapyaf .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #zqsywapyaf .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #zqsywapyaf .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #zqsywapyaf .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #zqsywapyaf .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #zqsywapyaf .gt_spanner_row { border-bottom-style: hidden; }
+ #zqsywapyaf .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #zqsywapyaf .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #zqsywapyaf .gt_from_md> :first-child { margin-top: 0; }
+ #zqsywapyaf .gt_from_md> :last-child { margin-bottom: 0; }
+ #zqsywapyaf .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #zqsywapyaf .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #zqsywapyaf .gt_indent_1 { text-indent: 5px; }
+ #zqsywapyaf .gt_indent_2 { text-indent: calc(5px * 2); }
+ #zqsywapyaf .gt_indent_3 { text-indent: calc(5px * 3); }
+ #zqsywapyaf .gt_indent_4 { text-indent: calc(5px * 4); }
+ #zqsywapyaf .gt_indent_5 { text-indent: calc(5px * 5); }
+ #zqsywapyaf .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #zqsywapyaf .gt_row_group_first td { border-top-width: 2px; }
+ #zqsywapyaf .gt_row_group_first th { border-top-width: 2px; }
+ #zqsywapyaf .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #zqsywapyaf .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #zqsywapyaf .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #zqsywapyaf .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #zqsywapyaf .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #zqsywapyaf .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #zqsywapyaf .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #zqsywapyaf .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #zqsywapyaf .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #zqsywapyaf .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #zqsywapyaf .gt_left { text-align: left; }
+ #zqsywapyaf .gt_center { text-align: center; }
+ #zqsywapyaf .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #zqsywapyaf .gt_font_normal { font-weight: normal; }
+ #zqsywapyaf .gt_font_bold { font-weight: bold; }
+ #zqsywapyaf .gt_font_italic { font-style: italic; }
+ #zqsywapyaf .gt_super { font-size: 65%; }
+ #zqsywapyaf .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #zqsywapyaf .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #zqsywapyaf .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #zqsywapyaf .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #zqsywapyaf .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #zqsywapyaf .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+
+<tr class="gt_col_headings">
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="over-draws">over draws</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="mean_abs_pu">mean_abs_pu</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="max_abs_pu">max_abs_pu</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="at_worst_bus_pu">at_worst_bus_pu</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+  <tr>
+    <td class="gt_row gt_left">mean</td>
+    <td class="gt_row gt_right">0.0017</td>
+    <td class="gt_row gt_right">0.0025</td>
+    <td class="gt_row gt_right">0.0020</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">max</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0040</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0055</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0054</td>
+  </tr>
+</tbody>
+
+</table>
+
+</div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimate</span> <span class="o">=</span> <span class="n">full</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">v_true</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">panel_size</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">0.6</span> <span class="o">*</span> <span class="n">style</span><span class="o">.</span><span class="n">PANEL_WIDTH_IN</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mf">0.74</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)),</span> <span class="n">v_true</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">LINE_WIDTH</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)),</span> <span class="n">estimate</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">HIGHLIGHT</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Estimated"</span><span class="p">,</span> <span class="o">**</span><span class="n">style</span><span class="o">.</span><span class="n">MARKER</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Bus, ordered by true voltage"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Voltage (pu)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Every customer metered: estimate against truth"</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">format_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">legend_below</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">style</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/f726157a4065fb5c8a45d4dd964e692cdc8bd17c2e1eb53bbb3aac7274d0afb4.png" src="../../_images/f726157a4065fb5c8a45d4dd964e692cdc8bd17c2e1eb53bbb3aac7274d0afb4.png" />
+</div>
+</div>
+<p style="text-align: justify">With every customer metered, every draw solves, and the estimate is within 0.0017 pu of the true voltage on average and 0.0025 pu at the worst bus, close to the 0.0018 pu floor the balanced model sets. Over the eight draws of meter noise, the largest error anywhere is 0.0055 pu, a small fraction of the 0.10 pu between nominal and a statutory limit.</p></section>
+<section id="how-many-meters-are-enough">
+<h2>5. How many meters are enough?<a class="headerlink" href="#how-many-meters-are-enough" title="Link to this heading">#</a></h2>
+<p style="text-align: justify">The substation meters the flow through the transformer, so the total demand behind it is known. With every customer but one metered, that one is the total less the rest. With two unmetered, only their sum is known, and nothing in the measurements separates them. The count says the same:</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">missing</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="n">solved</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">TRIALS</span><span class="p">):</span>
+        <span class="n">metered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">100</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">customers</span><span class="p">,</span> <span class="n">customers</span> <span class="o">-</span> <span class="n">missing</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">solved</span> <span class="o">+=</span> <span class="n">read</span><span class="p">(</span><span class="n">metered</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">s</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">observability</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">lv_bus</span><span class="p">,</span> <span class="n">metered</span><span class="o">=</span><span class="n">customers</span> <span class="o">-</span> <span class="n">missing</span><span class="p">)</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"unmetered customers"</span><span class="p">:</span> <span class="n">missing</span><span class="p">,</span>
+            <span class="s2">"equations"</span><span class="p">:</span> <span class="n">count</span><span class="o">.</span><span class="n">available</span><span class="p">,</span>
+            <span class="s2">"unknowns"</span><span class="p">:</span> <span class="n">count</span><span class="o">.</span><span class="n">required</span><span class="p">,</span>
+            <span class="s2">"solved"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">solved</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">TRIALS</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+<span class="n">themed_gt</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="fxumwdiipe" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
+<style>
+#fxumwdiipe table {
+          font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#fxumwdiipe thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#fxumwdiipe p { margin: 0; padding: 0; }
+ #fxumwdiipe .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #fxumwdiipe .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #fxumwdiipe .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #fxumwdiipe .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #fxumwdiipe .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #fxumwdiipe .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #fxumwdiipe .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #fxumwdiipe .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #fxumwdiipe .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #fxumwdiipe .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #fxumwdiipe .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #fxumwdiipe .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #fxumwdiipe .gt_spanner_row { border-bottom-style: hidden; }
+ #fxumwdiipe .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #fxumwdiipe .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #fxumwdiipe .gt_from_md> :first-child { margin-top: 0; }
+ #fxumwdiipe .gt_from_md> :last-child { margin-bottom: 0; }
+ #fxumwdiipe .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #fxumwdiipe .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #fxumwdiipe .gt_indent_1 { text-indent: 5px; }
+ #fxumwdiipe .gt_indent_2 { text-indent: calc(5px * 2); }
+ #fxumwdiipe .gt_indent_3 { text-indent: calc(5px * 3); }
+ #fxumwdiipe .gt_indent_4 { text-indent: calc(5px * 4); }
+ #fxumwdiipe .gt_indent_5 { text-indent: calc(5px * 5); }
+ #fxumwdiipe .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #fxumwdiipe .gt_row_group_first td { border-top-width: 2px; }
+ #fxumwdiipe .gt_row_group_first th { border-top-width: 2px; }
+ #fxumwdiipe .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #fxumwdiipe .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #fxumwdiipe .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #fxumwdiipe .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #fxumwdiipe .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #fxumwdiipe .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #fxumwdiipe .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #fxumwdiipe .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #fxumwdiipe .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #fxumwdiipe .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #fxumwdiipe .gt_left { text-align: left; }
+ #fxumwdiipe .gt_center { text-align: center; }
+ #fxumwdiipe .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #fxumwdiipe .gt_font_normal { font-weight: normal; }
+ #fxumwdiipe .gt_font_bold { font-weight: bold; }
+ #fxumwdiipe .gt_font_italic { font-style: italic; }
+ #fxumwdiipe .gt_super { font-size: 65%; }
+ #fxumwdiipe .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #fxumwdiipe .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #fxumwdiipe .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #fxumwdiipe .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #fxumwdiipe .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #fxumwdiipe .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+
+<tr class="gt_col_headings">
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="unmetered-customers">unmetered customers</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="equations">equations</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="unknowns">unknowns</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="solved">solved</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+  <tr>
+    <td class="gt_row gt_right">0</td>
+    <td class="gt_row gt_right">761</td>
+    <td class="gt_row gt_right">759</td>
+    <td class="gt_row gt_right">8/8</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">1</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">759</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">759</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">8/8</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_right">2</td>
+    <td class="gt_row gt_right">757</td>
+    <td class="gt_row gt_right">759</td>
+    <td class="gt_row gt_right">0/8</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">3</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">755</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">759</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0/8</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_right">4</td>
+    <td class="gt_row gt_right">753</td>
+    <td class="gt_row gt_right">759</td>
+    <td class="gt_row gt_right">0/8</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">5</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">751</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">759</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0/8</td>
+  </tr>
+</tbody>
+
+</table>
+
+</div>
+</div></div>
+</div>
+<p style="text-align: justify">One unmetered customer is recovered: 759 equations for 759 unknowns, and every draw solves. Two are not, in any draw. Coverage is not a dial that trades accuracy for cost on this feeder; below all customers but one, there is no estimate.</p></section>
+<section id="line-sensors-instead-of-meters">
+<h2>6. Line sensors instead of meters<a class="headerlink" href="#line-sensors-instead-of-meters" title="Link to this heading">#</a></h2>
+<p style="text-align: justify">An operator short of full smart-meter coverage can add power-flow sensors on a few lines instead. A sensor adds two equations, the same as a meter, so the count improves with every one. Whether the estimate does depends on where it goes: a sensor resolves an unmetered customer only if the flow it measures separates that customer from the others. The comparison below starts from 90% coverage (19 customers unmetered) and adds sensors either on randomly chosen lines or on the service line of each unmetered customer.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">service_line</span><span class="p">(</span><span class="n">bus</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The line whose far end is a customer's bus."""</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">index</span><span class="p">[(</span><span class="n">net</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">to_bus</span> <span class="o">==</span> <span class="n">bus</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">from_bus</span> <span class="o">==</span> <span class="n">bus</span><span class="p">)][</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">TRIALS</span><span class="p">):</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1000</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span>
+    <span class="n">metered</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">customers</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mf">0.9</span> <span class="o">*</span> <span class="n">customers</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">unmetered</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">customers</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">metered</span><span class="p">))</span>
+    <span class="n">placements</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">"random, </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">line</span><span class="p">),</span> <span class="n">k</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)}</span>
+    <span class="n">placements</span><span class="p">[</span><span class="sa">f</span><span class="s2">"targeted, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">unmetered</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">service_line</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">bus</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">unmetered</span><span class="p">]</span>
+    <span class="n">placements</span><span class="p">[</span><span class="s2">"none"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">placement</span><span class="p">,</span> <span class="n">sensors</span> <span class="ow">in</span> <span class="n">placements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">estimate</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">metered</span><span class="p">,</span> <span class="n">sensors</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">voltage_error</span><span class="p">(</span><span class="n">estimate</span><span class="p">,</span> <span class="n">v_true</span><span class="p">)[</span><span class="s2">"max_abs_pu"</span><span class="p">]</span> <span class="k">if</span> <span class="n">estimate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"placement"</span><span class="p">:</span> <span class="n">placement</span><span class="p">,</span> <span class="s2">"draw"</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span> <span class="s2">"solved"</span><span class="p">:</span> <span class="n">estimate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"max_error_pu"</span><span class="p">:</span> <span class="n">error</span><span class="p">})</span>
+
+<span class="n">sensors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+<span class="n">sensor_summary</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">sensors</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"placement"</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="n">solved</span><span class="o">=</span><span class="p">(</span><span class="s2">"solved"</span><span class="p">,</span> <span class="s2">"sum"</span><span class="p">),</span>
+        <span class="n">median_max_error_pu</span><span class="o">=</span><span class="p">(</span><span class="s2">"max_error_pu"</span><span class="p">,</span> <span class="s2">"median"</span><span class="p">),</span>
+        <span class="n">worst_max_error_pu</span><span class="o">=</span><span class="p">(</span><span class="s2">"max_error_pu"</span><span class="p">,</span> <span class="s2">"max"</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">sensor_summary</span><span class="p">[</span><span class="s2">"solved"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_summary</span><span class="p">[</span><span class="s2">"solved"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">TRIALS</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">themed_gt</span><span class="p">(</span><span class="n">sensor_summary</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="namsevpqcl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
+<style>
+#namsevpqcl table {
+          font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#namsevpqcl thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#namsevpqcl p { margin: 0; padding: 0; }
+ #namsevpqcl .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #namsevpqcl .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #namsevpqcl .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #namsevpqcl .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #namsevpqcl .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #namsevpqcl .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #namsevpqcl .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #namsevpqcl .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #namsevpqcl .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #namsevpqcl .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #namsevpqcl .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #namsevpqcl .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #namsevpqcl .gt_spanner_row { border-bottom-style: hidden; }
+ #namsevpqcl .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #namsevpqcl .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #namsevpqcl .gt_from_md> :first-child { margin-top: 0; }
+ #namsevpqcl .gt_from_md> :last-child { margin-bottom: 0; }
+ #namsevpqcl .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #namsevpqcl .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #namsevpqcl .gt_indent_1 { text-indent: 5px; }
+ #namsevpqcl .gt_indent_2 { text-indent: calc(5px * 2); }
+ #namsevpqcl .gt_indent_3 { text-indent: calc(5px * 3); }
+ #namsevpqcl .gt_indent_4 { text-indent: calc(5px * 4); }
+ #namsevpqcl .gt_indent_5 { text-indent: calc(5px * 5); }
+ #namsevpqcl .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #namsevpqcl .gt_row_group_first td { border-top-width: 2px; }
+ #namsevpqcl .gt_row_group_first th { border-top-width: 2px; }
+ #namsevpqcl .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #namsevpqcl .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #namsevpqcl .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #namsevpqcl .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #namsevpqcl .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #namsevpqcl .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #namsevpqcl .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #namsevpqcl .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #namsevpqcl .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #namsevpqcl .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #namsevpqcl .gt_left { text-align: left; }
+ #namsevpqcl .gt_center { text-align: center; }
+ #namsevpqcl .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #namsevpqcl .gt_font_normal { font-weight: normal; }
+ #namsevpqcl .gt_font_bold { font-weight: bold; }
+ #namsevpqcl .gt_font_italic { font-style: italic; }
+ #namsevpqcl .gt_super { font-size: 65%; }
+ #namsevpqcl .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #namsevpqcl .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #namsevpqcl .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #namsevpqcl .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #namsevpqcl .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #namsevpqcl .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+
+<tr class="gt_col_headings">
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="placement">placement</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="solved">solved</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="median_max_error_pu">median_max_error_pu</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="worst_max_error_pu">worst_max_error_pu</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+  <tr>
+    <td class="gt_row gt_left">random, 25</td>
+    <td class="gt_row gt_right">0/8</td>
+    <td class="gt_row gt_right"><NA></td>
+    <td class="gt_row gt_right"><NA></td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">random, 50</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0/8</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right"><NA></td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right"><NA></td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_left">random, 100</td>
+    <td class="gt_row gt_right">0/8</td>
+    <td class="gt_row gt_right"><NA></td>
+    <td class="gt_row gt_right"><NA></td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">random, 200</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">6/8</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0020</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0037</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_left">targeted, 19</td>
+    <td class="gt_row gt_right">8/8</td>
+    <td class="gt_row gt_right">0.0036</td>
+    <td class="gt_row gt_right">0.0085</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">none</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0/8</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right"><NA></td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right"><NA></td>
+  </tr>
+</tbody>
+
+</table>
+
+</div>
+</div></div>
+</div>
+<p style="text-align: justify">Where a sensor goes matters more than how many there are. Sensors on randomly chosen lines rarely help: most of the 377 lines are the service cables of customers who are already metered, so a sensor there adds equations without adding information. Fifty random sensors never solve; a hundred solve once in eight draws, and that one estimate is wrong by 0.35 pu, a reminder that a solved estimate is not a correct one and that its error has to be checked. Two hundred random sensors, more than half the lines, solve six times in eight.</p>
+<p style="text-align: justify">Nineteen sensors placed on the service lines of the nineteen unmetered customers solve every draw, within 0.0036 pu at the median. That is the same information a meter would have given, measured on the line instead, and it is the lesson: a measurement helps when it separates an unknown injection from the rest, and the count of equations cannot tell whether it does.</p></section>
+<section id="when-the-substation-reading-is-a-forecast">
+<h2>7. When the substation reading is a forecast<a class="headerlink" href="#when-the-substation-reading-is-a-forecast" title="Link to this heading">#</a></h2>
+<p style="text-align: justify">Everything above used the substation's measured state. An operator planning ahead has a forecast of it instead, and <code>run_comparison</code> asks whether the <em>kind</em> of forecast matters, at full meter coverage over a day of half-hours. Three substation inputs are fed to the same estimator: the true readings; a <em>coherent</em> forecast, one error applied to the demand and carried through a power flow, so its active power, reactive power and voltage describe a state the network can be in; and an <em>incoherent</em> one, each of the three perturbed on its own, as three separately calibrated forecasts would be. Both forecasts carry a 10% error.</p><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">comparison</span> <span class="o">=</span> <span class="n">run_comparison</span><span class="p">(</span><span class="n">FEEDER</span><span class="p">,</span> <span class="n">household_pool</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">smartmeter_frac</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">forecast_error</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">)</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">comparison</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="n">summary</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">summary</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Estimates that solved: </span><span class="si">{</span><span class="n">comparison</span><span class="o">.</span><span class="n">converged_fraction</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">themed_gt</span><span class="p">(</span><span class="n">summary</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Estimates that solved: 100%
+</pre></div>
+</div>
+<div class="output text_html"><div id="etuwqcauil" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
+<style>
+#etuwqcauil table {
+          font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#etuwqcauil thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#etuwqcauil p { margin: 0; padding: 0; }
+ #etuwqcauil .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #etuwqcauil .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #etuwqcauil .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #etuwqcauil .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #etuwqcauil .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #etuwqcauil .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #etuwqcauil .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #etuwqcauil .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #etuwqcauil .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #etuwqcauil .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #etuwqcauil .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #etuwqcauil .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #etuwqcauil .gt_spanner_row { border-bottom-style: hidden; }
+ #etuwqcauil .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #etuwqcauil .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #etuwqcauil .gt_from_md> :first-child { margin-top: 0; }
+ #etuwqcauil .gt_from_md> :last-child { margin-bottom: 0; }
+ #etuwqcauil .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #etuwqcauil .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #etuwqcauil .gt_indent_1 { text-indent: 5px; }
+ #etuwqcauil .gt_indent_2 { text-indent: calc(5px * 2); }
+ #etuwqcauil .gt_indent_3 { text-indent: calc(5px * 3); }
+ #etuwqcauil .gt_indent_4 { text-indent: calc(5px * 4); }
+ #etuwqcauil .gt_indent_5 { text-indent: calc(5px * 5); }
+ #etuwqcauil .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #etuwqcauil .gt_row_group_first td { border-top-width: 2px; }
+ #etuwqcauil .gt_row_group_first th { border-top-width: 2px; }
+ #etuwqcauil .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #etuwqcauil .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #etuwqcauil .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #etuwqcauil .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #etuwqcauil .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #etuwqcauil .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #etuwqcauil .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #etuwqcauil .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #etuwqcauil .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #etuwqcauil .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #etuwqcauil .gt_left { text-align: left; }
+ #etuwqcauil .gt_center { text-align: center; }
+ #etuwqcauil .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #etuwqcauil .gt_font_normal { font-weight: normal; }
+ #etuwqcauil .gt_font_bold { font-weight: bold; }
+ #etuwqcauil .gt_font_italic { font-style: italic; }
+ #etuwqcauil .gt_super { font-size: 65%; }
+ #etuwqcauil .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #etuwqcauil .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #etuwqcauil .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #etuwqcauil .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #etuwqcauil .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #etuwqcauil .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+
+<tr class="gt_col_headings">
+  <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="input">input</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="rmse_vm_pu-mean">rmse_vm_pu mean</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="rmse_vm_pu-median">rmse_vm_pu median</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="max_abs_err_pu-mean">max_abs_err_pu mean</th>
+  <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #FFFFFF; color: #222222;" scope="col" id="max_abs_err_pu-median">max_abs_err_pu median</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+  <tr>
+    <td class="gt_row gt_left">coherent</td>
+    <td class="gt_row gt_right">0.0061</td>
+    <td class="gt_row gt_right">0.0047</td>
+    <td class="gt_row gt_right">0.0077</td>
+    <td class="gt_row gt_right">0.0058</td>
+  </tr>
+  <tr>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_left">incoherent</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0096</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0080</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0115</td>
+    <td style="background-color: #f7fbfc;" class="gt_row gt_right">0.0097</td>
+  </tr>
+  <tr>
+    <td class="gt_row gt_left">truth</td>
+    <td class="gt_row gt_right">0.0000</td>
+    <td class="gt_row gt_right">0.0000</td>
+    <td class="gt_row gt_right">0.0000</td>
+    <td class="gt_row gt_right">0.0000</td>
+  </tr>
+</tbody>
+
+</table>
+
+</div>
+</div></div>
+</div>
+<p style="text-align: justify">Every estimate solved, so the difference between the rows is the quality of the state, not whether there is one. With the true substation readings the estimate is exact, since the meters here carry no noise. With a forecast, the coherent one gives a mean RMS error of 0.0061 pu; the incoherent one, with the same 10% error on each quantity, gives 0.0096 pu, about 57% worse. Three forecasts that are each well calibrated, but that together describe no state the network can be in, give the estimator a worse starting point than one consistent error.</p></section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul>
+<li style="text-align: justify"><code>to_pandapower</code> converts an OpenDSS feeder and restores each transformer's nameplate ratio; <code>check_conversion</code> compares the converted model with OpenDSS bus by bus. On this feeder the bus-base ratio puts every LV bus 0.044 pu low, and the corrected model agrees within 0.0018 pu, the limit a balanced model of an unbalanced feeder sets.</li>
+<li style="text-align: justify"><code>observability</code> counts equations against unknowns before an estimate is attempted. The substation alone is far short: no estimate exists.</li>
+<li style="text-align: justify"><code>estimate_voltages</code> with every customer's meter as a pseudo-measurement recovers every bus within a few thousandths of a per unit. One customer can be left unmetered, since the transformer flow fixes the total; two cannot.</li>
+<li style="text-align: justify">Line sensors help only where they separate an unmetered customer from the rest. Placed at random, even hundreds of them rarely give an estimate, and a solved estimate can still be badly wrong; placed on the unmetered customers' own lines, as many sensors as unmetered customers do.</li>
+<li style="text-align: justify"><code>run_comparison</code> shows that a coherent substation forecast gives a better state estimate than three separately calibrated ones of the same accuracy.</li>
+</ul></section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02-timeseries-der-modeling.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Time-Series Simulation and DER Modeling</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../gallery.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tutorial gallery</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objectives">Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-the-network-and-checking-it-first">1. Converting the network, and checking it first</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-true-state-at-the-evening-peak">2. The true state at the evening peak</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-substation-alone">3. The substation alone</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smart-meters-as-pseudo-measurements">4. Smart meters as pseudo-measurements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-meters-are-enough">5. How many meters are enough?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#line-sensors-instead-of-meters">6. Line sensors instead of meters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-the-substation-reading-is-a-forecast">7. When the substation reading is a forecast</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, sambaiga.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+  </p>
+</div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+# Contributing
+
+## Set up
+
+```bash
+uv sync --all-extras --group docs
+uv run pre-commit install
+```
+
+## Test
+
+Tests that need a solver are marked, so the rest run without one.
+
+```bash
+uv run pytest -m "not opendss and not pandapower"   # no solver needed
+uv run pytest                                        # everything
+uvx ty check popo/                                   # types
+```
+
+## Documentation
+
+These pages live in `docs/` and are built with Sphinx. The tutorials are executed on every build.
+
+```bash
+make docs          # build once, warnings as errors
+make docs-serve    # rebuild on change, at http://localhost:8002
+```
+
+The logo and the overview figure are generated, not drawn by hand:
+
+```bash
+uv run python scripts/generate_logo.py
+uv run python scripts/generate_readme_figure.py
+```
+
+## Commits
+
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/), checked by a pre-commit
+hook: `feat:`, `fix:`, `docs:`, `ci:` and so on.
