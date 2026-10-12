@@ -558,15 +558,6 @@ html[data-theme="dark"] .po-task-figure { border: 1px solid var(--po-border); }
 
 html[data-theme="dark"] .po-task-body { color: #8aabb4; }
 
-.po-task-tools {
-  font-size: 0.8rem;
-  line-height: 1.6;
-  margin: 0 0 0.75rem;
-}
-
-.po-task-tools span { font-weight: 600; color: var(--po-text); }
-.po-task-tools code { font-size: 0.78rem; }
-
 .po-task-link {
   display: inline-flex;
   align-items: center;
@@ -1158,13 +1149,14 @@ html[data-theme="dark"] div.cell_output table th { color: var(--po-text); }
   margin: 0 0 0.4rem;
 }
 
-/* Overview figure: full width, framed like a card. */
+/* Overview figure: the full content width, aligned with the panels above. It draws its
+   own day and night cards, so it has no frame; the white backing keeps the figure's
+   margins white in dark mode. */
 .po-overview {
   margin: 0.8rem 0 1.6rem;
-  border: 1px solid var(--po-border);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(16,117,145,0.08);
+  background: #ffffff;
 }
 .po-overview img { display: block; width: 100%; height: auto; }
 

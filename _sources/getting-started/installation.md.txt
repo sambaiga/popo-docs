@@ -1,31 +1,56 @@
 # Installation
 
-popo is published on PyPI as **`popo-flow`** and imported as **`popo`**. It needs Python 3.12 or later.
+popo is published on PyPI as `popo-flow` and imported as `popo`. It needs Python 3.12 or later.
+
+## Install from PyPI
 
 ```bash
 pip install popo-flow
 ```
 
-The core package reads network definitions, judges voltages against standards and works with results.
-The power-flow and estimation engines are optional extras, because neither is needed to read a network
-definition or check a limit:
+or, with [uv](https://docs.astral.sh/uv/):
 
-| Extra | Adds | For |
+```bash
+uv add popo-flow
+```
+
+The core package reads network definitions, checks voltages against standards and works with results.
+The power-flow and estimation engines are optional extras:
+
+| Extra | Adds | Needed for |
 |---|---|---|
 | `opendss` | OpenDSSDirect.py | building and solving circuits, time series, sweeps |
 | `estimation` | pandapower | state estimation |
 | `plot` | matplotlib, seaborn, Great Tables | figures and tables |
 | `notebooks` | matplotlib, Great Tables | running the tutorials |
-| `all` | everything above | |
+| `all` | all of the above | |
+
+To install every extra:
 
 ```bash
 pip install "popo-flow[all]"
 ```
 
-With [uv](https://docs.astral.sh/uv/):
+OpenDSSDirect.py includes the OpenDSS engine, so no separate installation is needed on any operating
+system.
+
+## Check the installation
 
 ```bash
-uv add "popo-flow[all]"
+python -c "import popo; print(popo.__version__)"
 ```
 
-OpenDSSDirect.py bundles the OpenDSS engine, so nothing else needs installing on any operating system.
+This prints the installed version. The [quickstart](quickstart.md) then runs a first simulation.
+
+## Install from source
+
+To work on popo itself, clone the repository and create an environment with every extra and the
+development tools:
+
+```bash
+git clone https://github.com/sambaiga/popo.git
+cd popo
+uv sync --all-extras --group docs
+```
+
+[Contributing](../contributing.md) describes the tests, linting and documentation build.

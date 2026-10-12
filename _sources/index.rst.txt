@@ -66,14 +66,8 @@ popo
               alt="Tutorial 01's six-house network at peak load, each bus coloured by voltage status." />
        </a>
        <h2 class="po-task-title">Model</h2>
-       <p class="po-task-body">Load an OpenDSS circuit as Python records and read its results
-       back as tables, one row per element and phase, with each voltage checked against a
-       named standard. On the six-house network of tutorial 01 at peak load, the farthest
-       house is at 0.920 pu and the nearest at 0.957 pu.</p>
-       <p class="po-task-tools"><span>Key tools:</span>
-         <a href="api/index.html#popo.network.Circuit"><code>Circuit</code></a>,
-         <a href="api/index.html#popo.powerflow.bus_voltages"><code>bus_voltages</code></a>,
-         <a href="api/index.html#popo.standards.VoltageLimits"><code>VoltageLimits</code></a></p>
+       <p class="po-task-body">Load an OpenDSS circuit as Python records, read its results back as tables by element
+       and phase, and check every voltage against a named standard.</p>
        <a class="po-task-link" href="guide/network.html">Read the user guide <i class="bi bi-arrow-right"></i></a>
      </div>
 
@@ -83,14 +77,8 @@ popo
               alt="Voltage over two days at 80% PV: the substation busbar stays near 1.04 pu while the most exposed customer rises above the 1.10 pu limit." />
        </a>
        <h2 class="po-task-title">Simulate</h2>
-       <p class="po-task-body">Step a feeder through half-hourly household, PV and EV profiles,
-       recording the voltage at every customer as well as at the substation. At 80% PV on a
-       188-customer UK feeder, the busbar never exceeds 1.048 pu, while the most exposed
-       customer reaches 1.156 pu and stays above the EN 50160 limit for four and a half hours.</p>
-       <p class="po-task-tools"><span>Key tools:</span>
-         <a href="api/index.html#popo.powerflow.solve_time_series"><code>solve_time_series</code></a>,
-         <a href="api/index.html#popo.scenarios.attach_generation"><code>attach_generation</code></a>,
-         <a href="api/index.html#popo.standards.VoltWattCurve"><code>VoltWattCurve</code></a></p>
+       <p class="po-task-body">Step a feeder through household, PV and EV profiles, recording transformer power,
+       feeder-head power and every customer's voltage at each step.</p>
        <a class="po-task-link" href="guide/powerflow.html">Read the user guide <i class="bi bi-arrow-right"></i></a>
      </div>
 
@@ -100,14 +88,8 @@ popo
               alt="True and estimated voltage at each of the feeder's buses, ordered by true voltage; the two agree throughout." />
        </a>
        <h2 class="po-task-title">Estimate</h2>
-       <p class="po-task-body">Convert a feeder to pandapower, check that a set of measurements
-       can determine its state, and estimate the voltage at every bus by weighted least squares.
-       With every customer on the same feeder metered, the estimate is within 0.001 pu at every
-       bus; with two customers unmetered, no estimate exists.</p>
-       <p class="po-task-tools"><span>Key tools:</span>
-         <a href="api/index.html#popo.estimation.to_pandapower"><code>to_pandapower</code></a>,
-         <a href="api/index.html#popo.estimation.observability"><code>observability</code></a>,
-         <a href="api/index.html#popo.estimation.estimate_voltages"><code>estimate_voltages</code></a></p>
+       <p class="po-task-body">Convert a feeder to pandapower, check that the measurements can determine its state, and
+       estimate the voltage at every bus by weighted least squares.</p>
        <a class="po-task-link" href="guide/estimation.html">Read the user guide <i class="bi bi-arrow-right"></i></a>
      </div>
 

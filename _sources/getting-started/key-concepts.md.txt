@@ -16,27 +16,27 @@ customer's own phase.
 
 ## Statutory limits
 
-A limit is a rule, not a number. EN 50160 asks that 95 % of ten-minute means over a week sit within
+A statutory limit is a band together with a rule for applying it. EN 50160 asks that 95 % of ten-minute means over a week sit within
 ±10 % of nominal, so a network can hold a low voltage for an hour and still comply; ANSI C84.1 Range A is
 ±5 % with no such allowance. {py:class}`~popo.standards.VoltageLimits` carries both the band and the rule,
 and a study selects a standard by name.
 
 ## Busbar and customers
 
-A secondary substation's busbar is where most networks are measured. It is not where voltage problems
-appear: rooftop solar raises voltage furthest from the substation, at the end of the longest service. A
-feeder can look compliant at the busbar while its farthest customers are well over the limit, which is why
+Most networks are measured at the secondary substation's busbar. Voltage problems usually appear
+elsewhere: rooftop solar raises voltage most at the far end of the longest service. A feeder can be within
+limits at the busbar while its farthest customers are over the limit, so
 {py:func}`~popo.powerflow.solve_time_series` can record every customer's voltage as well as the busbar's.
 
 ## Convergence
 
 A time-series solve whose inverter control loop fails to converge still reports a solved power flow, with
-reactive power that means nothing. popo returns convergence as part of every result
-({py:class}`~popo.powerflow.SolveReport`) rather than leaving it to a log line.
+meaningless reactive power. popo includes convergence in every result: a
+{py:class}`~popo.powerflow.SolveReport` counts the steps that did not converge.
 
 ## Observability
 
 A state estimator solves for a voltage magnitude and angle at every bus, less one reference angle:
 $2N - 1$ unknowns for $N$ buses. Each measurement supplies one equation, and each bus known to inject
-nothing supplies two. Fewer equations than unknowns means no estimate exists at all, whatever the solver;
-{py:func}`~popo.estimation.observability` counts them before an estimate is attempted.
+nothing supplies two. With fewer equations than unknowns no estimate exists, whichever solver is used.
+{py:func}`~popo.estimation.observability` counts both before an estimate is attempted.

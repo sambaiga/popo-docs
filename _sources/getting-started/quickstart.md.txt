@@ -1,21 +1,41 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python3
+mystnb:
+  execution_mode: cache
+---
+
 # Quickstart
 
-This page builds a small low-voltage network, solves it, reads the results back as tables and checks
-the voltages against a statutory limit. It needs the `opendss` and `plot` extras.
+This page builds a small low-voltage network, solves it, checks its voltages against a standard and
+simulates one day with rooftop solar. Every output on the page is produced by the code above it when
+the documentation is built. To run it yourself, install the `opendss` and `plot` extras (see
+[Installation](installation.md)).
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+import pandas as pd
+
+pd.set_option("display.precision", 3)
+```
 
 ## Build a network
 
-A circuit is built with OpenDSS's own commands. popo does its work on the way back out.
+A {py:class}`~popo.network.Circuit` attaches to the OpenDSS engine. You define the network with
+OpenDSS's own commands: here an 11/0.4 kV transformer, a 1 km cable and three houses, one on each phase.
 
-```python
-import opendssdirect as dss
+```{code-cell} ipython3
+from popo.network import Circuit
 
+circuit = Circuit()
 for command in [
     "Clear",
     "Set DefaultBaseFrequency=50",
     "New Circuit.Quickstart",
-    "Edit vsource.source bus1=sourceBus basekv=11 pu=1.0 phases=3",
-    "New Transformer.LVTR Buses=[sourcebus, A.1.2.3] Conns=[delta wye] KVs=[11, 0.4] KVAs=[250 250] xhl=2.5",
+    "Edit Vsource.Source bus1=SourceBus basekv=11 pu=1.0 phases=3",
+    "New Transformer.LVTR Buses=[SourceBus, A.1.2.3] Conns=[delta wye] KVs=[11, 0.4] KVAs=[250 250] xhl=2.5",
     "New Linecode.240sq nphases=3 R1=0.127 X1=0.072 units=km",
     "New Linecode.16sq nphases=1 R1=1.15 X1=0.083 units=km",
     "New Line.A_B bus1=A.1.2.3 bus2=B.1.2.3 length=1 units=km linecode=240sq",
@@ -28,52 +48,143 @@ for command in [
     "Set VoltageBases=[11 0.4]",
     "CalcVoltageBases",
 ]:
-    dss.Text.Command(command)
-dss.Solution.Solve()
+    circuit.command(command)
+circuit.solve()
+circuit.converged
 ```
 
-## Read it back
+## Inspect its elements
 
-{py:class}`~popo.network.Circuit` is a view of the compiled circuit that yields its elements as records,
-and {py:mod}`popo.powerflow` reads a solved circuit's results back as long tables.
+The circuit yields its lines, loads, transformers, PV systems and storage units as records, which
+convert directly to a DataFrame.
 
-```python
-import pandas as pd
-
-from popo.network import Circuit
-from popo.powerflow import bus_voltages, circuit_summary
-
-circuit = Circuit(dss)
-loads = pd.DataFrame(circuit.loads)
-voltages = bus_voltages(dss)
-print(circuit_summary(dss))
+```{code-cell} ipython3
+pd.DataFrame(circuit.loads)
 ```
 
-Each house is reported on the phase it is actually connected to: `D` on phase 2, `E` on phase 3.
+## Read the results
 
-## Check the voltages
+{py:meth}`~popo.network.Circuit.bus_voltages` returns one row per bus and connected phase. House `D`
+appears only on phase 2 and house `E` only on phase 3, the phases they are connected to.
 
-A statutory limit is a named standard, not a pair of numbers. The source bus is held at its setpoint by
-construction, so it is excluded before judging what customers see.
+```{code-cell} ipython3
+voltages = circuit.bus_voltages()
+voltages
+```
 
-```python
+{py:meth}`~popo.network.Circuit.summary` gives the size of the circuit, whether it converged and its
+total losses.
+
+```{code-cell} ipython3
+circuit.summary()
+```
+
+## Check against a standard
+
+{py:class}`~popo.standards.VoltageLimits` holds a standard's band and the rule for applying it. The
+source bus is held at its setpoint, so it is excluded before the check.
+
+```{code-cell} ipython3
 from popo.standards import VoltageLimits
 
 limits = VoltageLimits.en_50160()
 customers = voltages.query("bus != @circuit.source_bus")
 print(limits.check(customers["vmag_pu"]).summary())
-print(limits.violations(customers))
 ```
 
-## Draw it
+{py:meth}`~popo.standards.VoltageLimits.violations` lists every reading outside the band. At this
+loading there are none.
 
-```python
+```{code-cell} ipython3
+limits.violations(customers)
+```
+
+## Draw the network
+
+{py:func}`~popo.plotting.network.plot_topology` draws the network with each bus coloured by its
+voltage status.
+
+```{code-cell} ipython3
+from popo.plotting import line_style
 from popo.plotting.network import plot_topology, topology_from_dss
 
-plot_topology(topology_from_dss(dss), title="Quickstart network")
+line_style.configure(latex=False)
+plot_topology(topology_from_dss(circuit.dss), title="Quickstart network", figsize=(5.0, 3.6));
 ```
 
-## Next
+## Simulate a day
 
-- [Key concepts](key-concepts.md): phases, per unit, statutory bands and observability.
-- [Tutorials](../tutorials/index.rst): three end-to-end notebooks on real feeders.
+To step through time, each load follows a daily profile. Here every house follows the same demand
+shape, with peaks in the morning and evening, and house `E` gets a 10 kVA rooftop PV system that
+follows a clear-sky solar shape. Both profiles have 48 half-hourly values.
+
+```{code-cell} ipython3
+import numpy as np
+
+hours = np.arange(48) / 2
+demand = 0.25 + 0.35 * np.exp(-(((hours - 8) / 1.5) ** 2)) + 0.75 * np.exp(-(((hours - 19) / 2.0) ** 2))
+solar = np.clip(np.sin(np.pi * (hours - 6) / 14), 0, None)
+
+
+def as_mult(values):
+    return ",".join(f"{v:.3f}" for v in values)
+
+
+circuit.command(f"New Loadshape.Demand npts=48 interval=0.5 mult=({as_mult(demand)})")
+circuit.command(f"New Loadshape.Solar npts=48 interval=0.5 mult=({as_mult(solar)})")
+for house in ["C", "D", "E"]:
+    circuit.command(f"Edit Load.House_{house} daily=Demand")
+circuit.command("New PVSystem.PV_E phases=1 bus1=E.3 kV=0.23 kVA=10 Pmpp=10 irradiance=1 daily=Solar");
+```
+
+{py:meth}`~popo.network.Circuit.solve_time_series` solves the 48 steps. It records the transformer at
+every step and, when you pass `buses`, the voltage at each of those buses too. The report says whether
+every step converged.
+
+```{code-cell} ipython3
+report = circuit.solve_time_series(48, buses=["c", "d", "e"])
+report.converged
+```
+
+`report.records` has one row per step and transformer: active, reactive and apparent power at the
+secondary winding, the busbar voltage, and the power at the head of the feeder. At midday the PV
+output exceeds the three houses' demand, so the transformer's active power turns negative.
+
+```{code-cell} ipython3
+report.records[["step", "trafo", "p_kw", "q_kvar", "s_kva", "v_lv_pu"]].iloc[20:28]
+```
+
+{py:meth}`~popo.powerflow.SolveReport.voltage_traces` returns each bus's voltage over the day.
+
+```{code-cell} ipython3
+from popo.plotting import tokens
+
+traces = report.voltage_traces()
+colors = {"c": tokens.TEXT_MUTED, "d": tokens.HIGHLIGHT, "e": tokens.PRIMARY}
+
+fig, ax = line_style.new_panel()
+for bus, trace in traces.items():
+    ax.plot(hours, trace, color=colors[bus], label=f"House {bus.upper()}")
+ax.set_xlabel("Hour")
+ax.set_ylabel("Voltage (pu)")
+ax.set_xticks([0, 6, 12, 18, 24])
+line_style.finish(ax)
+line_style.legend_below(ax, ncol=3);
+```
+
+While the PV system generates, the voltage at house `E` rises to about 1.02 pu. The unbalanced flow
+also moves the other phases: house `D` rises and house `C` falls, so a single-phase installation
+changes the voltage seen by customers on other phases.
+{py:meth}`~popo.standards.VoltageLimits.event_summary` reports, for each bus, how far and for how long
+its voltage left the band; here every house stays within it.
+
+```{code-cell} ipython3
+limits.event_summary(traces)
+```
+
+## Next steps
+
+- [Key concepts](key-concepts.md) explains per unit, phases, statutory limits and observability.
+- The [user guide](../guide/index.md) covers each module in more depth.
+- The [tutorials](../tutorials/index.rst) work through three studies on real feeders, including
+  hosting capacity and state estimation.

@@ -1,8 +1,8 @@
 Get started
 ===========
 
-Install popo, build and solve a first network, and meet the handful of ideas
-the rest of the documentation relies on.
+These pages cover installing popo, building and simulating a first network, and
+the concepts used throughout the rest of the documentation.
 
 .. toctree::
    :maxdepth: 1
