@@ -1,0 +1,6 @@
+﻿popo.powerflow.ConvergenceError
+===============================
+
+.. currentmodule:: popo.powerflow
+
+.. autoexception:: ConvergenceError

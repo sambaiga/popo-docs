@@ -1,0 +1,6 @@
+﻿style
+=====
+
+.. currentmodule:: popo.plotting.style
+
+.. autofunction:: style

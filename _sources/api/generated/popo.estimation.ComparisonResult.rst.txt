@@ -1,0 +1,8 @@
+﻿ComparisonResult
+================
+
+.. currentmodule:: popo.estimation
+
+.. autoclass:: ComparisonResult
+   :members:
+   :show-inheritance:

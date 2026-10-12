@@ -1,0 +1,6 @@
+﻿calendar
+========
+
+.. currentmodule:: popo.profiles.synthetic
+
+.. autofunction:: calendar

@@ -1,0 +1,6 @@
+﻿circuit\_summary
+================
+
+.. currentmodule:: popo.powerflow
+
+.. autofunction:: circuit_summary

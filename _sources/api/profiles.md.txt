@@ -1,0 +1,32 @@
+# popo.profiles
+
+Loading and synthesising half-hourly demand, PV and EV profiles.
+
+```{eval-rst}
+.. rubric:: SMART-DS profiles
+
+.. module:: popo.profiles.smartds
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   load_pool
+   load_ratings
+   to_30min
+
+.. rubric:: Synthetic profiles
+
+.. module:: popo.profiles.synthetic
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   load_households
+   pv_unit_profile
+   ev_profiles
+   ev_stats
+   EVStats
+   calendar
+```

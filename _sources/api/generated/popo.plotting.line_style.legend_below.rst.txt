@@ -1,0 +1,6 @@
+﻿legend\_below
+=============
+
+.. currentmodule:: popo.plotting.line_style
+
+.. autofunction:: legend_below

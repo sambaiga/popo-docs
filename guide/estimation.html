@@ -520,12 +520,12 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="state-estimation">
 <h1>State estimation<a class="headerlink" href="#state-estimation" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../api/index.html#module-popo.estimation" title="popo.estimation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.estimation</span></code></a> estimates the voltage at every bus of a feeder from the measurements that
+<p><a class="reference internal" href="../api/estimation.html#module-popo.estimation" title="popo.estimation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.estimation</span></code></a> estimates the voltage at every bus of a feeder from the measurements that
 exist, using pandapower’s weighted-least-squares estimator. It needs the <code class="docutils literal notranslate"><span class="pre">estimation</span></code> extra, and the
 <code class="docutils literal notranslate"><span class="pre">opendss</span></code> extra to convert a feeder.</p>
 <section id="converting-a-feeder">
 <h2>Converting a feeder<a class="headerlink" href="#converting-a-feeder" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.estimation.to_pandapower" title="popo.estimation.to_pandapower"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_pandapower()</span></code></a> converts an OpenDSS feeder to a pandapower network and returns
+<p><a class="reference internal" href="../api/generated/popo.estimation.to_pandapower.html#popo.estimation.to_pandapower" title="popo.estimation.to_pandapower"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_pandapower()</span></code></a> converts an OpenDSS feeder to a pandapower network and returns
 it with the index of the substation’s low-voltage busbar, where the substation measurement is taken.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -548,7 +548,7 @@ it with the index of the substation’s low-voltage busbar, where the substation
 <p>The converter sets each transformer’s turns ratio from the voltage bases of its buses. <code class="docutils literal notranslate"><span class="pre">to_pandapower</span></code>
 restores the nameplate ratio, 11/0.416 kV here, which would otherwise put every low-voltage bus about
 0.04 pu too low.</p>
-<p><a class="reference internal" href="../api/index.html#popo.estimation.check_conversion" title="popo.estimation.check_conversion"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_conversion()</span></code></a> solves both models at the same loading and compares them
+<p><a class="reference internal" href="../api/generated/popo.estimation.check_conversion.html#popo.estimation.check_conversion" title="popo.estimation.check_conversion"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_conversion()</span></code></a> solves both models at the same loading and compares them
 bus by bus. Check this before relying on any estimate.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -578,7 +578,7 @@ balanced model of a feeder that OpenDSS models phase by phase.</p>
 <h2>Counting equations<a class="headerlink" href="#counting-equations" title="Link to this heading">#</a></h2>
 <p>An estimator solves for a voltage magnitude and angle at every bus, less one reference angle: 759
 unknowns for this feeder’s 380 buses. Each measurement supplies one equation, and each bus with no load
-supplies two. <a class="reference internal" href="../api/index.html#popo.estimation.observability" title="popo.estimation.observability"><code class="xref py py-func docutils literal notranslate"><span class="pre">observability()</span></code></a> counts both before an estimate is attempted.</p>
+supplies two. <a class="reference internal" href="../api/generated/popo.estimation.observability-function.html#popo.estimation.observability" title="popo.estimation.observability"><code class="xref py py-func docutils literal notranslate"><span class="pre">observability()</span></code></a> counts both before an estimate is attempted.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span>
@@ -654,8 +654,8 @@ unmetered there are fewer equations than unknowns, and no estimate exists whatev
 </section>
 <section id="estimating">
 <h2>Estimating<a class="headerlink" href="#estimating" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.estimation.set_loading" title="popo.estimation.set_loading"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_loading()</span></code></a> sets each customer’s demand for one step, and
-<a class="reference internal" href="../api/index.html#popo.estimation.true_state" title="popo.estimation.true_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">true_state()</span></code></a> solves the power flow to give the true voltages and the
+<p><a class="reference internal" href="../api/generated/popo.estimation.set_loading.html#popo.estimation.set_loading" title="popo.estimation.set_loading"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_loading()</span></code></a> sets each customer’s demand for one step, and
+<a class="reference internal" href="../api/generated/popo.estimation.true_state.html#popo.estimation.true_state" title="popo.estimation.true_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">true_state()</span></code></a> solves the power flow to give the true voltages and the
 substation reading. The example takes evening demand from the household pool.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -674,7 +674,7 @@ substation reading. The example takes evening demand from the household pool.</p
 </div>
 </div>
 </div>
-<p>Real measurements carry error. <a class="reference internal" href="../api/index.html#popo.estimation.MeasurementNoise" title="popo.estimation.MeasurementNoise"><code class="xref py py-class docutils literal notranslate"><span class="pre">MeasurementNoise</span></code></a> holds the standard
+<p>Real measurements carry error. <a class="reference internal" href="../api/generated/popo.estimation.MeasurementNoise.html#popo.estimation.MeasurementNoise" title="popo.estimation.MeasurementNoise"><code class="xref py py-class docutils literal notranslate"><span class="pre">MeasurementNoise</span></code></a> holds the standard
 deviations the estimator assumes: 0.002 pu for the busbar voltage, 2 % for the substation’s power and 10 %
 for a smart meter. The readings below are drawn with that error.</p>
 <div class="cell docutils container">
@@ -737,7 +737,7 @@ separates an unmetered customer from the others; the
 </section>
 <section id="forecasts-as-inputs">
 <h2>Forecasts as inputs<a class="headerlink" href="#forecasts-as-inputs" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.estimation.run_comparison" title="popo.estimation.run_comparison"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_comparison()</span></code></a> tests whether the kind of substation forecast matters when it
+<p><a class="reference internal" href="../api/generated/popo.estimation.run_comparison.html#popo.estimation.run_comparison" title="popo.estimation.run_comparison"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_comparison()</span></code></a> tests whether the kind of substation forecast matters when it
 feeds an estimator. It compares a coherent forecast, whose active power, reactive power and voltage
 describe a state the network can be in, with three forecasts of the same accuracy made separately.</p>
 </section>

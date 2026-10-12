@@ -1,0 +1,6 @@
+﻿bus\_roles
+==========
+
+.. currentmodule:: popo.plotting.network
+
+.. autofunction:: bus_roles

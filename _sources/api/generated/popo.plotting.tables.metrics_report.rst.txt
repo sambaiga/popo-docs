@@ -1,0 +1,6 @@
+﻿metrics\_report
+===============
+
+.. currentmodule:: popo.plotting.tables
+
+.. autofunction:: metrics_report

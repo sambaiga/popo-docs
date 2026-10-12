@@ -1,0 +1,6 @@
+﻿to\_30min
+=========
+
+.. currentmodule:: popo.profiles.smartds
+
+.. autofunction:: to_30min

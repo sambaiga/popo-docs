@@ -1,0 +1,6 @@
+﻿true\_state
+===========
+
+.. currentmodule:: popo.estimation
+
+.. autofunction:: true_state

@@ -1,0 +1,6 @@
+﻿topology\_layout
+================
+
+.. currentmodule:: popo.plotting.network
+
+.. autofunction:: topology_layout

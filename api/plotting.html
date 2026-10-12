@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>popo.plotting &#8212; popo</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/popo.css?v=60897174" />
+    <link crossorigin="anonymous" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=22840dfd"></script>
+    <script>let toggleHintShow = 'Show';</script>
+    <script>let toggleHintHide = 'Hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/plotting';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="topology_from_dss" href="generated/popo.plotting.network.topology_from_dss.html" />
+    <link rel="prev" title="calendar" href="generated/popo.profiles.synthetic.calendar.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.1" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt="popo"/>
+    <img src="../_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="popo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting-started/index.html">
+    Get started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../guide/index.html">
+    User guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="dropdown po-version-wrapper">
+  <button
+    class="btn dropdown-toggle po-version-btn"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+    aria-label="popo version 0.1.1"
+  >
+    <span class="po-version-label">v0.1.1</span>
+    <span class="po-alpha-pill">alpha</span>
+  </button>
+  <div class="dropdown-menu dropdown-menu-end po-version-menu">
+    <div class="po-version-info">
+      <p>
+        <strong>popo 0.1.1</strong> is in alpha.
+        The API may change before 1.0.
+      </p>
+      <a
+        href="../changelog.html"
+        class="po-version-changelog-link"
+      >
+        View changelog <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/popo-flow/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/box-seam-fill.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://sambaiga.github.io/twiga-docs/" title="twiga, popo's forecasting companion" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/graph-up-arrow.svg" class="icon-link-image" alt="twiga, popo's forecasting companion"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting-started/index.html">
+    Get started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../guide/index.html">
+    User guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="dropdown po-version-wrapper">
+  <button
+    class="btn dropdown-toggle po-version-btn"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+    aria-label="popo version 0.1.1"
+  >
+    <span class="po-version-label">v0.1.1</span>
+    <span class="po-alpha-pill">alpha</span>
+  </button>
+  <div class="dropdown-menu dropdown-menu-end po-version-menu">
+    <div class="po-version-info">
+      <p>
+        <strong>popo 0.1.1</strong> is in alpha.
+        The API may change before 1.0.
+      </p>
+      <a
+        href="../changelog.html"
+        class="po-version-changelog-link"
+      >
+        View changelog <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/popo-flow/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/box-seam-fill.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://sambaiga.github.io/twiga-docs/" title="twiga, popo's forecasting companion" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/graph-up-arrow.svg" class="icon-link-image" alt="twiga, popo's forecasting companion"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="network.html">popo.network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="powerflow.html">popo.powerflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scenarios.html">popo.scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="standards.html">popo.standards</a></li>
+<li class="toctree-l1"><a class="reference internal" href="estimation.html">popo.estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="profiles.html">popo.profiles</a></li>
+<li class="toctree-l1 current active has-children"><a aria-current="page" class="current reference internal" href="#">popo.plotting</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.network.topology_from_dss.html">topology_from_dss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.network.plot_topology.html">plot_topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.network.NetworkTopology.html">NetworkTopology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.network.topology_layout.html">topology_layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.network.bus_roles.html">bus_roles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.network.voltage_status.html">voltage_status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.style.configure.html">configure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.style.style.html">style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.style.sketch.html">sketch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.style.panel.html">panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.style.pad_limits.html">pad_limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.style.tex_safe.html">tex_safe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.line_style.configure.html">configure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.line_style.new_panel.html">new_panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.line_style.hour_axis.html">hour_axis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.line_style.set_y_axis.html">set_y_axis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.line_style.reference_line.html">reference_line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.line_style.legend_below.html">legend_below</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.line_style.finish.html">finish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.line_style.show.html">show</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.line_style.save.html">save</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.tables.themed_gt.html">themed_gt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.tables.record_table.html">record_table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/popo.plotting.tables.metrics_report.html">metrics_report</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">popo.plotting</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="popo-plotting">
+<h1>popo.plotting<a class="headerlink" href="#popo-plotting" title="Link to this heading">#</a></h1>
+<p>Network diagrams, figure style, line plots and tables. Needs the <code class="docutils literal notranslate"><span class="pre">plot</span></code> extra. See
+<a class="reference internal" href="../guide/plotting.html"><span class="doc">Plotting</span></a>.</p>
+<p class="rubric" id="module-popo.plotting">Network diagrams</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.network.topology_from_dss.html#popo.plotting.network.topology_from_dss" title="popo.plotting.network.topology_from_dss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">topology_from_dss</span></code></a></p></td>
+<td><p>Read the active, solved OpenDSS circuit into a <a class="reference internal" href="generated/popo.plotting.network.NetworkTopology.html#popo.plotting.network.NetworkTopology" title="popo.plotting.network.NetworkTopology"><code class="xref py py-class docutils literal notranslate"><span class="pre">NetworkTopology</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.network.plot_topology.html#popo.plotting.network.plot_topology" title="popo.plotting.network.plot_topology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_topology</span></code></a></p></td>
+<td><p>Draw a network as a schematic icon diagram, buses coloured by voltage status.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.network.NetworkTopology.html#popo.plotting.network.NetworkTopology" title="popo.plotting.network.NetworkTopology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkTopology</span></code></a></p></td>
+<td><p>The parts of a circuit a topology diagram needs, as plain Python data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.network.topology_layout.html#popo.plotting.network.topology_layout" title="popo.plotting.network.topology_layout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">topology_layout</span></code></a></p></td>
+<td><p>Lay out every bus as a tidy tree grown from <code class="docutils literal notranslate"><span class="pre">root</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.network.bus_roles.html#popo.plotting.network.bus_roles" title="popo.plotting.network.bus_roles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bus_roles</span></code></a></p></td>
+<td><p>Classify buses as <code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">load</span></code>, <code class="docutils literal notranslate"><span class="pre">pv</span></code> or <code class="docutils literal notranslate"><span class="pre">load_pv</span></code>; unlisted buses are junctions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.network.voltage_status.html#popo.plotting.network.voltage_status" title="popo.plotting.network.voltage_status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">voltage_status</span></code></a></p></td>
+<td><p>Classify a per-unit voltage against fixed limits: <code class="docutils literal notranslate"><span class="pre">(colour,</span> <span class="pre">label)</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Figure style</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.style.configure.html#popo.plotting.style.configure" title="popo.plotting.style.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a></p></td>
+<td><p>Apply popo's figure style globally: <code class="xref py py-data docutils literal notranslate"><span class="pre">BASE_RC</span></code>, LaTeX settings if used, then <code class="xref py py-data docutils literal notranslate"><span class="pre">POPO_RC</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.style.style.html#popo.plotting.style.style" title="popo.plotting.style.style"><code class="xref py py-obj docutils literal notranslate"><span class="pre">style</span></code></a></p></td>
+<td><p>Apply popo's style for the duration of a block, then restore.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.style.sketch.html#popo.plotting.style.sketch" title="popo.plotting.style.sketch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sketch</span></code></a></p></td>
+<td><p>Popo's style with hand-drawn lines, for concept illustrations rather than results.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.style.panel.html#popo.plotting.style.panel" title="popo.plotting.style.panel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">panel</span></code></a></p></td>
+<td><p>Size for one panel occupying <code class="docutils literal notranslate"><span class="pre">fraction</span></code> of a notional text width.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.style.pad_limits.html#popo.plotting.style.pad_limits" title="popo.plotting.style.pad_limits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pad_limits</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> across every array in <code class="docutils literal notranslate"><span class="pre">value_arrays</span></code>, padded by <code class="docutils literal notranslate"><span class="pre">frac</span></code> of the range.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.style.tex_safe.html#popo.plotting.style.tex_safe" title="popo.plotting.style.tex_safe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tex_safe</span></code></a></p></td>
+<td><p>Escape a string for LaTeX, for anything interpolated from data.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Line plots</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.line_style.configure.html#popo.plotting.line_style.configure" title="popo.plotting.line_style.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a></p></td>
+<td><p>Apply popo's figure style with the compact line-plot sizes on top.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.line_style.new_panel.html#popo.plotting.line_style.new_panel" title="popo.plotting.line_style.new_panel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_panel</span></code></a></p></td>
+<td><p>A single-axes figure authored at its final size (<code class="docutils literal notranslate"><span class="pre">fraction</span></code> of the text width).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.line_style.hour_axis.html#popo.plotting.line_style.hour_axis" title="popo.plotting.line_style.hour_axis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hour_axis</span></code></a></p></td>
+<td><p>Lead time in hours (0 to 24) shown as time of day; every forecast window starts at 00:00.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.line_style.set_y_axis.html#popo.plotting.line_style.set_y_axis" title="popo.plotting.line_style.set_y_axis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_y_axis</span></code></a></p></td>
+<td><p>Y-limits and ticks from the plotted data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.line_style.reference_line.html#popo.plotting.line_style.reference_line" title="popo.plotting.line_style.reference_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reference_line</span></code></a></p></td>
+<td><p>A horizontal reference (nominal level, zero, record mean) in the uniform dotted style.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.line_style.legend_below.html#popo.plotting.line_style.legend_below" title="popo.plotting.line_style.legend_below"><code class="xref py py-obj docutils literal notranslate"><span class="pre">legend_below</span></code></a></p></td>
+<td><p>One-row legend centred below the axes; <a class="reference internal" href="generated/popo.plotting.line_style.save.html#popo.plotting.line_style.save" title="popo.plotting.line_style.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">save()</span></code></a> places it <code class="docutils literal notranslate"><span class="pre">LEGEND_GAP_PT</span></code> below the x-axis label.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.line_style.finish.html#popo.plotting.line_style.finish" title="popo.plotting.line_style.finish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finish</span></code></a></p></td>
+<td><p>Left and bottom spines only, ticks pointing out, no minor ticks.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.line_style.show.html#popo.plotting.line_style.show" title="popo.plotting.line_style.show"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show</span></code></a></p></td>
+<td><p>Lay out the figure and its legends as <a class="reference internal" href="generated/popo.plotting.line_style.save.html#popo.plotting.line_style.save" title="popo.plotting.line_style.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">save()</span></code></a> does, then display it inline without writing files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.line_style.save.html#popo.plotting.line_style.save" title="popo.plotting.line_style.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a></p></td>
+<td><p>Write a PDF and a 600 dpi PNG, tightly cropped, with legends placed below the axes.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Tables</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.tables.themed_gt.html#popo.plotting.tables.themed_gt" title="popo.plotting.tables.themed_gt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">themed_gt</span></code></a></p></td>
+<td><p>Apply popo's table style to a Great Tables table or a DataFrame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/popo.plotting.tables.record_table.html#popo.plotting.tables.record_table" title="popo.plotting.tables.record_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">record_table</span></code></a></p></td>
+<td><p>A two-column <code class="docutils literal notranslate"><span class="pre">statistic</span> <span class="pre">|</span> <span class="pre">value</span></code> table for a one-row summary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/popo.plotting.tables.metrics_report.html#popo.plotting.tables.metrics_report" title="popo.plotting.tables.metrics_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics_report</span></code></a></p></td>
+<td><p>A themed metric-comparison table with each column's best value highlighted.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p id="module-popo.plotting.tokens"><a class="reference internal" href="#module-popo.plotting.tokens" title="popo.plotting.tokens"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting.tokens</span></code></a> holds the palette, <code class="docutils literal notranslate"><span class="pre">PALETTE</span></code>, and the colours named by role: <code class="docutils literal notranslate"><span class="pre">PRIMARY</span></code> for
+the subject of a figure, <code class="docutils literal notranslate"><span class="pre">INFO</span></code> and <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> for supporting series, <code class="docutils literal notranslate"><span class="pre">DANGER</span></code> for a failure and
+<code class="docutils literal notranslate"><span class="pre">TEXT_MUTED</span></code> for context.</p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/popo.profiles.synthetic.calendar.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">calendar</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="generated/popo.plotting.network.topology_from_dss.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">topology_from_dss</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, sambaiga.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+  </p>
+</div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+﻿new\_panel
+==========
+
+.. currentmodule:: popo.plotting.line_style
+
+.. autofunction:: new_panel

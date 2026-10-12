@@ -1,0 +1,6 @@
+﻿check\_conversion
+=================
+
+.. currentmodule:: popo.estimation
+
+.. autofunction:: check_conversion

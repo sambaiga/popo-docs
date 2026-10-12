@@ -1,0 +1,17 @@
+# popo.standards
+
+Statutory voltage limits and inverter characteristics. Needs no solver. See {doc}`../guide/standards`.
+
+```{eval-rst}
+.. module:: popo.standards
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   VoltageLimits
+   ComplianceReport
+   InverterCapability
+   VoltVarCurve
+   VoltWattCurve
+```

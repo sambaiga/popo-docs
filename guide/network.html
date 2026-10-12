@@ -520,12 +520,12 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="network">
 <h1>Network<a class="headerlink" href="#network" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../api/index.html#module-popo.network" title="popo.network"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.network</span></code></a> describes a circuit as it is defined: its lines, loads, transformers, PV systems
+<p><a class="reference internal" href="../api/network.html#module-popo.network" title="popo.network"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.network</span></code></a> describes a circuit as it is defined: its lines, loads, transformers, PV systems
 and storage units. Solving the circuit and reading its results is covered in <a class="reference internal" href="powerflow.html"><span class="doc">Power flow</span></a>.</p>
 <section id="loading-a-circuit">
 <h2>Loading a circuit<a class="headerlink" href="#loading-a-circuit" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.network.Circuit.load" title="popo.network.Circuit.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Circuit.load</span></code></a> clears the OpenDSS engine, compiles a master file
-and solves it. The returned <a class="reference internal" href="../api/index.html#popo.network.Circuit" title="popo.network.Circuit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit</span></code></a> is a view of the compiled circuit.</p>
+<p><a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.load" title="popo.network.Circuit.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Circuit.load</span></code></a> clears the OpenDSS engine, compiles a master file
+and solves it. The returned <a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit" title="popo.network.Circuit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit</span></code></a> is a view of the compiled circuit.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -552,13 +552,13 @@ and solves it. The returned <a class="reference internal" href="../api/index.htm
 </div>
 </div>
 <p>To build a circuit from OpenDSS commands instead of a file, create <code class="docutils literal notranslate"><span class="pre">Circuit()</span></code> and pass each command to
-<a class="reference internal" href="../api/index.html#popo.network.Circuit.command" title="popo.network.Circuit.command"><code class="xref py py-meth docutils literal notranslate"><span class="pre">command()</span></code></a>, as the <a class="reference internal" href="../getting-started/quickstart.html"><span class="std std-doc">quickstart</span></a> does.</p>
+<a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.command" title="popo.network.Circuit.command"><code class="xref py py-meth docutils literal notranslate"><span class="pre">command()</span></code></a>, as the <a class="reference internal" href="../getting-started/quickstart.html"><span class="std std-doc">quickstart</span></a> does.</p>
 </section>
 <section id="elements-as-records">
 <h2>Elements as records<a class="headerlink" href="#elements-as-records" title="Link to this heading">#</a></h2>
-<p>The circuit yields its elements as records: <a class="reference internal" href="../api/index.html#popo.network.Circuit.lines" title="popo.network.Circuit.lines"><code class="xref py py-attr docutils literal notranslate"><span class="pre">lines</span></code></a>,
-<a class="reference internal" href="../api/index.html#popo.network.Circuit.loads" title="popo.network.Circuit.loads"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loads</span></code></a>, <a class="reference internal" href="../api/index.html#popo.network.Circuit.transformers" title="popo.network.Circuit.transformers"><code class="xref py py-attr docutils literal notranslate"><span class="pre">transformers</span></code></a>,
-<a class="reference internal" href="../api/index.html#popo.network.Circuit.pvsystems" title="popo.network.Circuit.pvsystems"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pvsystems</span></code></a> and <a class="reference internal" href="../api/index.html#popo.network.Circuit.storage_units" title="popo.network.Circuit.storage_units"><code class="xref py py-attr docutils literal notranslate"><span class="pre">storage_units</span></code></a>. Each
+<p>The circuit yields its elements as records: <a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.lines" title="popo.network.Circuit.lines"><code class="xref py py-attr docutils literal notranslate"><span class="pre">lines</span></code></a>,
+<a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.loads" title="popo.network.Circuit.loads"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loads</span></code></a>, <a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.transformers" title="popo.network.Circuit.transformers"><code class="xref py py-attr docutils literal notranslate"><span class="pre">transformers</span></code></a>,
+<a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.pvsystems" title="popo.network.Circuit.pvsystems"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pvsystems</span></code></a> and <a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.storage_units" title="popo.network.Circuit.storage_units"><code class="xref py py-attr docutils literal notranslate"><span class="pre">storage_units</span></code></a>. Each
 record is a small dataclass, so a collection converts directly to a DataFrame.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -650,10 +650,10 @@ record is a small dataclass, so a collection converts directly to a DataFrame.</
 </div>
 </div>
 </div>
-<p>A <a class="reference internal" href="../api/index.html#popo.network.Transformer" title="popo.network.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transformer</span></code></a> keeps its nameplate rating (500 kVA here) separate from its
+<p>A <a class="reference internal" href="../api/generated/popo.network.Transformer.html#popo.network.Transformer" title="popo.network.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transformer</span></code></a> keeps its nameplate rating (500 kVA here) separate from its
 normal thermal rating (550 kVA), because a loading study needs to know which of the two it is comparing
 against.</p>
-<p>For a property that no record covers, <a class="reference internal" href="../api/index.html#popo.network.Circuit.command" title="popo.network.Circuit.command"><code class="xref py py-meth docutils literal notranslate"><span class="pre">command()</span></code></a> passes an OpenDSS command
+<p>For a property that no record covers, <a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.command" title="popo.network.Circuit.command"><code class="xref py py-meth docutils literal notranslate"><span class="pre">command()</span></code></a> passes an OpenDSS command
 through and returns its answer:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -670,7 +670,7 @@ through and returns its answer:</p>
 </section>
 <section id="customers">
 <h2>Customers<a class="headerlink" href="#customers" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.network.residential_loads" title="popo.network.residential_loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">residential_loads()</span></code></a> lists a feeder’s low-voltage residential loads as
+<p><a class="reference internal" href="../api/generated/popo.network.residential_loads.html#popo.network.residential_loads" title="popo.network.residential_loads"><code class="xref py py-func docutils literal notranslate"><span class="pre">residential_loads()</span></code></a> lists a feeder’s low-voltage residential loads as
 <code class="docutils literal notranslate"><span class="pre">(load</span> <span class="pre">name,</span> <span class="pre">bus)</span></code> pairs. Every scenario function in <a class="reference internal" href="scenarios.html"><span class="doc">Scenarios</span></a> takes its customers in this form.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -693,7 +693,7 @@ through and returns its answer:</p>
 </section>
 <section id="describing-a-feeder">
 <h2>Describing a feeder<a class="headerlink" href="#describing-a-feeder" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.network.profile_circuit" title="popo.network.profile_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">profile_circuit()</span></code></a> summarises a circuit at its defined loading.</p>
+<p><a class="reference internal" href="../api/generated/popo.network.profile_circuit.html#popo.network.profile_circuit" title="popo.network.profile_circuit"><code class="xref py py-func docutils literal notranslate"><span class="pre">profile_circuit()</span></code></a> summarises a circuit at its defined loading.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span>
@@ -720,7 +720,7 @@ dtype: object
 </div>
 </div>
 </div>
-<p><a class="reference internal" href="../api/index.html#popo.network.measure_sensitivity" title="popo.network.measure_sensitivity"><code class="xref py py-func docutils literal notranslate"><span class="pre">measure_sensitivity()</span></code></a> raises the loading, solves again and measures how far the
+<p><a class="reference internal" href="../api/generated/popo.network.measure_sensitivity.html#popo.network.measure_sensitivity" title="popo.network.measure_sensitivity"><code class="xref py py-func docutils literal notranslate"><span class="pre">measure_sensitivity()</span></code></a> raises the loading, solves again and measures how far the
 lowest bus voltage moves per megawatt of substation demand. A high sensitivity means a voltage limit is
 likely to bind before the transformer’s thermal rating does.</p>
 <div class="cell docutils container">
@@ -752,11 +752,11 @@ MW.</p>
 <p>A North American feeder can have hundreds of pole-mounted transformers. Recording all of them in every
 scenario is slow, so popo provides three steps for choosing which to monitor:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../api/index.html#popo.network.read_transformers" title="popo.network.read_transformers"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_transformers()</span></code></a> reads the transformers from an OpenDSS definition file,
+<li><p><a class="reference internal" href="../api/generated/popo.network.read_transformers.html#popo.network.read_transformers" title="popo.network.read_transformers"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_transformers()</span></code></a> reads the transformers from an OpenDSS definition file,
 keeping the nameplate and normal ratings separate.</p></li>
-<li><p><a class="reference internal" href="../api/index.html#popo.network.screen" title="popo.network.screen"><code class="xref py py-func docutils literal notranslate"><span class="pre">screen()</span></code></a> steps the feeder through a short window and returns each transformer’s
+<li><p><a class="reference internal" href="../api/generated/popo.network.screen.html#popo.network.screen" title="popo.network.screen"><code class="xref py py-func docutils literal notranslate"><span class="pre">screen()</span></code></a> steps the feeder through a short window and returns each transformer’s
 peak apparent power and voltage extremes.</p></li>
-<li><p><a class="reference internal" href="../api/index.html#popo.network.select_by_utilisation" title="popo.network.select_by_utilisation"><code class="xref py py-func docutils literal notranslate"><span class="pre">select_by_utilisation()</span></code></a> takes the most heavily loaded transformers from the
+<li><p><a class="reference internal" href="../api/generated/popo.network.select_by_utilisation.html#popo.network.select_by_utilisation" title="popo.network.select_by_utilisation"><code class="xref py py-func docutils literal notranslate"><span class="pre">select_by_utilisation()</span></code></a> takes the most heavily loaded transformers from the
 screen, where a thermal limit can bind, and keeps that selection fixed across scenarios so a sweep
 compares the same assets.</p></li>
 </ul>

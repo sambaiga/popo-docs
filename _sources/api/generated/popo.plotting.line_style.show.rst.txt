@@ -1,0 +1,6 @@
+﻿show
+====
+
+.. currentmodule:: popo.plotting.line_style
+
+.. autofunction:: show

@@ -1,0 +1,8 @@
+﻿Observability
+=============
+
+.. currentmodule:: popo.estimation
+
+.. autoclass:: Observability
+   :members:
+   :show-inheritance:

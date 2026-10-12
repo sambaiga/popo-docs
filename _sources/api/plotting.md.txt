@@ -1,0 +1,76 @@
+# popo.plotting
+
+Network diagrams, figure style, line plots and tables. Needs the `plot` extra. See
+{doc}`../guide/plotting`.
+
+```{eval-rst}
+.. module:: popo.plotting
+
+.. rubric:: Network diagrams
+
+.. module:: popo.plotting.network
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   topology_from_dss
+   plot_topology
+   NetworkTopology
+   topology_layout
+   bus_roles
+   voltage_status
+
+.. rubric:: Figure style
+
+.. module:: popo.plotting.style
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   configure
+   style
+   sketch
+   panel
+   pad_limits
+   tex_safe
+
+.. rubric:: Line plots
+
+.. module:: popo.plotting.line_style
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   configure
+   new_panel
+   hour_axis
+   set_y_axis
+   reference_line
+   legend_below
+   finish
+   show
+   save
+
+.. rubric:: Tables
+
+.. module:: popo.plotting.tables
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   themed_gt
+   record_table
+   metrics_report
+```
+
+```{eval-rst}
+.. module:: popo.plotting.tokens
+```
+
+{py:mod}`popo.plotting.tokens` holds the palette, `PALETTE`, and the colours named by role: `PRIMARY` for
+the subject of a figure, `INFO` and `WARNING` for supporting series, `DANGER` for a failure and
+`TEXT_MUTED` for context.

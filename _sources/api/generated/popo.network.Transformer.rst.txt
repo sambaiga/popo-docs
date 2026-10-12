@@ -1,0 +1,8 @@
+﻿Transformer
+===========
+
+.. currentmodule:: popo.network
+
+.. autoclass:: Transformer
+   :members:
+   :show-inheritance:

@@ -1,0 +1,6 @@
+﻿profile\_circuit
+================
+
+.. currentmodule:: popo.network
+
+.. autofunction:: profile_circuit

@@ -1,0 +1,6 @@
+﻿hour\_axis
+==========
+
+.. currentmodule:: popo.plotting.line_style
+
+.. autofunction:: hour_axis

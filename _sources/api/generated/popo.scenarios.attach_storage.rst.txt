@@ -1,0 +1,6 @@
+﻿attach\_storage
+===============
+
+.. currentmodule:: popo.scenarios
+
+.. autofunction:: attach_storage

@@ -1,0 +1,41 @@
+# popo.estimation
+
+Conversion to pandapower and weighted-least-squares state estimation. Needs the `estimation` extra. See
+{doc}`../guide/estimation`.
+
+```{eval-rst}
+.. module:: popo.estimation
+
+.. rubric:: Converting a feeder
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   to_pandapower
+   check_conversion
+   set_loading
+   true_state
+
+.. rubric:: Estimating
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   observability
+   Observability
+   estimate_voltages
+   MeasurementNoise
+   voltage_error
+   zero_injection_buses
+
+.. rubric:: Forecasts as inputs
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   run_comparison
+   ComparisonResult
+```

@@ -1,0 +1,6 @@
+﻿zero\_injection\_buses
+======================
+
+.. currentmodule:: popo.estimation
+
+.. autofunction:: zero_injection_buses

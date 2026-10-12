@@ -1,0 +1,6 @@
+﻿load\_households
+================
+
+.. currentmodule:: popo.profiles.synthetic
+
+.. autofunction:: load_households

@@ -1,0 +1,6 @@
+﻿assign\_household\_profiles
+===========================
+
+.. currentmodule:: popo.scenarios
+
+.. autofunction:: assign_household_profiles

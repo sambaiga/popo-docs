@@ -1,0 +1,8 @@
+﻿Circuit
+=======
+
+.. currentmodule:: popo.network
+
+.. autoclass:: Circuit
+   :members:
+   :show-inheritance:

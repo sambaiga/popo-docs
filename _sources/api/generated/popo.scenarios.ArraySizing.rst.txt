@@ -1,0 +1,8 @@
+﻿ArraySizing
+===========
+
+.. currentmodule:: popo.scenarios
+
+.. autoclass:: ArraySizing
+   :members:
+   :show-inheritance:

@@ -1,0 +1,6 @@
+﻿load\_ratings
+=============
+
+.. currentmodule:: popo.profiles.smartds
+
+.. autofunction:: load_ratings

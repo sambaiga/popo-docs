@@ -520,14 +520,14 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="plotting">
 <h1>Plotting<a class="headerlink" href="#plotting" title="Link to this heading">#</a></h1>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting</span></code> draws network diagrams, line plots and tables in one style, the style used by
+<p><a class="reference internal" href="../api/plotting.html#module-popo.plotting" title="popo.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting</span></code></a> draws network diagrams, line plots and tables in one style, the style used by
 every figure in this documentation. It needs the <code class="docutils literal notranslate"><span class="pre">plot</span></code> extra.</p>
 <section id="figure-style">
 <h2>Figure style<a class="headerlink" href="#figure-style" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.plotting.style.configure" title="popo.plotting.style.configure"><code class="xref py py-func docutils literal notranslate"><span class="pre">popo.plotting.style.configure()</span></code></a> applies the style to every figure that follows: serif type,
+<p><a class="reference internal" href="../api/generated/popo.plotting.style.configure.html#popo.plotting.style.configure" title="popo.plotting.style.configure"><code class="xref py py-func docutils literal notranslate"><span class="pre">popo.plotting.style.configure()</span></code></a> applies the style to every figure that follows: serif type,
 thin axes without a grid, and the popo palette. With <code class="docutils literal notranslate"><span class="pre">latex=True</span></code>, the default, text is typeset by LaTeX,
 which must be installed; <code class="docutils literal notranslate"><span class="pre">latex=False</span></code> uses matplotlib’s own text rendering.
-<a class="reference internal" href="../api/index.html#module-popo.plotting.line_style" title="popo.plotting.line_style"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting.line_style</span></code></a> calls the same function and adds conventions for line plots.</p>
+<a class="reference internal" href="../api/plotting.html#module-popo.plotting.line_style" title="popo.plotting.line_style"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting.line_style</span></code></a> calls the same function and adds conventions for line plots.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">line_style</span>
@@ -540,8 +540,8 @@ which must be installed; <code class="docutils literal notranslate"><span class=
 </section>
 <section id="network-diagrams">
 <h2>Network diagrams<a class="headerlink" href="#network-diagrams" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.plotting.network.topology_from_dss" title="popo.plotting.network.topology_from_dss"><code class="xref py py-func docutils literal notranslate"><span class="pre">topology_from_dss()</span></code></a> reads the topology and bus voltages of a solved
-circuit, and <a class="reference internal" href="../api/index.html#popo.plotting.network.plot_topology" title="popo.plotting.network.plot_topology"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_topology()</span></code></a> draws it as a schematic: a lightning bolt
+<p><a class="reference internal" href="../api/generated/popo.plotting.network.topology_from_dss.html#popo.plotting.network.topology_from_dss" title="popo.plotting.network.topology_from_dss"><code class="xref py py-func docutils literal notranslate"><span class="pre">topology_from_dss()</span></code></a> reads the topology and bus voltages of a solved
+circuit, and <a class="reference internal" href="../api/generated/popo.plotting.network.plot_topology.html#popo.plotting.network.plot_topology" title="popo.plotting.network.plot_topology"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_topology()</span></code></a> draws it as a schematic: a lightning bolt
 for the source, a transformer badge, a house for each customer, and every bus coloured by its voltage
 status.</p>
 <div class="cell docutils container">
@@ -583,16 +583,16 @@ status.</p>
 </div>
 <p>Houses <code class="docutils literal notranslate"><span class="pre">C</span></code>, <code class="docutils literal notranslate"><span class="pre">G</span></code> and <code class="docutils literal notranslate"><span class="pre">H</span></code> fall below 0.94 pu and are drawn in orange. House <code class="docutils literal notranslate"><span class="pre">D</span></code>, at the same distance
 as <code class="docutils literal notranslate"><span class="pre">C</span></code> but alone on phase 2, stays at 1.00 pu: on an unbalanced network the phase a customer is on
-matters as much as its distance from the transformer. The colour thresholds default to 0.94 and 1.10 pu; pass <code class="docutils literal notranslate"><span class="pre">limits=</span></code> a <a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits" title="popo.standards.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a> to use
+matters as much as its distance from the transformer. The colour thresholds default to 0.94 and 1.10 pu; pass <code class="docutils literal notranslate"><span class="pre">limits=</span></code> a <a class="reference internal" href="../api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits" title="popo.standards.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a> to use
 a standard’s band instead. <code class="docutils literal notranslate"><span class="pre">orientation=&quot;horizontal&quot;</span></code> lays the tree out from left to right.</p>
 </section>
 <section id="line-plots">
 <h2>Line plots<a class="headerlink" href="#line-plots" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#module-popo.plotting.line_style" title="popo.plotting.line_style"><code class="xref py py-mod docutils literal notranslate"><span class="pre">line_style</span></code></a> provides the pieces of a line plot: <code class="docutils literal notranslate"><span class="pre">new_panel</span></code> for a panel at its
+<p><a class="reference internal" href="../api/plotting.html#module-popo.plotting.line_style" title="popo.plotting.line_style"><code class="xref py py-mod docutils literal notranslate"><span class="pre">line_style</span></code></a> provides the pieces of a line plot: <code class="docutils literal notranslate"><span class="pre">new_panel</span></code> for a panel at its
 final size (by default 0.40 of a 6.3 in text width, with an aspect of 0.74), <code class="docutils literal notranslate"><span class="pre">hour_axis</span></code> for a day
 from 00 to 24, <code class="docutils literal notranslate"><span class="pre">set_y_axis</span></code> for padded limits and a few round ticks, <code class="docutils literal notranslate"><span class="pre">reference_line</span></code> for a dotted level
 such as a limit, <code class="docutils literal notranslate"><span class="pre">finish</span></code> for the axes, and <code class="docutils literal notranslate"><span class="pre">legend_below</span></code> for a legend under the plot. <code class="docutils literal notranslate"><span class="pre">show</span></code> lays out
-the figure and places the legend. <code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting.tokens</span></code> names the palette colours by
+the figure and places the legend. <a class="reference internal" href="../api/plotting.html#module-popo.plotting.tokens" title="popo.plotting.tokens"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.plotting.tokens</span></code></a> names the palette colours by
 role: <code class="docutils literal notranslate"><span class="pre">PRIMARY</span></code> for the subject of a figure, <code class="docutils literal notranslate"><span class="pre">DANGER</span></code> for a failure, <code class="docutils literal notranslate"><span class="pre">TEXT_MUTED</span></code> for context.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -624,7 +624,7 @@ role: <code class="docutils literal notranslate"><span class="pre">PRIMARY</span
 </section>
 <section id="tables">
 <h2>Tables<a class="headerlink" href="#tables" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.plotting.tables.themed_gt" title="popo.plotting.tables.themed_gt"><code class="xref py py-func docutils literal notranslate"><span class="pre">themed_gt()</span></code></a> styles a DataFrame as a
+<p><a class="reference internal" href="../api/generated/popo.plotting.tables.themed_gt.html#popo.plotting.tables.themed_gt" title="popo.plotting.tables.themed_gt"><code class="xref py py-func docutils literal notranslate"><span class="pre">themed_gt()</span></code></a> styles a DataFrame as a
 <a class="reference external" href="https://posit-dev.github.io/great-tables/">Great Tables</a> table in the same palette.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -638,67 +638,67 @@ role: <code class="docutils literal notranslate"><span class="pre">PRIMARY</span
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div id="yaadiclnij" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
+<div class="output text_html"><div id="wdzlpwcwec" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:100%;height:auto;">
 <style>
-#yaadiclnij table {
+#wdzlpwcwec table {
           font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#yaadiclnij thead, tbody, tfoot, tr, td, th { border-style: none; }
+#wdzlpwcwec thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#yaadiclnij p { margin: 0; padding: 0; }
- #yaadiclnij .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #yaadiclnij .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #yaadiclnij .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #yaadiclnij .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #yaadiclnij .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #yaadiclnij .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #yaadiclnij .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #yaadiclnij .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #yaadiclnij .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #yaadiclnij .gt_column_spanner_outer:first-child { padding-left: 0; }
- #yaadiclnij .gt_column_spanner_outer:last-child { padding-right: 0; }
- #yaadiclnij .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
- #yaadiclnij .gt_spanner_row { border-bottom-style: hidden; }
- #yaadiclnij .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #yaadiclnij .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #yaadiclnij .gt_from_md> :first-child { margin-top: 0; }
- #yaadiclnij .gt_from_md> :last-child { margin-bottom: 0; }
- #yaadiclnij .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #yaadiclnij .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #yaadiclnij .gt_indent_1 { text-indent: 5px; }
- #yaadiclnij .gt_indent_2 { text-indent: calc(5px * 2); }
- #yaadiclnij .gt_indent_3 { text-indent: calc(5px * 3); }
- #yaadiclnij .gt_indent_4 { text-indent: calc(5px * 4); }
- #yaadiclnij .gt_indent_5 { text-indent: calc(5px * 5); }
- #yaadiclnij .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #yaadiclnij .gt_row_group_first td { border-top-width: 2px; }
- #yaadiclnij .gt_row_group_first th { border-top-width: 2px; }
- #yaadiclnij .gt_striped { color: #2d3748; background-color: #F4F4F4; }
- #yaadiclnij .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
- #yaadiclnij .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
- #yaadiclnij .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
- #yaadiclnij .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #yaadiclnij .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
- #yaadiclnij .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
- #yaadiclnij .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
- #yaadiclnij .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #yaadiclnij .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #yaadiclnij .gt_left { text-align: left; }
- #yaadiclnij .gt_center { text-align: center; }
- #yaadiclnij .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #yaadiclnij .gt_font_normal { font-weight: normal; }
- #yaadiclnij .gt_font_bold { font-weight: bold; }
- #yaadiclnij .gt_font_italic { font-style: italic; }
- #yaadiclnij .gt_super { font-size: 65%; }
- #yaadiclnij .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #yaadiclnij .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
- #yaadiclnij .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #yaadiclnij .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #yaadiclnij .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #yaadiclnij .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#wdzlpwcwec p { margin: 0; padding: 0; }
+ #wdzlpwcwec .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 100%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #wdzlpwcwec .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #wdzlpwcwec .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #wdzlpwcwec .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #wdzlpwcwec .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #wdzlpwcwec .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #wdzlpwcwec .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #wdzlpwcwec .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #wdzlpwcwec .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #wdzlpwcwec .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #wdzlpwcwec .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #wdzlpwcwec .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #wdzlpwcwec .gt_spanner_row { border-bottom-style: hidden; }
+ #wdzlpwcwec .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #wdzlpwcwec .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #wdzlpwcwec .gt_from_md> :first-child { margin-top: 0; }
+ #wdzlpwcwec .gt_from_md> :last-child { margin-bottom: 0; }
+ #wdzlpwcwec .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #wdzlpwcwec .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #wdzlpwcwec .gt_indent_1 { text-indent: 5px; }
+ #wdzlpwcwec .gt_indent_2 { text-indent: calc(5px * 2); }
+ #wdzlpwcwec .gt_indent_3 { text-indent: calc(5px * 3); }
+ #wdzlpwcwec .gt_indent_4 { text-indent: calc(5px * 4); }
+ #wdzlpwcwec .gt_indent_5 { text-indent: calc(5px * 5); }
+ #wdzlpwcwec .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #wdzlpwcwec .gt_row_group_first td { border-top-width: 2px; }
+ #wdzlpwcwec .gt_row_group_first th { border-top-width: 2px; }
+ #wdzlpwcwec .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #wdzlpwcwec .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #wdzlpwcwec .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #wdzlpwcwec .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #wdzlpwcwec .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #wdzlpwcwec .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #wdzlpwcwec .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #wdzlpwcwec .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #wdzlpwcwec .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #wdzlpwcwec .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #wdzlpwcwec .gt_left { text-align: left; }
+ #wdzlpwcwec .gt_center { text-align: center; }
+ #wdzlpwcwec .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #wdzlpwcwec .gt_font_normal { font-weight: normal; }
+ #wdzlpwcwec .gt_font_bold { font-weight: bold; }
+ #wdzlpwcwec .gt_font_italic { font-style: italic; }
+ #wdzlpwcwec .gt_super { font-size: 65%; }
+ #wdzlpwcwec .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #wdzlpwcwec .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #wdzlpwcwec .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #wdzlpwcwec .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #wdzlpwcwec .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #wdzlpwcwec .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
@@ -738,8 +738,8 @@ role: <code class="docutils literal notranslate"><span class="pre">PRIMARY</span
 </div>
 </div></div>
 </div>
-<p><a class="reference internal" href="../api/index.html#popo.plotting.tables.record_table" title="popo.plotting.tables.record_table"><code class="xref py py-func docutils literal notranslate"><span class="pre">record_table()</span></code></a> shows a one-row summary, such as
-<a class="reference internal" href="../api/index.html#popo.network.Circuit.summary" title="popo.network.Circuit.summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">summary()</span></code></a>, as a two-column table.</p>
+<p><a class="reference internal" href="../api/generated/popo.plotting.tables.record_table.html#popo.plotting.tables.record_table" title="popo.plotting.tables.record_table"><code class="xref py py-func docutils literal notranslate"><span class="pre">record_table()</span></code></a> shows a one-row summary, such as
+<a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.summary" title="popo.network.Circuit.summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">summary()</span></code></a>, as a two-column table.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">record_table</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">summary</span><span class="p">(),</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Circuit summary"</span><span class="p">)</span>
@@ -747,67 +747,67 @@ role: <code class="docutils literal notranslate"><span class="pre">PRIMARY</span
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div id="wzdrhkutbf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:60%;height:auto;">
+<div class="output text_html"><div id="bbbgiqsnko" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:60%;height:auto;">
 <style>
-#wzdrhkutbf table {
+#bbbgiqsnko table {
           font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#wzdrhkutbf thead, tbody, tfoot, tr, td, th { border-style: none; }
+#bbbgiqsnko thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#wzdrhkutbf p { margin: 0; padding: 0; }
- #wzdrhkutbf .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 60%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #wzdrhkutbf .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #wzdrhkutbf .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #wzdrhkutbf .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #wzdrhkutbf .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #wzdrhkutbf .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #wzdrhkutbf .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #wzdrhkutbf .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #wzdrhkutbf .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #wzdrhkutbf .gt_column_spanner_outer:first-child { padding-left: 0; }
- #wzdrhkutbf .gt_column_spanner_outer:last-child { padding-right: 0; }
- #wzdrhkutbf .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
- #wzdrhkutbf .gt_spanner_row { border-bottom-style: hidden; }
- #wzdrhkutbf .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #wzdrhkutbf .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #wzdrhkutbf .gt_from_md> :first-child { margin-top: 0; }
- #wzdrhkutbf .gt_from_md> :last-child { margin-bottom: 0; }
- #wzdrhkutbf .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #wzdrhkutbf .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #wzdrhkutbf .gt_indent_1 { text-indent: 5px; }
- #wzdrhkutbf .gt_indent_2 { text-indent: calc(5px * 2); }
- #wzdrhkutbf .gt_indent_3 { text-indent: calc(5px * 3); }
- #wzdrhkutbf .gt_indent_4 { text-indent: calc(5px * 4); }
- #wzdrhkutbf .gt_indent_5 { text-indent: calc(5px * 5); }
- #wzdrhkutbf .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #wzdrhkutbf .gt_row_group_first td { border-top-width: 2px; }
- #wzdrhkutbf .gt_row_group_first th { border-top-width: 2px; }
- #wzdrhkutbf .gt_striped { color: #2d3748; background-color: #F4F4F4; }
- #wzdrhkutbf .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
- #wzdrhkutbf .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
- #wzdrhkutbf .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
- #wzdrhkutbf .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #wzdrhkutbf .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
- #wzdrhkutbf .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
- #wzdrhkutbf .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
- #wzdrhkutbf .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #wzdrhkutbf .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #wzdrhkutbf .gt_left { text-align: left; }
- #wzdrhkutbf .gt_center { text-align: center; }
- #wzdrhkutbf .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #wzdrhkutbf .gt_font_normal { font-weight: normal; }
- #wzdrhkutbf .gt_font_bold { font-weight: bold; }
- #wzdrhkutbf .gt_font_italic { font-style: italic; }
- #wzdrhkutbf .gt_super { font-size: 65%; }
- #wzdrhkutbf .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #wzdrhkutbf .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
- #wzdrhkutbf .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #wzdrhkutbf .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #wzdrhkutbf .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #wzdrhkutbf .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#bbbgiqsnko p { margin: 0; padding: 0; }
+ #bbbgiqsnko .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #2d3748; font-size: 13px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: 60%; border-top-style: solid; border-top-width: 2px; border-top-color: #107591; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #107591; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #bbbgiqsnko .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #bbbgiqsnko .gt_title { color: #2d3748; font-size: 16px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #bbbgiqsnko .gt_subtitle { color: #2d3748; font-size: 13px; font-weight: initial; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #bbbgiqsnko .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #bbbgiqsnko .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #bbbgiqsnko .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #bbbgiqsnko .gt_col_heading { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 9px; padding-bottom: 11px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #bbbgiqsnko .gt_column_spanner_outer { color: #2d3748; background-color: #FFFFFF; font-size: 13px; font-weight: bold; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #bbbgiqsnko .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #bbbgiqsnko .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #bbbgiqsnko .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #069fac; vertical-align: bottom; padding-top: 9px; padding-bottom: 9px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #bbbgiqsnko .gt_spanner_row { border-bottom-style: hidden; }
+ #bbbgiqsnko .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #bbbgiqsnko .gt_empty_group_heading { padding: 0.5px; color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #bbbgiqsnko .gt_from_md> :first-child { margin-top: 0; }
+ #bbbgiqsnko .gt_from_md> :last-child { margin-bottom: 0; }
+ #bbbgiqsnko .gt_row { padding-top: 7px; padding-bottom: 7px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #bbbgiqsnko .gt_stub { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #bbbgiqsnko .gt_indent_1 { text-indent: 5px; }
+ #bbbgiqsnko .gt_indent_2 { text-indent: calc(5px * 2); }
+ #bbbgiqsnko .gt_indent_3 { text-indent: calc(5px * 3); }
+ #bbbgiqsnko .gt_indent_4 { text-indent: calc(5px * 4); }
+ #bbbgiqsnko .gt_indent_5 { text-indent: calc(5px * 5); }
+ #bbbgiqsnko .gt_stub_row_group { color: #2d3748; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #bbbgiqsnko .gt_row_group_first td { border-top-width: 2px; }
+ #bbbgiqsnko .gt_row_group_first th { border-top-width: 2px; }
+ #bbbgiqsnko .gt_striped { color: #2d3748; background-color: #F4F4F4; }
+ #bbbgiqsnko .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #e8e8e8; }
+ #bbbgiqsnko .gt_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #bbbgiqsnko .gt_first_summary_row { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; }
+ #bbbgiqsnko .gt_last_summary_row_top { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #bbbgiqsnko .gt_grand_summary_row { color: #2d3748; background-color: #FFFFFF; text-transform: inherit; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; }
+ #bbbgiqsnko .gt_first_grand_summary_row_bottom { border-top-style: double; border-top-width: 6px; border-top-color: #D3D3D3; }
+ #bbbgiqsnko .gt_last_grand_summary_row_top { border-bottom-style: double; border-bottom-width: 6px; border-bottom-color: #D3D3D3; }
+ #bbbgiqsnko .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #bbbgiqsnko .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #bbbgiqsnko .gt_left { text-align: left; }
+ #bbbgiqsnko .gt_center { text-align: center; }
+ #bbbgiqsnko .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #bbbgiqsnko .gt_font_normal { font-weight: normal; }
+ #bbbgiqsnko .gt_font_bold { font-weight: bold; }
+ #bbbgiqsnko .gt_font_italic { font-style: italic; }
+ #bbbgiqsnko .gt_super { font-size: 65%; }
+ #bbbgiqsnko .gt_footnotes { color: font-color(#FFFFFF); background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #bbbgiqsnko .gt_footnote { margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; }
+ #bbbgiqsnko .gt_sourcenotes { color: #2d3748; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #bbbgiqsnko .gt_sourcenote { font-size: 11px; padding-top: 6px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #bbbgiqsnko .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #bbbgiqsnko .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">

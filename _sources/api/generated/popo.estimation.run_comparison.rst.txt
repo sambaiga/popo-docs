@@ -1,0 +1,6 @@
+﻿run\_comparison
+===============
+
+.. currentmodule:: popo.estimation
+
+.. autofunction:: run_comparison

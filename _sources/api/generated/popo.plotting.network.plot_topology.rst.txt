@@ -1,0 +1,6 @@
+﻿plot\_topology
+==============
+
+.. currentmodule:: popo.plotting.network
+
+.. autofunction:: plot_topology

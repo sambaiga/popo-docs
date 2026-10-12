@@ -1,0 +1,6 @@
+﻿configure
+=========
+
+.. currentmodule:: popo.plotting.style
+
+.. autofunction:: configure

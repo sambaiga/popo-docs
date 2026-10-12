@@ -1,0 +1,6 @@
+﻿record\_table
+=============
+
+.. currentmodule:: popo.plotting.tables
+
+.. autofunction:: record_table

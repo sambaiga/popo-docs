@@ -1,0 +1,6 @@
+﻿attach\_weather
+===============
+
+.. currentmodule:: popo.network
+
+.. autofunction:: attach_weather

@@ -537,7 +537,7 @@ customer’s own phase.</p>
 <h2>Statutory limits<a class="headerlink" href="#statutory-limits" title="Link to this heading">#</a></h2>
 <p>A statutory limit is a band together with a rule for applying it. EN 50160 asks that 95 % of ten-minute means over a week sit within
 ±10 % of nominal, so a network can hold a low voltage for an hour and still comply; ANSI C84.1 Range A is
-±5 % with no such allowance. <a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits" title="popo.standards.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a> carries both the band and the rule,
+±5 % with no such allowance. <a class="reference internal" href="../api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits" title="popo.standards.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a> carries both the band and the rule,
 and a study selects a standard by name.</p>
 </section>
 <section id="busbar-and-customers">
@@ -545,20 +545,20 @@ and a study selects a standard by name.</p>
 <p>Most networks are measured at the secondary substation’s busbar. Voltage problems usually appear
 elsewhere: rooftop solar raises voltage most at the far end of the longest service. A feeder can be within
 limits at the busbar while its farthest customers are over the limit, so
-<a class="reference internal" href="../api/index.html#popo.powerflow.solve_time_series" title="popo.powerflow.solve_time_series"><code class="xref py py-func docutils literal notranslate"><span class="pre">solve_time_series()</span></code></a> can record every customer’s voltage as well as the busbar’s.</p>
+<a class="reference internal" href="../api/generated/popo.powerflow.solve_time_series.html#popo.powerflow.solve_time_series" title="popo.powerflow.solve_time_series"><code class="xref py py-func docutils literal notranslate"><span class="pre">solve_time_series()</span></code></a> can record every customer’s voltage as well as the busbar’s.</p>
 </section>
 <section id="convergence">
 <h2>Convergence<a class="headerlink" href="#convergence" title="Link to this heading">#</a></h2>
 <p>A time-series solve whose inverter control loop fails to converge still reports a solved power flow, with
 meaningless reactive power. popo includes convergence in every result: a
-<a class="reference internal" href="../api/index.html#popo.powerflow.SolveReport" title="popo.powerflow.SolveReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">SolveReport</span></code></a> counts the steps that did not converge.</p>
+<a class="reference internal" href="../api/generated/popo.powerflow.SolveReport.html#popo.powerflow.SolveReport" title="popo.powerflow.SolveReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">SolveReport</span></code></a> counts the steps that did not converge.</p>
 </section>
 <section id="observability">
 <h2>Observability<a class="headerlink" href="#observability" title="Link to this heading">#</a></h2>
 <p>A state estimator solves for a voltage magnitude and angle at every bus, less one reference angle:
 <span class="math notranslate nohighlight">\(2N - 1\)</span> unknowns for <span class="math notranslate nohighlight">\(N\)</span> buses. Each measurement supplies one equation, and each bus known to inject
 nothing supplies two. With fewer equations than unknowns no estimate exists, whichever solver is used.
-<a class="reference internal" href="../api/index.html#popo.estimation.observability" title="popo.estimation.observability"><code class="xref py py-func docutils literal notranslate"><span class="pre">observability()</span></code></a> counts both before an estimate is attempted.</p>
+<a class="reference internal" href="../api/generated/popo.estimation.observability-function.html#popo.estimation.observability" title="popo.estimation.observability"><code class="xref py py-func docutils literal notranslate"><span class="pre">observability()</span></code></a> counts both before an estimate is attempted.</p>
 </section>
 </section>
 

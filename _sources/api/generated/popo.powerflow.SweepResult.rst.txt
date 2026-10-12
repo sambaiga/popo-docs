@@ -1,0 +1,8 @@
+﻿SweepResult
+===========
+
+.. currentmodule:: popo.powerflow
+
+.. autoclass:: SweepResult
+   :members:
+   :show-inheritance:

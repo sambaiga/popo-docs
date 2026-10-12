@@ -1,0 +1,6 @@
+﻿set\_loading
+============
+
+.. currentmodule:: popo.estimation
+
+.. autofunction:: set_loading

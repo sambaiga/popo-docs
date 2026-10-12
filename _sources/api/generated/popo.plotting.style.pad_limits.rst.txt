@@ -1,0 +1,6 @@
+﻿pad\_limits
+===========
+
+.. currentmodule:: popo.plotting.style
+
+.. autofunction:: pad_limits

@@ -1,0 +1,8 @@
+﻿ScenarioReport
+==============
+
+.. currentmodule:: popo.scenarios
+
+.. autoclass:: ScenarioReport
+   :members:
+   :show-inheritance:

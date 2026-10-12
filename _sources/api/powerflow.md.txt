@@ -1,0 +1,41 @@
+# popo.powerflow
+
+Results of a solved circuit, time-series solves and penetration sweeps. Needs the `opendss` extra. See
+{doc}`../guide/powerflow`.
+
+```{eval-rst}
+.. module:: popo.powerflow
+
+.. rubric:: Results tables
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   bus_voltages
+   line_currents
+   line_losses
+   element_powers
+   circuit_summary
+   source_bus
+
+.. rubric:: Time series
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   solve_time_series
+   SolveReport
+   ConvergenceError
+
+.. rubric:: Penetration sweeps
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   run_uk_sweep
+   run_us_sweep
+   SweepResult
+```

@@ -1,0 +1,6 @@
+﻿screen
+======
+
+.. currentmodule:: popo.network
+
+.. autofunction:: screen

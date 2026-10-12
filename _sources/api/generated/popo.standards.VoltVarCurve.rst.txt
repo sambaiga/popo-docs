@@ -1,0 +1,8 @@
+﻿VoltVarCurve
+============
+
+.. currentmodule:: popo.standards
+
+.. autoclass:: VoltVarCurve
+   :members:
+   :show-inheritance:

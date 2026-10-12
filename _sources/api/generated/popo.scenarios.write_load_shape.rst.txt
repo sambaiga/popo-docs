@@ -1,0 +1,6 @@
+﻿write\_load\_shape
+==================
+
+.. currentmodule:: popo.scenarios
+
+.. autofunction:: write_load_shape

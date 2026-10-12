@@ -1,0 +1,8 @@
+﻿SolveReport
+===========
+
+.. currentmodule:: popo.powerflow
+
+.. autoclass:: SolveReport
+   :members:
+   :show-inheritance:

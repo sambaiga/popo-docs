@@ -1,0 +1,8 @@
+﻿CircuitProfile
+==============
+
+.. currentmodule:: popo.network
+
+.. autoclass:: CircuitProfile
+   :members:
+   :show-inheritance:

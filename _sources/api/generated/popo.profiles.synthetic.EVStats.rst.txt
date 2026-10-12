@@ -1,0 +1,8 @@
+﻿EVStats
+=======
+
+.. currentmodule:: popo.profiles.synthetic
+
+.. autoclass:: EVStats
+   :members:
+   :show-inheritance:

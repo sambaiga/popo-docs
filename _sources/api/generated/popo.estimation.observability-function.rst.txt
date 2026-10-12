@@ -1,0 +1,6 @@
+﻿observability
+=============
+
+.. currentmodule:: popo.estimation
+
+.. autofunction:: observability

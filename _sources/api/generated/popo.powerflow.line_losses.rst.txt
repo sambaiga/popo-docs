@@ -1,0 +1,6 @@
+﻿line\_losses
+============
+
+.. currentmodule:: popo.powerflow
+
+.. autofunction:: line_losses

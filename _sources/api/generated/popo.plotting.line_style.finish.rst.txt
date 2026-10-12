@@ -1,0 +1,6 @@
+﻿finish
+======
+
+.. currentmodule:: popo.plotting.line_style
+
+.. autofunction:: finish

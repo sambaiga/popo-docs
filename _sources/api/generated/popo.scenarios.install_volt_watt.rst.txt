@@ -1,0 +1,6 @@
+﻿install\_volt\_watt
+===================
+
+.. currentmodule:: popo.scenarios
+
+.. autofunction:: install_volt_watt

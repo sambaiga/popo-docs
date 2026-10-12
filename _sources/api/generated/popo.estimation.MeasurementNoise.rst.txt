@@ -1,0 +1,8 @@
+﻿MeasurementNoise
+================
+
+.. currentmodule:: popo.estimation
+
+.. autoclass:: MeasurementNoise
+   :members:
+   :show-inheritance:

@@ -1,0 +1,6 @@
+﻿attach\_generation
+==================
+
+.. currentmodule:: popo.scenarios
+
+.. autofunction:: attach_generation

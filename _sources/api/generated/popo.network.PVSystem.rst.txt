@@ -1,0 +1,8 @@
+﻿PVSystem
+========
+
+.. currentmodule:: popo.network
+
+.. autoclass:: PVSystem
+   :members:
+   :show-inheritance:

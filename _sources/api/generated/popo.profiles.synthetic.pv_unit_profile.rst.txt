@@ -1,0 +1,6 @@
+﻿pv\_unit\_profile
+=================
+
+.. currentmodule:: popo.profiles.synthetic
+
+.. autofunction:: pv_unit_profile

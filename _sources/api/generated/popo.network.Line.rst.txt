@@ -1,0 +1,8 @@
+﻿Line
+====
+
+.. currentmodule:: popo.network
+
+.. autoclass:: Line
+   :members:
+   :show-inheritance:

@@ -1,0 +1,8 @@
+﻿InverterCapability
+==================
+
+.. currentmodule:: popo.standards
+
+.. autoclass:: InverterCapability
+   :members:
+   :show-inheritance:

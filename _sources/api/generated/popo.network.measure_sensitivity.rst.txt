@@ -1,0 +1,6 @@
+﻿measure\_sensitivity
+====================
+
+.. currentmodule:: popo.network
+
+.. autofunction:: measure_sensitivity

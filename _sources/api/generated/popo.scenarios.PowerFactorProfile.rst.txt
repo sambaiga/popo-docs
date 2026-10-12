@@ -1,0 +1,8 @@
+﻿PowerFactorProfile
+==================
+
+.. currentmodule:: popo.scenarios
+
+.. autoclass:: PowerFactorProfile
+   :members:
+   :show-inheritance:

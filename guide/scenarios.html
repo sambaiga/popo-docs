@@ -520,12 +520,12 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="scenarios">
 <h1>Scenarios<a class="headerlink" href="#scenarios" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../api/index.html#module-popo.scenarios" title="popo.scenarios"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.scenarios</span></code></a> changes a circuit to represent a future one: customers with real demand
+<p><a class="reference internal" href="../api/scenarios.html#module-popo.scenarios" title="popo.scenarios"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.scenarios</span></code></a> changes a circuit to represent a future one: customers with real demand
 profiles, and a share of them with rooftop solar, an EV charger or a battery. It needs the <code class="docutils literal notranslate"><span class="pre">opendss</span></code>
 extra.</p>
 <section id="household-demand">
 <h2>Household demand<a class="headerlink" href="#household-demand" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.scenarios.assign_household_profiles" title="popo.scenarios.assign_household_profiles"><code class="xref py py-func docutils literal notranslate"><span class="pre">assign_household_profiles()</span></code></a> gives each customer its own demand shape, drawn from
+<p><a class="reference internal" href="../api/generated/popo.scenarios.assign_household_profiles.html#popo.scenarios.assign_household_profiles" title="popo.scenarios.assign_household_profiles"><code class="xref py py-func docutils literal notranslate"><span class="pre">assign_household_profiles()</span></code></a> gives each customer its own demand shape, drawn from
 a pool of recorded household profiles. It returns the number of customers it assigned.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -557,8 +557,8 @@ a pool of recorded household profiles. It returns the number of customers it ass
 </section>
 <section id="rooftop-solar">
 <h2>Rooftop solar<a class="headerlink" href="#rooftop-solar" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.scenarios.attach_generation" title="popo.scenarios.attach_generation"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_generation()</span></code></a> fits a rooftop array to a fraction of customers, the
-penetration. Array sizes are drawn from <a class="reference internal" href="../api/index.html#popo.scenarios.ArraySizing" title="popo.scenarios.ArraySizing"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArraySizing</span></code></a>, by default a mean of
+<p><a class="reference internal" href="../api/generated/popo.scenarios.attach_generation.html#popo.scenarios.attach_generation" title="popo.scenarios.attach_generation"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_generation()</span></code></a> fits a rooftop array to a fraction of customers, the
+penetration. Array sizes are drawn from <a class="reference internal" href="../api/generated/popo.scenarios.ArraySizing.html#popo.scenarios.ArraySizing" title="popo.scenarios.ArraySizing"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArraySizing</span></code></a>, by default a mean of
 3.5 kWp clipped to between 2 and 12 kWp, and every array follows the same per-unit generation profile.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -650,16 +650,16 @@ penetration. Array sizes are drawn from <a class="reference internal" href="../a
 customers are chosen; with the same seed, the customers chosen at 40 % are also chosen at 60 %, so
 results at different penetrations compare the same households.</p>
 <p>Each array is connected on its customer’s own phase. The bus suffix <code class="docutils literal notranslate"><span class="pre">.1.0</span></code> means phase 1 to neutral.
-<a class="reference internal" href="../api/index.html#popo.scenarios.service_connection" title="popo.scenarios.service_connection"><code class="xref py py-func docutils literal notranslate"><span class="pre">service_connection()</span></code></a> returns the suffix for any customer, and the <code class="docutils literal notranslate"><span class="pre">connection</span></code>
+<a class="reference internal" href="../api/generated/popo.scenarios.service_connection.html#popo.scenarios.service_connection" title="popo.scenarios.service_connection"><code class="xref py py-func docutils literal notranslate"><span class="pre">service_connection()</span></code></a> returns the suffix for any customer, and the <code class="docutils literal notranslate"><span class="pre">connection</span></code>
 argument of every scenario function overrides it.</p>
 </section>
 <section id="ev-charging-and-storage">
 <h2>EV charging and storage<a class="headerlink" href="#ev-charging-and-storage" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.scenarios.attach_charging" title="popo.scenarios.attach_charging"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_charging()</span></code></a> gives a fraction of customers an EV charger. Each charger
+<p><a class="reference internal" href="../api/generated/popo.scenarios.attach_charging.html#popo.scenarios.attach_charging" title="popo.scenarios.attach_charging"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_charging()</span></code></a> gives a fraction of customers an EV charger. Each charger
 follows its own recorded session series, so the total at the substation reflects how often chargers
 actually coincide.</p>
-<p><a class="reference internal" href="../api/index.html#popo.scenarios.attach_storage" title="popo.scenarios.attach_storage"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_storage()</span></code></a> gives customers a battery that charges and discharges in fixed
-daily windows, set by <a class="reference internal" href="../api/index.html#popo.scenarios.StorageDispatch" title="popo.scenarios.StorageDispatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">StorageDispatch</span></code></a>. The default is a 3 kW, 10 kWh battery
+<p><a class="reference internal" href="../api/generated/popo.scenarios.attach_storage.html#popo.scenarios.attach_storage" title="popo.scenarios.attach_storage"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_storage()</span></code></a> gives customers a battery that charges and discharges in fixed
+daily windows, set by <a class="reference internal" href="../api/generated/popo.scenarios.StorageDispatch.html#popo.scenarios.StorageDispatch" title="popo.scenarios.StorageDispatch"><code class="xref py py-class docutils literal notranslate"><span class="pre">StorageDispatch</span></code></a>. The default is a 3 kW, 10 kWh battery
 that charges from 10:00 to 17:00, while rooftop generation is high, and discharges from 18:00 to 22:00.</p>
 </section>
 <section id="comparing-scenarios">
@@ -803,8 +803,8 @@ in the evening.</p></li>
 <section id="inverter-control">
 <h2>Inverter control<a class="headerlink" href="#inverter-control" title="Link to this heading">#</a></h2>
 <p>Volt-VAr and Volt-Watt are installed through <code class="docutils literal notranslate"><span class="pre">attach_generation</span></code>, with the <code class="docutils literal notranslate"><span class="pre">volt_var</span></code> or <code class="docutils literal notranslate"><span class="pre">volt_watt</span></code>
-argument, or added afterwards to every inverter with <a class="reference internal" href="../api/index.html#popo.scenarios.install_volt_var" title="popo.scenarios.install_volt_var"><code class="xref py py-func docutils literal notranslate"><span class="pre">install_volt_var()</span></code></a> and
-<a class="reference internal" href="../api/index.html#popo.scenarios.install_volt_watt" title="popo.scenarios.install_volt_watt"><code class="xref py py-func docutils literal notranslate"><span class="pre">install_volt_watt()</span></code></a>. The curves themselves are standards, described in
+argument, or added afterwards to every inverter with <a class="reference internal" href="../api/generated/popo.scenarios.install_volt_var.html#popo.scenarios.install_volt_var" title="popo.scenarios.install_volt_var"><code class="xref py py-func docutils literal notranslate"><span class="pre">install_volt_var()</span></code></a> and
+<a class="reference internal" href="../api/generated/popo.scenarios.install_volt_watt.html#popo.scenarios.install_volt_watt" title="popo.scenarios.install_volt_watt"><code class="xref py py-func docutils literal notranslate"><span class="pre">install_volt_watt()</span></code></a>. The curves themselves are standards, described in
 <a class="reference internal" href="standards.html"><span class="doc">Standards</span></a>.</p>
 </section>
 <section id="limitations">

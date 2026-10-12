@@ -523,7 +523,7 @@ the documentation is built. To run it yourself, install the <code class="docutil
 <a class="reference internal" href="installation.html"><span class="std std-doc">Installation</span></a>).</p>
 <section id="build-a-network">
 <h2>Build a network<a class="headerlink" href="#build-a-network" title="Link to this heading">#</a></h2>
-<p>A <a class="reference internal" href="../api/index.html#popo.network.Circuit" title="popo.network.Circuit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit</span></code></a> attaches to the OpenDSS engine. You define the network with
+<p>A <a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit" title="popo.network.Circuit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit</span></code></a> attaches to the OpenDSS engine. You define the network with
 OpenDSS’s own commands: here an 11/0.4 kV transformer, a 1 km cable and three houses, one on each phase.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -633,7 +633,7 @@ convert directly to a DataFrame.</p>
 </section>
 <section id="read-the-results">
 <h2>Read the results<a class="headerlink" href="#read-the-results" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.network.Circuit.bus_voltages" title="popo.network.Circuit.bus_voltages"><code class="xref py py-meth docutils literal notranslate"><span class="pre">bus_voltages()</span></code></a> returns one row per bus and connected phase. House <code class="docutils literal notranslate"><span class="pre">D</span></code>
+<p><a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.bus_voltages" title="popo.network.Circuit.bus_voltages"><code class="xref py py-meth docutils literal notranslate"><span class="pre">bus_voltages()</span></code></a> returns one row per bus and connected phase. House <code class="docutils literal notranslate"><span class="pre">D</span></code>
 appears only on phase 2 and house <code class="docutils literal notranslate"><span class="pre">E</span></code> only on phase 3, the phases they are connected to.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -769,7 +769,7 @@ appears only on phase 2 and house <code class="docutils literal notranslate"><sp
 </table>
 </div></div></div>
 </div>
-<p><a class="reference internal" href="../api/index.html#popo.network.Circuit.summary" title="popo.network.Circuit.summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">summary()</span></code></a> gives the size of the circuit, whether it converged and its
+<p><a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.summary" title="popo.network.Circuit.summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">summary()</span></code></a> gives the size of the circuit, whether it converged and its
 total losses.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -792,7 +792,7 @@ total losses.</p>
 </section>
 <section id="check-against-a-standard">
 <h2>Check against a standard<a class="headerlink" href="#check-against-a-standard" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits" title="popo.standards.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a> holds a standard’s band and the rule for applying it. The
+<p><a class="reference internal" href="../api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits" title="popo.standards.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a> holds a standard’s band and the rule for applying it. The
 source bus is held at its setpoint, so it is excluded before the check.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -810,7 +810,7 @@ source bus is held at its setpoint, so it is excluded before the check.</p>
 </div>
 </div>
 </div>
-<p><a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits.violations" title="popo.standards.VoltageLimits.violations"><code class="xref py py-meth docutils literal notranslate"><span class="pre">violations()</span></code></a> lists every reading outside the band. At this
+<p><a class="reference internal" href="../api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits.violations" title="popo.standards.VoltageLimits.violations"><code class="xref py py-meth docutils literal notranslate"><span class="pre">violations()</span></code></a> lists every reading outside the band. At this
 loading there are none.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -854,7 +854,7 @@ loading there are none.</p>
 </section>
 <section id="draw-the-network">
 <h2>Draw the network<a class="headerlink" href="#draw-the-network" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.plotting.network.plot_topology" title="popo.plotting.network.plot_topology"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_topology()</span></code></a> draws the network with each bus coloured by its
+<p><a class="reference internal" href="../api/generated/popo.plotting.network.plot_topology.html#popo.plotting.network.plot_topology" title="popo.plotting.network.plot_topology"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_topology()</span></code></a> draws the network with each bus coloured by its
 voltage status.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -901,7 +901,7 @@ follows a clear-sky solar shape. Both profiles have 48 half-hourly values.</p>
 </div>
 </div>
 </div>
-<p><a class="reference internal" href="../api/index.html#popo.network.Circuit.solve_time_series" title="popo.network.Circuit.solve_time_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">solve_time_series()</span></code></a> solves the 48 steps. It records the transformer at
+<p><a class="reference internal" href="../api/generated/popo.network.Circuit.html#popo.network.Circuit.solve_time_series" title="popo.network.Circuit.solve_time_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">solve_time_series()</span></code></a> solves the 48 steps. It records the transformer at
 every step and, when you pass <code class="docutils literal notranslate"><span class="pre">buses</span></code>, the voltage at each of those buses too. The report says whether
 every step converged.</p>
 <div class="cell docutils container">
@@ -1030,7 +1030,7 @@ output exceeds the three houses’ demand, so the transformer’s active power t
 </table>
 </div></div></div>
 </div>
-<p><a class="reference internal" href="../api/index.html#popo.powerflow.SolveReport.voltage_traces" title="popo.powerflow.SolveReport.voltage_traces"><code class="xref py py-meth docutils literal notranslate"><span class="pre">voltage_traces()</span></code></a> returns each bus’s voltage over the day.</p>
+<p><a class="reference internal" href="../api/generated/popo.powerflow.SolveReport.html#popo.powerflow.SolveReport.voltage_traces" title="popo.powerflow.SolveReport.voltage_traces"><code class="xref py py-meth docutils literal notranslate"><span class="pre">voltage_traces()</span></code></a> returns each bus’s voltage over the day.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">tokens</span>
@@ -1057,7 +1057,7 @@ output exceeds the three houses’ demand, so the transformer’s active power t
 <p>While the PV system generates, the voltage at house <code class="docutils literal notranslate"><span class="pre">E</span></code> rises to about 1.02 pu. The unbalanced flow
 also moves the other phases: house <code class="docutils literal notranslate"><span class="pre">D</span></code> rises and house <code class="docutils literal notranslate"><span class="pre">C</span></code> falls, so a single-phase installation
 changes the voltage seen by customers on other phases.
-<a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits.event_summary" title="popo.standards.VoltageLimits.event_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">event_summary()</span></code></a> reports, for each bus, how far and for how long
+<a class="reference internal" href="../api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits.event_summary" title="popo.standards.VoltageLimits.event_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">event_summary()</span></code></a> reports, for each bus, how far and for how long
 its voltage left the band; here every house stays within it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

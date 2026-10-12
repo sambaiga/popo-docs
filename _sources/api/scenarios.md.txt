@@ -1,0 +1,41 @@
+# popo.scenarios
+
+Household demand, rooftop solar, EV charging, storage and inverter control. Needs the `opendss` extra.
+See {doc}`../guide/scenarios`.
+
+```{eval-rst}
+.. module:: popo.scenarios
+
+.. rubric:: Demand and technologies
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   assign_household_profiles
+   attach_generation
+   attach_charging
+   attach_storage
+   service_connection
+   write_load_shape
+
+.. rubric:: Settings
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   ArraySizing
+   PowerFactorProfile
+   StorageDispatch
+   ScenarioReport
+
+.. rubric:: Inverter control
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   install_volt_var
+   install_volt_watt
+```

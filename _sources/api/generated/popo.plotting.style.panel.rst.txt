@@ -1,0 +1,6 @@
+﻿panel
+=====
+
+.. currentmodule:: popo.plotting.style
+
+.. autofunction:: panel

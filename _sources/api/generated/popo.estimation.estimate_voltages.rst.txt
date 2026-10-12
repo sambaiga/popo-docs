@@ -1,0 +1,6 @@
+﻿estimate\_voltages
+==================
+
+.. currentmodule:: popo.estimation
+
+.. autofunction:: estimate_voltages

@@ -1,0 +1,8 @@
+﻿VoltageSensitivity
+==================
+
+.. currentmodule:: popo.network
+
+.. autoclass:: VoltageSensitivity
+   :members:
+   :show-inheritance:

@@ -1,0 +1,6 @@
+﻿themed\_gt
+==========
+
+.. currentmodule:: popo.plotting.tables
+
+.. autofunction:: themed_gt

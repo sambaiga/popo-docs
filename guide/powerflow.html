@@ -520,7 +520,7 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="power-flow">
 <h1>Power flow<a class="headerlink" href="#power-flow" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../api/index.html#module-popo.powerflow" title="popo.powerflow"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.powerflow</span></code></a> reads a solved circuit’s results as tables and steps a circuit through time.
+<p><a class="reference internal" href="../api/powerflow.html#module-popo.powerflow" title="popo.powerflow"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.powerflow</span></code></a> reads a solved circuit’s results as tables and steps a circuit through time.
 It needs the <code class="docutils literal notranslate"><span class="pre">opendss</span></code> extra.</p>
 <section id="results-of-a-solved-circuit">
 <h2>Results of a solved circuit<a class="headerlink" href="#results-of-a-solved-circuit" title="Link to this heading">#</a></h2>
@@ -533,19 +533,19 @@ DataFrame. <code class="docutils literal notranslate"><span class="pre">Circuit<
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/index.html#popo.powerflow.bus_voltages" title="popo.powerflow.bus_voltages"><code class="xref py py-func docutils literal notranslate"><span class="pre">bus_voltages()</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/generated/popo.powerflow.bus_voltages.html#popo.powerflow.bus_voltages" title="popo.powerflow.bus_voltages"><code class="xref py py-func docutils literal notranslate"><span class="pre">bus_voltages()</span></code></a></p></td>
 <td><p>bus and connected phase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/index.html#popo.powerflow.line_currents" title="popo.powerflow.line_currents"><code class="xref py py-func docutils literal notranslate"><span class="pre">line_currents()</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/generated/popo.powerflow.line_currents.html#popo.powerflow.line_currents" title="popo.powerflow.line_currents"><code class="xref py py-func docutils literal notranslate"><span class="pre">line_currents()</span></code></a></p></td>
 <td><p>line and phase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/index.html#popo.powerflow.line_losses" title="popo.powerflow.line_losses"><code class="xref py py-func docutils literal notranslate"><span class="pre">line_losses()</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/generated/popo.powerflow.line_losses.html#popo.powerflow.line_losses" title="popo.powerflow.line_losses"><code class="xref py py-func docutils literal notranslate"><span class="pre">line_losses()</span></code></a></p></td>
 <td><p>line</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/index.html#popo.powerflow.element_powers" title="popo.powerflow.element_powers"><code class="xref py py-func docutils literal notranslate"><span class="pre">element_powers()</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/generated/popo.powerflow.element_powers.html#popo.powerflow.element_powers" title="popo.powerflow.element_powers"><code class="xref py py-func docutils literal notranslate"><span class="pre">element_powers()</span></code></a></p></td>
 <td><p>element and phase, for one element type</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/index.html#popo.powerflow.circuit_summary" title="popo.powerflow.circuit_summary"><code class="xref py py-func docutils literal notranslate"><span class="pre">circuit_summary()</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/generated/popo.powerflow.circuit_summary.html#popo.powerflow.circuit_summary" title="popo.powerflow.circuit_summary"><code class="xref py py-func docutils literal notranslate"><span class="pre">circuit_summary()</span></code></a></p></td>
 <td><p>circuit, as a dictionary</p></td>
 </tr>
 </tbody>
@@ -824,9 +824,9 @@ defined loading the transformer carries about 198 kW, unevenly split across its 
 </section>
 <section id="time-series">
 <h2>Time series<a class="headerlink" href="#time-series" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.powerflow.solve_time_series" title="popo.powerflow.solve_time_series"><code class="xref py py-func docutils literal notranslate"><span class="pre">solve_time_series()</span></code></a> steps the circuit through its load shapes, by default in
+<p><a class="reference internal" href="../api/generated/popo.powerflow.solve_time_series.html#popo.powerflow.solve_time_series" title="popo.powerflow.solve_time_series"><code class="xref py py-func docutils literal notranslate"><span class="pre">solve_time_series()</span></code></a> steps the circuit through its load shapes, by default in
 30-minute steps. Here each customer is first given a household demand profile with
-<a class="reference internal" href="../api/index.html#popo.scenarios.assign_household_profiles" title="popo.scenarios.assign_household_profiles"><code class="xref py py-func docutils literal notranslate"><span class="pre">assign_household_profiles()</span></code></a> (see <a class="reference internal" href="scenarios.html"><span class="doc">Scenarios</span></a>).</p>
+<a class="reference internal" href="../api/generated/popo.scenarios.assign_household_profiles.html#popo.scenarios.assign_household_profiles" title="popo.scenarios.assign_household_profiles"><code class="xref py py-func docutils literal notranslate"><span class="pre">assign_household_profiles()</span></code></a> (see <a class="reference internal" href="scenarios.html"><span class="doc">Scenarios</span></a>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -949,7 +949,7 @@ defined loading the transformer carries about 198 kW, unevenly split across its 
 <p><code class="docutils literal notranslate"><span class="pre">report.records</span></code> has one row per step and monitored transformer: the active, reactive and apparent
 power at its secondary winding, the mean and minimum voltage on its secondary busbar, and the power at
 the head of the feeder. Passing <code class="docutils literal notranslate"><span class="pre">buses</span></code> also records the voltage at each of those buses, which
-<a class="reference internal" href="../api/index.html#popo.powerflow.SolveReport.voltage_traces" title="popo.powerflow.SolveReport.voltage_traces"><code class="xref py py-meth docutils literal notranslate"><span class="pre">voltage_traces()</span></code></a> returns as one array per bus.</p>
+<a class="reference internal" href="../api/generated/popo.powerflow.SolveReport.html#popo.powerflow.SolveReport.voltage_traces" title="popo.powerflow.SolveReport.voltage_traces"><code class="xref py py-meth docutils literal notranslate"><span class="pre">voltage_traces()</span></code></a> returns as one array per bus.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">popo.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">line_style</span><span class="p">,</span> <span class="n">tokens</span>
@@ -1000,12 +1000,12 @@ diverged.</p>
 </div>
 </div>
 <p>At a diverged step, each recorded customer voltage is NaN. To stop a study when any step diverges, call
-<a class="reference internal" href="../api/index.html#popo.powerflow.SolveReport.require_convergence" title="popo.powerflow.SolveReport.require_convergence"><code class="xref py py-meth docutils literal notranslate"><span class="pre">require_convergence()</span></code></a>, which raises
-<a class="reference internal" href="../api/index.html#popo.powerflow.ConvergenceError" title="popo.powerflow.ConvergenceError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConvergenceError</span></code></a>.</p>
+<a class="reference internal" href="../api/generated/popo.powerflow.SolveReport.html#popo.powerflow.SolveReport.require_convergence" title="popo.powerflow.SolveReport.require_convergence"><code class="xref py py-meth docutils literal notranslate"><span class="pre">require_convergence()</span></code></a>, which raises
+<a class="reference internal" href="../api/generated/popo.powerflow.ConvergenceError.html#popo.powerflow.ConvergenceError" title="popo.powerflow.ConvergenceError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConvergenceError</span></code></a>.</p>
 </section>
 <section id="penetration-sweeps">
 <h2>Penetration sweeps<a class="headerlink" href="#penetration-sweeps" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.powerflow.run_uk_sweep" title="popo.powerflow.run_uk_sweep"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_uk_sweep()</span></code></a> and <a class="reference internal" href="../api/index.html#popo.powerflow.run_us_sweep" title="popo.powerflow.run_us_sweep"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_us_sweep()</span></code></a> run a grid of EV and
+<p><a class="reference internal" href="../api/generated/popo.powerflow.run_uk_sweep.html#popo.powerflow.run_uk_sweep" title="popo.powerflow.run_uk_sweep"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_uk_sweep()</span></code></a> and <a class="reference internal" href="../api/generated/popo.powerflow.run_us_sweep.html#popo.powerflow.run_us_sweep" title="popo.powerflow.run_us_sweep"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_us_sweep()</span></code></a> run a grid of EV and
 PV penetration levels on one feeder. Each scenario builds a fresh circuit from the same seed, so the
 customers who have PV at 40 % penetration still have it at 60 %. A sweep on this feeder takes several
 minutes, so it is not run on this page; the

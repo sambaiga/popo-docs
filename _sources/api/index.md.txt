@@ -1,69 +1,27 @@
 # API reference
 
-Every public class and function, by subpackage.
+The reference lists every public class and function in popo, one page per subpackage. Each name links to
+a page with its full signature, parameters and return values. For explanations and examples, see the
+[user guide](../guide/index.md).
 
-## popo.network
+| Subpackage | Contents |
+|---|---|
+| [`popo.network`](network.md) | Circuits as defined: elements, customers and feeder screening. |
+| [`popo.powerflow`](powerflow.md) | Results of a solved circuit, time-series solves and penetration sweeps. Needs the `opendss` extra. |
+| [`popo.scenarios`](scenarios.md) | Household demand, rooftop solar, EV charging, storage and inverter control. Needs the `opendss` extra. |
+| [`popo.standards`](standards.md) | Statutory voltage limits and inverter characteristics. Needs no solver. |
+| [`popo.estimation`](estimation.md) | Conversion to pandapower and weighted-least-squares state estimation. Needs the `estimation` extra. |
+| [`popo.profiles`](profiles.md) | Loading and synthesising half-hourly demand, PV and EV profiles. |
+| [`popo.plotting`](plotting.md) | Network diagrams, figure style, line plots and tables. Needs the `plot` extra. |
 
-```{eval-rst}
-.. automodule:: popo.network
-   :members:
-   :imported-members:
-```
+```{toctree}
+:hidden:
 
-## popo.powerflow
-
-```{eval-rst}
-.. automodule:: popo.powerflow
-   :members:
-   :imported-members:
-```
-
-## popo.scenarios
-
-```{eval-rst}
-.. automodule:: popo.scenarios
-   :members:
-   :imported-members:
-```
-
-## popo.standards
-
-```{eval-rst}
-.. automodule:: popo.standards
-   :members:
-   :imported-members:
-```
-
-## popo.estimation
-
-```{eval-rst}
-.. automodule:: popo.estimation
-   :members:
-   :imported-members:
-```
-
-## popo.profiles
-
-```{eval-rst}
-.. automodule:: popo.profiles.smartds
-   :members:
-
-.. automodule:: popo.profiles.synthetic
-   :members:
-```
-
-## popo.plotting
-
-```{eval-rst}
-.. automodule:: popo.plotting.network
-   :members: NetworkTopology, topology_from_dss, plot_topology, topology_layout, bus_roles, voltage_status
-
-.. automodule:: popo.plotting.tables
-   :members:
-
-.. automodule:: popo.plotting.style
-   :members: configure, style, sketch, panel, pad_limits, tex_safe, format_axes, despine
-
-.. automodule:: popo.plotting.line_style
-   :members: configure, new_panel, reference_line, set_y_axis, legend_below, finish, show, save
+network
+powerflow
+scenarios
+standards
+estimation
+profiles
+plotting
 ```

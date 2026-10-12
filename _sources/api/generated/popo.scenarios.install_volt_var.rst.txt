@@ -1,0 +1,6 @@
+﻿install\_volt\_var
+==================
+
+.. currentmodule:: popo.scenarios
+
+.. autofunction:: install_volt_var

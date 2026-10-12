@@ -1,0 +1,6 @@
+﻿attach\_charging
+================
+
+.. currentmodule:: popo.scenarios
+
+.. autofunction:: attach_charging

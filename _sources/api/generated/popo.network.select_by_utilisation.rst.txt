@@ -1,0 +1,6 @@
+﻿select\_by\_utilisation
+=======================
+
+.. currentmodule:: popo.network
+
+.. autofunction:: select_by_utilisation

@@ -1,0 +1,6 @@
+﻿set\_y\_axis
+============
+
+.. currentmodule:: popo.plotting.line_style
+
+.. autofunction:: set_y_axis

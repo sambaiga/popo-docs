@@ -520,12 +520,12 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="standards">
 <h1>Standards<a class="headerlink" href="#standards" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../api/index.html#module-popo.standards" title="popo.standards"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.standards</span></code></a> represents voltage limits and inverter characteristics as named standards. A
+<p><a class="reference internal" href="../api/standards.html#module-popo.standards" title="popo.standards"><code class="xref py py-mod docutils literal notranslate"><span class="pre">popo.standards</span></code></a> represents voltage limits and inverter characteristics as named standards. A
 study selects a standard by name, so its results record which standard was applied. This module needs
 no solver.</p>
 <section id="voltage-limits">
 <h2>Voltage limits<a class="headerlink" href="#voltage-limits" title="Link to this heading">#</a></h2>
-<p>A <a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits" title="popo.standards.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a> holds a band and the rule for applying it: the share of
+<p>A <a class="reference internal" href="../api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits" title="popo.standards.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a> holds a band and the rule for applying it: the share of
 samples that must lie inside the band (the coverage) and, where the standard sets one, an extreme bound
 that no sample may cross.</p>
 <div class="cell docutils container">
@@ -617,8 +617,8 @@ C84.1 Range A requires every sample to lie within ±5 %.</p>
 </section>
 <section id="checking-a-series">
 <h2>Checking a series<a class="headerlink" href="#checking-a-series" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits.check" title="popo.standards.VoltageLimits.check"><code class="xref py py-meth docutils literal notranslate"><span class="pre">check()</span></code></a> applies the full rule to a series and returns a
-<a class="reference internal" href="../api/index.html#popo.standards.ComplianceReport" title="popo.standards.ComplianceReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComplianceReport</span></code></a>. The example below is one week of ten-minute means: near
+<p><a class="reference internal" href="../api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits.check" title="popo.standards.VoltageLimits.check"><code class="xref py py-meth docutils literal notranslate"><span class="pre">check()</span></code></a> applies the full rule to a series and returns a
+<a class="reference internal" href="../api/generated/popo.standards.ComplianceReport.html#popo.standards.ComplianceReport" title="popo.standards.ComplianceReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComplianceReport</span></code></a>. The example below is one week of ten-minute means: near
 nominal, with a dip to 0.88 pu from 18:00 to 18:40 each day.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -728,9 +728,9 @@ outside its band, and 97.2 % lie inside; ANSI permits none. <code class="docutil
 </section>
 <section id="where-and-for-how-long">
 <h2>Where and for how long<a class="headerlink" href="#where-and-for-how-long" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits.violations" title="popo.standards.VoltageLimits.violations"><code class="xref py py-meth docutils literal notranslate"><span class="pre">violations()</span></code></a> returns the readings outside the band, with the side
+<p><a class="reference internal" href="../api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits.violations" title="popo.standards.VoltageLimits.violations"><code class="xref py py-meth docutils literal notranslate"><span class="pre">violations()</span></code></a> returns the readings outside the band, with the side
 and the distance past the bound. It takes any frame with a <code class="docutils literal notranslate"><span class="pre">vmag_pu</span></code> column, such as the output of
-<a class="reference internal" href="../api/index.html#popo.powerflow.bus_voltages" title="popo.powerflow.bus_voltages"><code class="xref py py-func docutils literal notranslate"><span class="pre">bus_voltages()</span></code></a>.</p>
+<a class="reference internal" href="../api/generated/popo.powerflow.bus_voltages.html#popo.powerflow.bus_voltages" title="popo.powerflow.bus_voltages"><code class="xref py py-func docutils literal notranslate"><span class="pre">bus_voltages()</span></code></a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">readings</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"bus"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">],</span> <span class="s2">"vmag_pu"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.93</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.06</span><span class="p">,</span> <span class="mf">1.12</span><span class="p">]})</span>
@@ -789,7 +789,7 @@ and the distance past the bound. It takes any frame with a <code class="docutils
 </table>
 </div></div></div>
 </div>
-<p><a class="reference internal" href="../api/index.html#popo.standards.VoltageLimits.event_summary" title="popo.standards.VoltageLimits.event_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">event_summary()</span></code></a> takes one voltage trace per customer and counts
+<p><a class="reference internal" href="../api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits.event_summary" title="popo.standards.VoltageLimits.event_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">event_summary()</span></code></a> takes one voltage trace per customer and counts
 the steps outside the band, their mean severity and the longest unbroken run. Two customers with the
 same maximum voltage can differ in duration:</p>
 <div class="cell docutils container">
@@ -870,10 +870,10 @@ same maximum voltage can differ in duration:</p>
 </section>
 <section id="inverter-characteristics">
 <h2>Inverter characteristics<a class="headerlink" href="#inverter-characteristics" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../api/index.html#popo.standards.InverterCapability" title="popo.standards.InverterCapability"><code class="xref py py-class docutils literal notranslate"><span class="pre">InverterCapability</span></code></a> is the reactive power an inverter must be able to supply,
+<p><a class="reference internal" href="../api/generated/popo.standards.InverterCapability.html#popo.standards.InverterCapability" title="popo.standards.InverterCapability"><code class="xref py py-class docutils literal notranslate"><span class="pre">InverterCapability</span></code></a> is the reactive power an inverter must be able to supply,
 as a fraction of its rating: 0.44 under IEEE 1547 category B and 0.33 under EREC G99.
-<a class="reference internal" href="../api/index.html#popo.standards.VoltVarCurve" title="popo.standards.VoltVarCurve"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltVarCurve</span></code></a> sets reactive power against voltage, and
-<a class="reference internal" href="../api/index.html#popo.standards.VoltWattCurve" title="popo.standards.VoltWattCurve"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltWattCurve</span></code></a> sets the share of active power allowed against voltage. Both
+<a class="reference internal" href="../api/generated/popo.standards.VoltVarCurve.html#popo.standards.VoltVarCurve" title="popo.standards.VoltVarCurve"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltVarCurve</span></code></a> sets reactive power against voltage, and
+<a class="reference internal" href="../api/generated/popo.standards.VoltWattCurve.html#popo.standards.VoltWattCurve" title="popo.standards.VoltWattCurve"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltWattCurve</span></code></a> sets the share of active power allowed against voltage. Both
 have an IEEE 1547 default.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

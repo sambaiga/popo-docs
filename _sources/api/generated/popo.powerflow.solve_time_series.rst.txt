@@ -1,0 +1,6 @@
+﻿solve\_time\_series
+===================
+
+.. currentmodule:: popo.powerflow
+
+.. autofunction:: solve_time_series

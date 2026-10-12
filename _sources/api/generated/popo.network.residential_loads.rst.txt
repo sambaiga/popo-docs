@@ -1,0 +1,6 @@
+﻿residential\_loads
+==================
+
+.. currentmodule:: popo.network
+
+.. autofunction:: residential_loads

@@ -1,0 +1,8 @@
+﻿StorageDispatch
+===============
+
+.. currentmodule:: popo.scenarios
+
+.. autoclass:: StorageDispatch
+   :members:
+   :show-inheritance:

@@ -1,0 +1,44 @@
+# popo.network
+
+Circuits as defined: elements, customers and feeder screening. See {doc}`../guide/network`.
+
+```{eval-rst}
+.. module:: popo.network
+
+.. rubric:: Circuits and their elements
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   Circuit
+   Line
+   Load
+   Transformer
+   PVSystem
+   StorageUnit
+
+.. rubric:: Customers and transformers
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   residential_loads
+   read_transformers
+   select_by_utilisation
+   screen
+
+.. rubric:: Describing a feeder
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   profile_circuit
+   CircuitProfile
+   measure_sensitivity
+   VoltageSensitivity
+   attach_weather
+   MVVoltageProfile
+```
