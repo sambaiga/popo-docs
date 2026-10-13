@@ -21,7 +21,7 @@ The power-flow and estimation engines are optional extras:
 |---|---|---|
 | `opendss` | OpenDSSDirect.py | building and solving circuits, time series, sweeps |
 | `estimation` | pandapower | state estimation |
-| `plot` | matplotlib, seaborn, Great Tables | figures and tables |
+| `plot` | matplotlib, SciencePlots, Great Tables | figures and tables |
 | `notebooks` | matplotlib, Great Tables | running the tutorials |
 | `all` | all of the above | |
 

@@ -550,9 +550,10 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>definition</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></span>) – Path to the <code class="docutils literal notranslate"><span class="pre">Transformers.dss</span></code> file of a circuit.</p></li>
-<li><p><strong>secondary_kv</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Keep only transformers at this secondary voltage, which is
-how distribution transformers are separated from upstream ones.
-<code class="docutils literal notranslate"><span class="pre">None</span></code> keeps every transformer found.</p></li>
+<li><p><strong>secondary_kv</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Keep only transformers with a winding at this voltage, and
+report that winding, which is how distribution transformers are
+separated from upstream ones. <code class="docutils literal notranslate"><span class="pre">None</span></code> keeps every transformer and
+reports its lowest-voltage winding as the secondary.</p></li>
 <li><p><strong>tolerance_kv</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Tolerance when matching <code class="docutils literal notranslate"><span class="pre">secondary_kv</span></code>.</p></li>
 </ul>
 </dd>
