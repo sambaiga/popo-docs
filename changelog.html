@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="_static/documentation_options.js?v=938c9ccc"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -63,7 +63,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.1" />
+  <meta name="docsearch:version" content="0.2.0" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -214,15 +214,15 @@
     type="button"
     data-bs-toggle="dropdown"
     aria-expanded="false"
-    aria-label="popo version 0.1.1"
+    aria-label="popo version 0.2.0"
   >
-    <span class="po-version-label">v0.1.1</span>
+    <span class="po-version-label">v0.2.0</span>
     <span class="po-alpha-pill">alpha</span>
   </button>
   <div class="dropdown-menu dropdown-menu-end po-version-menu">
     <div class="po-version-info">
       <p>
-        <strong>popo 0.1.1</strong> is in alpha.
+        <strong>popo 0.2.0</strong> is in alpha.
         The API may change before 1.0.
       </p>
       <a
@@ -378,15 +378,15 @@
     type="button"
     data-bs-toggle="dropdown"
     aria-expanded="false"
-    aria-label="popo version 0.1.1"
+    aria-label="popo version 0.2.0"
   >
-    <span class="po-version-label">v0.1.1</span>
+    <span class="po-version-label">v0.2.0</span>
     <span class="po-alpha-pill">alpha</span>
   </button>
   <div class="dropdown-menu dropdown-menu-end po-version-menu">
     <div class="po-version-info">
       <p>
-        <strong>popo 0.1.1</strong> is in alpha.
+        <strong>popo 0.2.0</strong> is in alpha.
         The API may change before 1.0.
       </p>
       <a
@@ -510,10 +510,54 @@
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h1>
 <p>All notable changes to popo are listed here, newest first. Versions follow
 <a class="reference external" href="https://semver.org">semantic versioning</a>; before 1.0 the API may change.</p>
-<section id="v0-1-1-2026-10-12">
-<h2>v0.1.1 (2026-10-12)<a class="headerlink" href="#v0-1-1-2026-10-12" title="Link to this heading">#</a></h2>
+<section id="v0-2-0-2026-10-13">
+<h2>v0.2.0 (2026-10-13)<a class="headerlink" href="#v0-2-0-2026-10-13" title="Link to this heading">#</a></h2>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>powerflow:</strong> Record customer-terminal voltages per transformer in sweeps</p></li>
+</ul>
+</section>
+<section id="bug-fixes">
+<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>network:</strong> Read_transformers reports the secondary winding by default</p></li>
+</ul>
+</section>
+<section id="refactoring">
+<h3>Refactoring<a class="headerlink" href="#refactoring" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>plotting:</strong> [<strong>breaking</strong>] Remove comparison_plots</p></li>
+</ul>
+</section>
 <section id="documentation">
 <h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Landing page organised by task, with figures from the tutorials</p></li>
+<li><p>Executed quickstart, plainer landing panels and a redesigned overview</p></li>
+<li><p>User guide with executed examples, and figures in the thesis style</p></li>
+<li><p>Tutorials as a gallery of thumbnails from their own figures</p></li>
+<li><p>API reference with one page per subpackage and per object</p></li>
+</ul>
+</section>
+<section id="build-and-packaging">
+<h3>Build and packaging<a class="headerlink" href="#build-and-packaging" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Drop lets-plot from the plot extra</p></li>
+<li><p>Bump the minor version for breaking changes below 1.0</p></li>
+</ul>
+</section>
+<section id="continuous-integration">
+<h3>Continuous integration<a class="headerlink" href="#continuous-integration" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>release:</strong> Generate the changelog with git-cliff, and show it in the docs</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-1-1-2026-10-12">
+<h2>v0.1.1 (2026-10-12)<a class="headerlink" href="#v0-1-1-2026-10-12" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h3>Documentation<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>readme:</strong> Replace the internal status notes with a public status and citation</p></li>
 </ul>
@@ -521,8 +565,8 @@
 </section>
 <section id="v0-1-0-2026-10-12">
 <h2>v0.1.0 (2026-10-12)<a class="headerlink" href="#v0-1-0-2026-10-12" title="Link to this heading">#</a></h2>
-<section id="features">
-<h3>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h3>
+<section id="id2">
+<h3>Features<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>standards:</strong> Voltage limits and inverter capability curves</p></li>
 <li><p><strong>network:</strong> Transformer reader capturing both rating conventions</p></li>
@@ -537,8 +581,8 @@
 <li><p><strong>brand:</strong> A bat whose wing bones are a feeder, and a day/night overview</p></li>
 </ul>
 </section>
-<section id="bug-fixes">
-<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading">#</a></h3>
+<section id="id3">
+<h3>Bug fixes<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>ci:</strong> Pin UV_PYTHON per matrix leg so the 3.13 test job actually runs on 3.13</p></li>
 <li><p><strong>test:</strong> Widen US sweep regression tolerance for cross-platform solver variation</p></li>
@@ -552,8 +596,8 @@
 <li><p><strong>estimation:</strong> Correct the meter sign, failure detection, substation measurement and conversion ratio</p></li>
 </ul>
 </section>
-<section id="id1">
-<h3>Documentation<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<section id="id4">
+<h3>Documentation<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Record what is being extracted and why</p></li>
 <li><p>Correct stale Status section to reflect actual extraction progress</p></li>
@@ -579,16 +623,16 @@
 <li><p><strong>plotting:</strong> Add unit tests for popo.plotting</p></li>
 </ul>
 </section>
-<section id="build-and-packaging">
-<h3>Build and packaging<a class="headerlink" href="#build-and-packaging" title="Link to this heading">#</a></h3>
+<section id="id5">
+<h3>Build and packaging<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Publish as pop-flow on PyPI</p></li>
 <li><p>Keep test data and the secrets baseline out of the sdist</p></li>
 <li><p>Publish as popo-flow on PyPI</p></li>
 </ul>
 </section>
-<section id="continuous-integration">
-<h3>Continuous integration<a class="headerlink" href="#continuous-integration" title="Link to this heading">#</a></h3>
+<section id="id6">
+<h3>Continuous integration<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Add a manual release workflow</p></li>
 <li><p>Re-lock after a release bump; use absolute README image URLs</p></li>
@@ -644,17 +688,26 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-1-1-2026-10-12">v0.1.1 (2026-10-12)</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-2-0-2026-10-13">v0.2.0 (2026-10-13)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bug-fixes">Bug fixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#refactoring">Refactoring</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-packaging">Build and packaging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-integration">Continuous integration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-1-1-2026-10-12">v0.1.1 (2026-10-12)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Documentation</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-1-0-2026-10-12">v0.1.0 (2026-10-12)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bug-fixes">Bug fixes</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Documentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Bug fixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Documentation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tests">Tests</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-packaging">Build and packaging</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-integration">Continuous integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Build and packaging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Continuous integration</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maintenance">Maintenance</a></li>
 </ul>
 </li>
