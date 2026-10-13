@@ -25,6 +25,7 @@ Circuits as defined: elements, customers and feeder screening. See {doc}`../guid
    :nosignatures:
 
    residential_loads
+   transformer_customers
    read_transformers
    select_by_utilisation
    screen

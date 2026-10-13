@@ -1,0 +1,6 @@
+﻿transformer\_customers
+======================
+
+.. currentmodule:: popo.network
+
+.. autofunction:: transformer_customers
