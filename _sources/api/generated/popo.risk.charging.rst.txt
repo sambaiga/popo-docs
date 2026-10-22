@@ -1,0 +1,6 @@
+﻿charging
+========
+
+.. currentmodule:: popo.risk
+
+.. autofunction:: charging

@@ -1,0 +1,6 @@
+﻿spread
+======
+
+.. currentmodule:: popo.risk
+
+.. autofunction:: spread

@@ -1,0 +1,6 @@
+﻿v2g\_dispatch
+=============
+
+.. currentmodule:: popo.scenarios
+
+.. autofunction:: v2g_dispatch

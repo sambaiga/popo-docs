@@ -1,0 +1,8 @@
+﻿EVPeakShave
+===========
+
+.. currentmodule:: popo.scenarios
+
+.. autoclass:: EVPeakShave
+   :members:
+   :show-inheritance:

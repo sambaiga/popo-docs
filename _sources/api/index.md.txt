@@ -9,6 +9,7 @@ a page with its full signature, parameters and return values. For explanations a
 | [`popo.network`](network.md) | Circuits as defined: elements, customers and feeder screening. |
 | [`popo.powerflow`](powerflow.md) | Results of a solved circuit, time-series solves and penetration sweeps. Needs the `opendss` extra. |
 | [`popo.scenarios`](scenarios.md) | Household demand, rooftop solar, EV charging, storage and inverter control. Needs the `opendss` extra. |
+| [`popo.risk`](risk.md) | Per-customer voltage and thermal risk under DER, and whether groups or features explain it. Needs the `opendss` extra to solve. |
 | [`popo.standards`](standards.md) | Statutory voltage limits and inverter characteristics. Needs no solver. |
 | [`popo.estimation`](estimation.md) | Conversion to pandapower and weighted-least-squares state estimation. Needs the `estimation` extra. |
 | [`popo.profiles`](profiles.md) | Loading and synthesising half-hourly demand, PV and EV profiles. |
@@ -20,6 +21,7 @@ a page with its full signature, parameters and return values. For explanations a
 network
 powerflow
 scenarios
+risk
 standards
 estimation
 profiles

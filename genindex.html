@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="_static/documentation_options.js?v=938c9ccc"></script>
+    <script src="_static/documentation_options.js?v=37f418d5"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -61,7 +61,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.2.0" />
+  <meta name="docsearch:version" content="0.2.1" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -212,15 +212,15 @@
     type="button"
     data-bs-toggle="dropdown"
     aria-expanded="false"
-    aria-label="popo version 0.2.0"
+    aria-label="popo version 0.2.1"
   >
-    <span class="po-version-label">v0.2.0</span>
+    <span class="po-version-label">v0.2.1</span>
     <span class="po-alpha-pill">alpha</span>
   </button>
   <div class="dropdown-menu dropdown-menu-end po-version-menu">
     <div class="po-version-info">
       <p>
-        <strong>popo 0.2.0</strong> is in alpha.
+        <strong>popo 0.2.1</strong> is in alpha.
         The API may change before 1.0.
       </p>
       <a
@@ -374,15 +374,15 @@
     type="button"
     data-bs-toggle="dropdown"
     aria-expanded="false"
-    aria-label="popo version 0.2.0"
+    aria-label="popo version 0.2.1"
   >
-    <span class="po-version-label">v0.2.0</span>
+    <span class="po-version-label">v0.2.1</span>
     <span class="po-alpha-pill">alpha</span>
   </button>
   <div class="dropdown-menu dropdown-menu-end po-version-menu">
     <div class="po-version-info">
       <p>
-        <strong>popo 0.2.0</strong> is in alpha.
+        <strong>popo 0.2.1</strong> is in alpha.
         The API may change before 1.0.
       </p>
       <a
@@ -478,6 +478,7 @@
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
@@ -504,11 +505,13 @@
 </li>
       <li><a href="api/generated/popo.scenarios.ArraySizing.html#popo.scenarios.ArraySizing">ArraySizing (class in popo.scenarios)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/popo.scenarios.assign_household_profiles.html#popo.scenarios.assign_household_profiles">assign_household_profiles() (in module popo.scenarios)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/popo.scenarios.attach_charging.html#popo.scenarios.attach_charging">attach_charging() (in module popo.scenarios)</a>
+</li>
+      <li><a href="api/generated/popo.scenarios.attach_ev_storage.html#popo.scenarios.attach_ev_storage">attach_ev_storage() (in module popo.scenarios)</a>
 </li>
       <li><a href="api/generated/popo.scenarios.attach_generation.html#popo.scenarios.attach_generation">attach_generation() (in module popo.scenarios)</a>
 </li>
@@ -543,6 +546,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/popo.profiles.synthetic.calendar.html#popo.profiles.synthetic.calendar">calendar() (in module popo.profiles.synthetic)</a>
+</li>
+      <li><a href="api/generated/popo.scenarios.PVDerating.html#popo.scenarios.PVDerating.cell_temperature">cell_temperature() (popo.scenarios.PVDerating method)</a>
+</li>
+      <li><a href="api/generated/popo.risk.charging.html#popo.risk.charging">charging() (in module popo.risk)</a>
 </li>
       <li><a href="api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits.check">check() (popo.standards.VoltageLimits method)</a>
 </li>
@@ -582,6 +589,8 @@
 </li>
       <li><a href="api/generated/popo.powerflow.ConvergenceError.html#popo.powerflow.ConvergenceError">ConvergenceError</a>
 </li>
+      <li><a href="api/generated/popo.risk.correlations.html#popo.risk.correlations">correlations() (in module popo.risk)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -606,6 +615,8 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/popo.scenarios.PVDerating.html#popo.scenarios.PVDerating.efficiency_curve">efficiency_curve() (popo.scenarios.PVDerating method)</a>
+</li>
       <li><a href="api/generated/popo.powerflow.element_powers.html#popo.powerflow.element_powers">element_powers() (in module popo.powerflow)</a>
 
       <ul>
@@ -618,17 +629,23 @@
 </li>
       <li><a href="api/generated/popo.estimation.estimate_voltages.html#popo.estimation.estimate_voltages">estimate_voltages() (in module popo.estimation)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/popo.scenarios.ScenarioReport.html#popo.scenarios.ScenarioReport.ev_penetration">ev_penetration (popo.scenarios.ScenarioReport property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/popo.profiles.synthetic.ev_profiles.html#popo.profiles.synthetic.ev_profiles">ev_profiles() (in module popo.profiles.synthetic)</a>
 </li>
       <li><a href="api/generated/popo.profiles.synthetic.ev_stats.html#popo.profiles.synthetic.ev_stats">ev_stats() (in module popo.profiles.synthetic)</a>
 </li>
+      <li><a href="api/generated/popo.scenarios.EVBattery.html#popo.scenarios.EVBattery">EVBattery (class in popo.scenarios)</a>
+</li>
       <li><a href="api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits.event_summary">event_summary() (popo.standards.VoltageLimits method)</a>
 </li>
+      <li><a href="api/generated/popo.scenarios.EVPeakShave.html#popo.scenarios.EVPeakShave">EVPeakShave (class in popo.scenarios)</a>
+</li>
       <li><a href="api/generated/popo.profiles.synthetic.EVStats.html#popo.profiles.synthetic.EVStats">EVStats (class in popo.profiles.synthetic)</a>
+</li>
+      <li><a href="api/generated/popo.scenarios.EVBattery.html#popo.scenarios.EVBattery.exchangeable_kwh">exchangeable_kwh (popo.scenarios.EVBattery property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -637,6 +654,14 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/generated/popo.plotting.line_style.finish.html#popo.plotting.line_style.finish">finish() (in module popo.plotting.line_style)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/popo.risk.generation.html#popo.risk.generation">generation() (in module popo.risk)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -746,6 +771,8 @@
 </li>
         <li><a href="api/profiles.html#module-popo.profiles.synthetic">popo.profiles.synthetic</a>
 </li>
+        <li><a href="api/risk.html#module-popo.risk">popo.risk</a>
+</li>
         <li><a href="api/scenarios.html#module-popo.scenarios">popo.scenarios</a>
 </li>
         <li><a href="api/standards.html#module-popo.standards">popo.standards</a>
@@ -788,6 +815,8 @@
       <li><a href="api/generated/popo.plotting.style.pad_limits.html#popo.plotting.style.pad_limits">pad_limits() (in module popo.plotting.style)</a>
 </li>
       <li><a href="api/generated/popo.plotting.style.panel.html#popo.plotting.style.panel">panel() (in module popo.plotting.style)</a>
+</li>
+      <li><a href="api/generated/popo.risk.peak.html#popo.risk.peak">peak() (in module popo.risk)</a>
 </li>
       <li><a href="api/generated/popo.plotting.network.plot_topology.html#popo.plotting.network.plot_topology">plot_topology() (in module popo.plotting.network)</a>
 </li>
@@ -871,6 +900,13 @@
 </li>
       </ul></li>
       <li>
+    popo.risk
+
+      <ul>
+        <li><a href="api/risk.html#module-popo.risk">module</a>
+</li>
+      </ul></li>
+      <li>
     popo.scenarios
 
       <ul>
@@ -886,6 +922,8 @@
       </ul></li>
       <li><a href="api/generated/popo.network.VoltageSensitivity.html#popo.network.VoltageSensitivity.power_factor_ratio">power_factor_ratio (popo.network.VoltageSensitivity property)</a>
 </li>
+      <li><a href="api/generated/popo.scenarios.PVDerating.html#popo.scenarios.PVDerating.power_temperature_curve">power_temperature_curve() (popo.scenarios.PVDerating method)</a>
+</li>
       <li><a href="api/generated/popo.scenarios.PowerFactorProfile.html#popo.scenarios.PowerFactorProfile">PowerFactorProfile (class in popo.scenarios)</a>
 </li>
       <li><a href="api/generated/popo.network.profile_circuit.html#popo.network.profile_circuit">profile_circuit() (in module popo.network)</a>
@@ -893,6 +931,8 @@
       <li><a href="api/generated/popo.scenarios.ScenarioReport.html#popo.scenarios.ScenarioReport.pv_penetration">pv_penetration (popo.scenarios.ScenarioReport property)</a>
 </li>
       <li><a href="api/generated/popo.profiles.synthetic.pv_unit_profile.html#popo.profiles.synthetic.pv_unit_profile">pv_unit_profile() (in module popo.profiles.synthetic)</a>
+</li>
+      <li><a href="api/generated/popo.scenarios.PVDerating.html#popo.scenarios.PVDerating">PVDerating (class in popo.scenarios)</a>
 </li>
       <li><a href="api/generated/popo.network.PVSystem.html#popo.network.PVSystem">PVSystem (class in popo.network)</a>
 </li>
@@ -970,6 +1010,8 @@
 </li>
       <li><a href="api/generated/popo.powerflow.source_bus.html#popo.powerflow.source_bus">source_bus() (in module popo.powerflow)</a>
 </li>
+      <li><a href="api/generated/popo.risk.spread.html#popo.risk.spread">spread() (in module popo.risk)</a>
+</li>
       <li><a href="api/generated/popo.network.Circuit.html#popo.network.Circuit.storage_units">storage_units (popo.network.Circuit property)</a>
 </li>
       <li><a href="api/generated/popo.scenarios.StorageDispatch.html#popo.scenarios.StorageDispatch">StorageDispatch (class in popo.scenarios)</a>
@@ -1026,6 +1068,10 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/popo.scenarios.v2g_dispatch.html#popo.scenarios.v2g_dispatch">v2g_dispatch() (in module popo.scenarios)</a>
+</li>
+      <li><a href="api/generated/popo.scenarios.V2GSchedule.html#popo.scenarios.V2GSchedule">V2GSchedule (class in popo.scenarios)</a>
+</li>
       <li><a href="api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits.violations">violations() (popo.standards.VoltageLimits method)</a>
 </li>
       <li><a href="api/generated/popo.network.VoltageSensitivity.html#popo.network.VoltageSensitivity.voltage_drop_percent">voltage_drop_percent (popo.network.VoltageSensitivity property)</a>
@@ -1039,6 +1085,8 @@
       <li><a href="api/generated/popo.powerflow.SolveReport.html#popo.powerflow.SolveReport.voltage_traces">voltage_traces() (popo.powerflow.SolveReport method)</a>
 </li>
       <li><a href="api/generated/popo.standards.VoltageLimits.html#popo.standards.VoltageLimits">VoltageLimits (class in popo.standards)</a>
+</li>
+      <li><a href="api/generated/popo.risk.voltages.html#popo.risk.voltages">voltages() (in module popo.risk)</a>
 </li>
       <li><a href="api/generated/popo.network.VoltageSensitivity.html#popo.network.VoltageSensitivity">VoltageSensitivity (class in popo.network)</a>
 </li>

@@ -1,0 +1,8 @@
+﻿PVDerating
+==========
+
+.. currentmodule:: popo.scenarios
+
+.. autoclass:: PVDerating
+   :members:
+   :show-inheritance:

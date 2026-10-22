@@ -1,0 +1,18 @@
+# popo.risk
+
+Per-customer DER risk: each customer's voltage excursions under rooftop solar and its contribution at the feeder peak under EV charging, and checks of whether groups or features explain them. The solving functions need the `opendss` extra.
+
+```{eval-rst}
+.. module:: popo.risk
+
+.. autosummary::
+   :toctree: generated
+   :nosignatures:
+
+   voltages
+   generation
+   peak
+   charging
+   spread
+   correlations
+```

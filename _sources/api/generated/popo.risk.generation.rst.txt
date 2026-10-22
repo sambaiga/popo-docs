@@ -1,0 +1,6 @@
+﻿generation
+==========
+
+.. currentmodule:: popo.risk
+
+.. autofunction:: generation

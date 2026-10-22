@@ -1,0 +1,8 @@
+﻿EVBattery
+=========
+
+.. currentmodule:: popo.scenarios
+
+.. autoclass:: EVBattery
+   :members:
+   :show-inheritance:

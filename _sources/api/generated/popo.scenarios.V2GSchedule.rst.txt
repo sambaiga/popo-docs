@@ -1,0 +1,8 @@
+﻿V2GSchedule
+===========
+
+.. currentmodule:: popo.scenarios
+
+.. autoclass:: V2GSchedule
+   :members:
+   :show-inheritance:

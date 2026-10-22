@@ -64,6 +64,14 @@ At 60 % penetration, 113 of the 188 customers have an array. The random generato
 customers are chosen; with the same seed, the customers chosen at 40 % are also chosen at 60 %, so
 results at different penetrations compare the same households.
 
+The profile is used as given, in kW per kWp of array, so its annual mean times 8,760 is the yield in
+kWh/kWp. A PV-Watts output divided by its array size already includes temperature, wiring and
+inverter losses. For a profile of plane-of-array irradiance instead, pass
+{py:class}`~popo.scenarios.PVDerating` and the air temperature: popo then derates the arrays the way
+PV-Watts does, through OpenDSS's own temperature and efficiency curves (cell temperature from the NOCT
+model, -0.4 % per kelvin above 25 °C, 14 % DC losses and the PV-Watts inverter efficiency curve).
+Inverters switch on above 5 % of their rating.
+
 Each array is connected on its customer's own phase. The bus suffix `.1.0` means phase 1 to neutral.
 {py:func}`~popo.scenarios.service_connection` returns the suffix for any customer, and the `connection`
 argument of every scenario function overrides it.
@@ -77,6 +85,19 @@ actually coincide.
 {py:func}`~popo.scenarios.attach_storage` gives customers a battery that charges and discharges in fixed
 daily windows, set by {py:class}`~popo.scenarios.StorageDispatch`. The default is a 3 kW, 10 kWh battery
 that charges from 10:00 to 17:00, while rooftop generation is high, and discharges from 18:00 to 22:00.
+
+## Vehicle-to-grid
+
+OpenDSS has no electric-vehicle element, and `attach_charging` models each vehicle as a load that
+follows its recorded sessions. For a vehicle that can also discharge to the network,
+{py:func}`~popo.scenarios.attach_ev_storage` adds an OpenDSS `Storage` element beside that load. A
+`Storage` element cannot represent the energy used for driving, so it carries only the
+vehicle-to-grid exchange: it discharges and then recharges the same energy plus its losses, and
+OpenDSS tracks a genuine state of charge between the battery's reserve and its arrival level
+({py:class}`~popo.scenarios.EVBattery`). The exchange follows a fixed evening-discharge, night-recharge
+{py:class}`~popo.scenarios.V2GSchedule`, or an OpenDSS `StorageController`
+({py:class}`~popo.scenarios.EVPeakShave`) that discharges the fleet while a transformer is above a
+target and recharges it while the transformer is below a lower one.
 
 ## Comparing scenarios
 

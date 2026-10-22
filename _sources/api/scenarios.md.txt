@@ -15,6 +15,8 @@ See {doc}`../guide/scenarios`.
    assign_household_profiles
    attach_generation
    attach_charging
+   attach_ev_storage
+   v2g_dispatch
    attach_storage
    service_connection
    write_load_shape
@@ -26,8 +28,12 @@ See {doc}`../guide/scenarios`.
    :nosignatures:
 
    ArraySizing
+   PVDerating
    PowerFactorProfile
    StorageDispatch
+   EVBattery
+   V2GSchedule
+   EVPeakShave
    ScenarioReport
 
 .. rubric:: Inverter control

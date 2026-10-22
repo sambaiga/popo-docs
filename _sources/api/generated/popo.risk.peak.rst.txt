@@ -1,0 +1,6 @@
+﻿peak
+====
+
+.. currentmodule:: popo.risk
+
+.. autofunction:: peak
