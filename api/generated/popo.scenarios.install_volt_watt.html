@@ -549,10 +549,9 @@
 <dt class="sig sig-object py" id="popo.scenarios.install_volt_watt">
 <span class="sig-prename descclassname"><span class="pre">popo.scenarios.</span></span><span class="sig-name descname"><span class="pre">install_volt_watt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pv_vw'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#popo.scenarios.install_volt_watt" title="Link to this definition">#</a></dt>
 <dd><p>Install a voltage-dependent active-power curtailment on every inverter.</p>
-<p>Volt-Watt and Volt-VAr are both inverter controls, and OpenDSS assigns each
-inverter to one control. Installing both as separate controls on the same
-inverters does not combine them, so <a class="reference internal" href="popo.scenarios.attach_generation.html#popo.scenarios.attach_generation" title="popo.scenarios.attach_generation"><code class="xref py py-func docutils literal notranslate"><span class="pre">attach_generation()</span></code></a> accepts one or
-the other.</p>
+<p>OpenDSS assigns each inverter to one control, so installing Volt-Watt and Volt-VAr as
+separate controls does not combine them; <code class="xref py py-func docutils literal notranslate"><span class="pre">install_volt_var_watt()</span></code> installs both
+as one combined control.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

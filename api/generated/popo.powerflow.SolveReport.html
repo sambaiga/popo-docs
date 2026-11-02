@@ -541,7 +541,7 @@
 <h1>SolveReport<a class="headerlink" href="#solvereport" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="popo.powerflow.SolveReport">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">popo.powerflow.</span></span><span class="sig-name descname"><span class="pre">SolveReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">records</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diverged_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bus_records</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#popo.powerflow.SolveReport" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">popo.powerflow.</span></span><span class="sig-name descname"><span class="pre">SolveReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">records</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diverged_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bus_records</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv_records</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#popo.powerflow.SolveReport" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>The result of a time-series solve, including whether it converged.</p>
 <dl class="field-list simple">
@@ -554,6 +554,9 @@
 <code class="docutils literal notranslate"><span class="pre">bus</span></code> and <code class="docutils literal notranslate"><span class="pre">vmag_pu</span></code> (the mean across the bus’s connected
 phases), or <code class="docutils literal notranslate"><span class="pre">None</span></code> when no buses were requested. A diverged step
 is recorded as NaN rather than as the solver’s last iterate.</p></li>
+<li><p><strong>pv_records</strong> – One row per step and PV system, with columns <code class="docutils literal notranslate"><span class="pre">step</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pvsystem</span></code> and <code class="docutils literal notranslate"><span class="pre">kw</span></code> (its AC output), or <code class="docutils literal notranslate"><span class="pre">None</span></code> when PV output
+was not requested.</p></li>
 </ul>
 </dd>
 </dl>

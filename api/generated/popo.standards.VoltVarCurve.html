@@ -534,7 +534,7 @@
 <h1>VoltVarCurve<a class="headerlink" href="#voltvarcurve" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="popo.standards.VoltVarCurve">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">popo.standards.</span></span><span class="sig-name descname"><span class="pre">VoltVarCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capability</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadband_pu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit_pu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.06</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.VoltVarCurve" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">popo.standards.</span></span><span class="sig-name descname"><span class="pre">VoltVarCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capability</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadband_pu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit_pu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_limit_pu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.VoltVarCurve" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A piecewise-linear Volt-VAr characteristic.</p>
 <p>Reactive power is flat inside a deadband around nominal and ramps linearly
@@ -544,16 +544,54 @@ the response oppose the excursion rather than reinforce it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>capability</strong> – The reactive capability the curve ramps towards.</p></li>
+<li><p><strong>capability</strong> – The reactive capability the curve ramps towards, absorbed above
+nominal and supplied below.</p></li>
 <li><p><strong>deadband_pu</strong> – Half-width of the flat region around nominal, in per unit.</p></li>
-<li><p><strong>limit_pu</strong> – Voltage displacement at which the full capability is reached.</p></li>
+<li><p><strong>limit_pu</strong> – Voltage displacement above nominal at which full absorption is reached.</p></li>
+<li><p><strong>lower_limit_pu</strong> – Displacement below nominal at which full supply is reached;
+<code class="docutils literal notranslate"><span class="pre">None</span></code> makes the curve symmetric, equal to <code class="docutils literal notranslate"><span class="pre">limit_pu</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="popo.standards.VoltVarCurve.lower_pu">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">lower_pu</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span><a class="headerlink" href="#popo.standards.VoltVarCurve.lower_pu" title="Link to this definition">#</a></dt>
+<dd><p>Displacement below nominal at which full supply is reached.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="popo.standards.VoltVarCurve.breakpoints">
+<span class="sig-name descname"><span class="pre">breakpoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.VoltVarCurve.breakpoints" title="Link to this definition">#</a></dt>
+<dd><p>The four voltage breakpoints and the reactive power at each, as OpenDSS takes them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#Ellipsis" title="(in Python v3.15)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>], <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#Ellipsis" title="(in Python v3.15)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]]</span></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">volts</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="n">VoltVarCurve</span><span class="o">.</span><span class="n">as_nzs_4777</span><span class="p">()</span><span class="o">.</span><span class="n">breakpoints</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="mi">230</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">volts</span><span class="p">],</span> <span class="n">values</span>
+<span class="go">([207, 220, 240, 258], (0.44, 0.0, 0.0, -0.6))</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="popo.standards.VoltVarCurve.ieee_1547_default">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ieee_1547_default</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.VoltVarCurve.ieee_1547_default" title="Link to this definition">#</a></dt>
 <dd><p>The default characteristic of IEEE 1547-2018, category B.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#popo.standards.VoltVarCurve" title="popo.standards.inverter.VoltVarCurve"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltVarCurve</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="popo.standards.VoltVarCurve.as_nzs_4777">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">as_nzs_4777</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.VoltVarCurve.as_nzs_4777" title="Link to this definition">#</a></dt>
+<dd><p>The volt-var characteristic of AS/NZS 4777.2:2020, Australia A, on a 230 V base.</p>
+<p>Full supply at 207 V, none between 220 and 240 V, and full absorption at 258 V.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#popo.standards.VoltVarCurve" title="popo.standards.inverter.VoltVarCurve"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltVarCurve</span></code></a></span></p>
@@ -637,7 +675,10 @@ which is the response to a voltage above nominal.</p>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltVarCurve"><code class="docutils literal notranslate"><span class="pre">VoltVarCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltVarCurve.lower_pu"><code class="docutils literal notranslate"><span class="pre">VoltVarCurve.lower_pu</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltVarCurve.breakpoints"><code class="docutils literal notranslate"><span class="pre">VoltVarCurve.breakpoints()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltVarCurve.ieee_1547_default"><code class="docutils literal notranslate"><span class="pre">VoltVarCurve.ieee_1547_default()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltVarCurve.as_nzs_4777"><code class="docutils literal notranslate"><span class="pre">VoltVarCurve.as_nzs_4777()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltVarCurve.reactive_power_pu"><code class="docutils literal notranslate"><span class="pre">VoltVarCurve.reactive_power_pu()</span></code></a></li>
 </ul>
 </li>

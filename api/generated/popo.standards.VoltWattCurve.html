@@ -565,6 +565,25 @@ of rated output.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="popo.standards.VoltWattCurve.as_nzs_4777">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">as_nzs_4777</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.VoltWattCurve.as_nzs_4777" title="Link to this definition">#</a></dt>
+<dd><p>The volt-watt characteristic of AS/NZS 4777.2:2020, Australia A, on a 230 V base.</p>
+<p>Unrestricted to 253 V, the upper limit of AS 61000.3.100, and curtailed to 20% of rated
+output at 260 V, so that it acts as a backstop above the limit rather than inside the band.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#popo.standards.VoltWattCurve" title="popo.standards.inverter.VoltWattCurve"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltWattCurve</span></code></a></span></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">curve</span> <span class="o">=</span> <span class="n">VoltWattCurve</span><span class="o">.</span><span class="n">as_nzs_4777</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">curve</span><span class="o">.</span><span class="n">start_pu</span> <span class="o">*</span> <span class="mi">230</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">curve</span><span class="o">.</span><span class="n">end_pu</span> <span class="o">*</span> <span class="mi">230</span><span class="p">),</span> <span class="n">curve</span><span class="o">.</span><span class="n">min_power_pu</span>
+<span class="go">(253, 260, 0.2)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="popo.standards.VoltWattCurve.active_power_pu">
 <span class="sig-name descname"><span class="pre">active_power_pu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voltage_pu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.VoltWattCurve.active_power_pu" title="Link to this definition">#</a></dt>
 <dd><p>Active power the curve permits at a given terminal voltage.</p>
@@ -641,6 +660,7 @@ of rated output.</p></li>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltWattCurve"><code class="docutils literal notranslate"><span class="pre">VoltWattCurve</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltWattCurve.ieee_1547_default"><code class="docutils literal notranslate"><span class="pre">VoltWattCurve.ieee_1547_default()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltWattCurve.as_nzs_4777"><code class="docutils literal notranslate"><span class="pre">VoltWattCurve.as_nzs_4777()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltWattCurve.active_power_pu"><code class="docutils literal notranslate"><span class="pre">VoltWattCurve.active_power_pu()</span></code></a></li>
 </ul>
 </li>

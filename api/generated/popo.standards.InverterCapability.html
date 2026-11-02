@@ -536,7 +536,7 @@
 <h1>InverterCapability<a class="headerlink" href="#invertercapability" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="popo.standards.InverterCapability">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">popo.standards.</span></span><span class="sig-name descname"><span class="pre">InverterCapability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_limit_pu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.InverterCapability" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">popo.standards.</span></span><span class="sig-name descname"><span class="pre">InverterCapability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_limit_pu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absorb_limit_pu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.InverterCapability" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Reactive capability of a distributed generator, as a standard sets it.</p>
 <dl class="field-list simple">
@@ -549,10 +549,32 @@ of its rated apparent power, in both directions.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="popo.standards.InverterCapability.absorb_pu">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">absorb_pu</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span><a class="headerlink" href="#popo.standards.InverterCapability.absorb_pu" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">absorb_limit_pu</span></code>, or <code class="docutils literal notranslate"><span class="pre">q_limit_pu</span></code> when none is set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Reactive power the inverter can absorb</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="popo.standards.InverterCapability.ieee_1547">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ieee_1547</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.InverterCapability.ieee_1547" title="Link to this definition">#</a></dt>
 <dd><p>North American interconnection, IEEE 1547-2018 category B.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#popo.standards.InverterCapability" title="popo.standards.inverter.InverterCapability"><code class="xref py py-class docutils literal notranslate"><span class="pre">InverterCapability</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="popo.standards.InverterCapability.as_nzs_4777">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">as_nzs_4777</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.InverterCapability.as_nzs_4777" title="Link to this definition">#</a></dt>
+<dd><p>Australian interconnection, AS/NZS 4777.2:2020 Australia A: 44% supplied, 60% absorbed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#popo.standards.InverterCapability" title="popo.standards.inverter.InverterCapability"><code class="xref py py-class docutils literal notranslate"><span class="pre">InverterCapability</span></code></a></span></p>
@@ -583,7 +605,7 @@ of its rated apparent power, in both directions.</p></li>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The request, clipped symmetrically to the capability.</p>
+<dd class="field-odd"><p><em>The request, clipped to the capability</em> – <code class="docutils literal notranslate"><span class="pre">q_limit_pu</span></code> supplied and <code class="docutils literal notranslate"><span class="pre">absorb_pu</span></code> absorbed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -640,7 +662,9 @@ of its rated apparent power, in both directions.</p></li>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.InverterCapability"><code class="docutils literal notranslate"><span class="pre">InverterCapability</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.InverterCapability.absorb_pu"><code class="docutils literal notranslate"><span class="pre">InverterCapability.absorb_pu</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.InverterCapability.ieee_1547"><code class="docutils literal notranslate"><span class="pre">InverterCapability.ieee_1547()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.InverterCapability.as_nzs_4777"><code class="docutils literal notranslate"><span class="pre">InverterCapability.as_nzs_4777()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.InverterCapability.erec_g99"><code class="docutils literal notranslate"><span class="pre">InverterCapability.erec_g99()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.InverterCapability.clip"><code class="docutils literal notranslate"><span class="pre">InverterCapability.clip()</span></code></a></li>
 </ul>

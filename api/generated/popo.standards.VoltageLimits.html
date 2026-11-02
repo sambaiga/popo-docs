@@ -600,6 +600,20 @@ classify how bad an excursion is, not as the operating target.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="popo.standards.VoltageLimits.as_61000_3_100">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">as_61000_3_100</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.VoltageLimits.as_61000_3_100" title="Link to this definition">#</a></dt>
+<dd><p>Australian low-voltage supply, AS 61000.3.100.</p>
+<p>230 V, +10 % and -6 %: the 1st percentile of ten-minute values over a
+week must be at least 216 V and the 99th percentile at most 253 V, so 98 %
+of values must lie within the band.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#popo.standards.VoltageLimits" title="popo.standards.voltage.VoltageLimits"><code class="xref py py-class docutils literal notranslate"><span class="pre">VoltageLimits</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="popo.standards.VoltageLimits.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voltage_pu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#popo.standards.VoltageLimits.check" title="Link to this definition">#</a></dt>
 <dd><p>Judge a per-unit voltage series against this standard.</p>
@@ -634,14 +648,14 @@ Non-finite entries are dropped rather than counted as breaches.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>readings</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></span>) – One row per reading, e.g. per (bus, phase) from
+<li><p><strong>readings</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></span>) – One row per reading, e.g. per (bus, phase) from
 <code class="xref py py-func docutils literal notranslate"><span class="pre">popo.powerflow.results.bus_voltages()</span></code> or per (bus, step)
 from <code class="xref py py-attr docutils literal notranslate"><span class="pre">popo.powerflow.SolveReport.bus_records</span></code>.</p></li>
 <li><p><strong>value_col</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Column holding the per-unit voltage.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The rows of <code class="docutils literal notranslate"><span class="pre">readings</span></code> outside <code class="docutils literal notranslate"><span class="pre">[lower_pu,</span> <span class="pre">upper_pu]</span></code>, with a
@@ -674,7 +688,7 @@ non-finite step, such as a diverged solve, counts as neither
 above nor below.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>One row per trace</em> – <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">v_mean_pu</span></code>, <code class="docutils literal notranslate"><span class="pre">v_min_pu</span></code>,
@@ -745,6 +759,7 @@ and <code class="docutils literal notranslate"><span class="pre">over_longest_st
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltageLimits.en_50160"><code class="docutils literal notranslate"><span class="pre">VoltageLimits.en_50160()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltageLimits.ansi_c84_1_range_a"><code class="docutils literal notranslate"><span class="pre">VoltageLimits.ansi_c84_1_range_a()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltageLimits.ansi_c84_1_range_b"><code class="docutils literal notranslate"><span class="pre">VoltageLimits.ansi_c84_1_range_b()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltageLimits.as_61000_3_100"><code class="docutils literal notranslate"><span class="pre">VoltageLimits.as_61000_3_100()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltageLimits.check"><code class="docutils literal notranslate"><span class="pre">VoltageLimits.check()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltageLimits.violations"><code class="docutils literal notranslate"><span class="pre">VoltageLimits.violations()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#popo.standards.VoltageLimits.event_summary"><code class="docutils literal notranslate"><span class="pre">VoltageLimits.event_summary()</span></code></a></li>
